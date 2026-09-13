@@ -1,6 +1,7 @@
 import pytest
 
 from app.structured.normalization import normalize_instance
+from app.structured.schema_prep import LOCAL_TIME_PATTERN, prepare_generation_schema
 from app.structured.validation import check_schema, parse_json, validation_errors
 
 
@@ -37,6 +38,44 @@ def test_normalization_is_schema_directed():
         "time": "23:59",
         "score": 82.5,
     }
+
+
+def test_generation_schema_constrains_time_to_local_hhmm():
+    schema = {
+        "type": "object",
+        "properties": {
+            "course": {"type": "string", "x-normalize": "upper"},
+            "due_time": {"type": "string", "format": "time"},
+        },
+        "required": ["course", "due_time"],
+        "additionalProperties": False,
+    }
+
+    prepared = prepare_generation_schema(schema)
+    due_time = prepared["properties"]["due_time"]
+
+    # The caller schema is never mutated.
+    assert schema["properties"]["due_time"] == {"type": "string", "format": "time"}
+
+    # LM Studio receives the exact local-time representation the API requires,
+    # rather than RFC3339 `time` (which permits seconds + timezone suffixes).
+    assert "format" not in due_time
+    assert due_time["pattern"] == LOCAL_TIME_PATTERN
+    assert "24-hour HH:MM" in due_time["description"]
+
+    # Private gateway annotations are not leaked into the model-facing schema.
+    assert "x-normalize" not in prepared["properties"]["course"]
+
+
+def test_gateway_time_validation_accepts_hhmm_and_rejects_rfc3339_time():
+    schema = {
+        "type": "object",
+        "properties": {"due_time": {"type": "string", "format": "time"}},
+        "required": ["due_time"],
+    }
+
+    assert not validation_errors({"due_time": "23:59"}, schema)
+    assert validation_errors({"due_time": "18:59:00Z"}, schema)
 
 
 def test_normalization_does_not_fix_wrong_facts():

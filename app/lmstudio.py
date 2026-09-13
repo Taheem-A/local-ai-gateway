@@ -137,16 +137,22 @@ async def generate_structured(
     if not choices:
         raise LMStudioError("LM Studio returned no completion choices.")
 
-    content = choices[0].get("message", {}).get("content")
+    choice = choices[0]
+    message = choice.get("message") or {}
+    content = message.get("content")
     if not isinstance(content, str):
         raise LMStudioError("LM Studio returned no structured message content.")
 
-    usage = data.get("usage", {})
+    usage = data.get("usage") or {}
+    completion_details = usage.get("completion_tokens_details") or {}
+
     return {
         "text": content.strip(),
         "model": data.get("model", model),
         "input_tokens": usage.get("prompt_tokens"),
         "output_tokens": usage.get("completion_tokens"),
+        "reasoning_output_tokens": completion_details.get("reasoning_tokens"),
+        "finish_reason": choice.get("finish_reason"),
     }
 
 

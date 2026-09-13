@@ -5,7 +5,7 @@ from typing import Any
 
 from app.lmstudio import generate_structured
 from app.structured.normalization import normalize_instance
-from app.structured.schema_prep import prepare_generation_schema
+from app.structured.schema_prep import add_generation_hints, prepare_generation_schema
 from app.structured.validation import check_schema, parse_json, validation_errors
 
 
@@ -25,7 +25,7 @@ def _retry_prompt(original_prompt: str, previous_text: str, errors: list[str]) -
     return (
         f"{original_prompt}\n\n"
         "Your previous output failed validation. Correct it and return ONLY an object "
-        "that conforms to the supplied JSON Schema.\n\n"
+        "that conforms to the supplied JSON Schema and canonical output requirements.\n\n"
         f"Validation errors:\n{error_lines}\n\n"
         f"Previous output:\n{previous_text or '<empty>'}"
     )
@@ -49,7 +49,13 @@ async def run_structured(
     # leaves broader than this gateway's API contract (notably RFC3339 `time`).
     generation_schema = prepare_generation_schema(schema)
 
-    attempt_prompt = prompt
+    # Constrained decoding controls syntax, but gateway-specific semantics such as
+    # "preserve the source's local clock time" also need to be visible to the
+    # model in natural language. Keep those instructions generated from the same
+    # caller schema so the prompt and validator cannot silently drift apart.
+    canonical_prompt = add_generation_hints(prompt, schema)
+
+    attempt_prompt = canonical_prompt
     last_errors: list[str] = []
     last_text = ""
     last_finish_reason: str | None = None
@@ -103,7 +109,7 @@ async def run_structured(
                     )
 
         if attempt < max_attempts:
-            attempt_prompt = _retry_prompt(prompt, last_text, last_errors)
+            attempt_prompt = _retry_prompt(canonical_prompt, last_text, last_errors)
 
     from app.errors import StructuredOutputError
 

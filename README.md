@@ -144,6 +144,8 @@ Invoke-RestMethod `
     -Body $body
 ```
 
+For this gateway, `format = "time"` means a local clock value in exact `HH:MM` form. Standard JSON Schema defines `time` more broadly as RFC 3339 full-time (for example `18:59:00Z`). The gateway therefore translates `format = "time"` to an explicit `HH:MM` pattern in the copy sent to LM Studio, while keeping the caller's original schema for local validation. A source value of `11:59 PM` should therefore remain the same local clock time and be returned as `23:59`, not be timezone-converted or given a suffix.
+
 ## 8. Classification
 
 ```powershell
@@ -151,6 +153,7 @@ $body = @{
     text = "Homework 4 is due Sunday at 11:59 PM."
     labels = @("assignment", "exam", "announcement", "irrelevant")
     quality = "default"
+    max_output_tokens = 512
 } | ConvertTo-Json
 
 Invoke-RestMethod `
@@ -159,6 +162,8 @@ Invoke-RestMethod `
     -Headers $headers `
     -Body $body
 ```
+
+Classification defaults to a 512-token generation ceiling. The original 128-token hard cap was too small for GPT-OSS at medium reasoning because hidden reasoning can consume the output budget before the final JSON label is emitted. Structured failures now also retain `finish_reason` and token diagnostics when LM Studio provides them.
 
 ## 9. Install the Python client
 

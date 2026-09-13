@@ -56,7 +56,9 @@ def error_grade(reason):
 
 def main():
     parser = argparse.ArgumentParser(description='Sequential benchmark v2 with independent grading dimensions.')
-    parser.add_argument('--quality', choices=['fast', 'balanced', 'deep'])
+    parser.add_argument('--quality', choices=['fast', 'balanced', 'default', 'deep'])
+    parser.add_argument('--reasoning', choices=['low', 'medium', 'high'],
+                        help='Explicit reasoning-effort override. Useful for GPT-OSS low/medium/high comparisons.')
     parser.add_argument('--name')
     parser.add_argument('--category')
     parser.add_argument('--max-output-tokens', type=int, choices=range(1, 8193), metavar='1..8192',
@@ -72,7 +74,8 @@ def main():
     label = re.sub(r'[^A-Za-z0-9._-]+', '_', args.name or args.quality or 'benchmark')
     run_dir = RESULTS_DIR / f"{datetime.now():%Y%m%d_%H%M%S_%f}_{label}_{uuid.uuid4().hex[:6]}"
     run_dir.mkdir(parents=True, exist_ok=False)
-    metadata: dict[str, Any] = dict(version=2, started_at=now(), forced_quality=args.quality, name=args.name,
+    metadata: dict[str, Any] = dict(version=2, started_at=now(), forced_quality=args.quality,
+                                    forced_reasoning=args.reasoning, name=args.name,
                                     case_count=len(cases), state='running', execute_code=not args.skip_code_tests)
     metadata['max_output_tokens_override'] = args.max_output_tokens
     metadata['source_sha256'] = {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
@@ -114,13 +117,16 @@ def main():
                 body = dict(prompt=case['prompt'], quality=quality,
                             temperature=case.get('temperature', defaults.get('temperature', 0.0)),
                             max_output_tokens=args.max_output_tokens or case.get('max_output_tokens', 2048))
+                if args.reasoning:
+                    body['reasoning'] = args.reasoning
                 if case.get('system'):
                     body['system'] = case['system']
                 row: dict[str, Any] = dict(id=case['id'], suite=case['_suite'], source_file=case['_source'],
                            category=case['category'], difficulty=case['difficulty'], quality=quality,
-                           prompt=case['prompt'], expected=case['expected'], request=body,
+                           reasoning=args.reasoning, prompt=case['prompt'], expected=case['expected'], request=body,
                            response={}, grade={}, error=None, wall_time_seconds=None)
-                print(f"[{number:02d}/{len(cases):02d}] {case['id']} ({quality})", end=' ... ', flush=True)
+                reasoning_suffix = f", reasoning={args.reasoning}" if args.reasoning else ''
+                print(f"[{number:02d}/{len(cases):02d}] {case['id']} ({quality}{reasoning_suffix})", end=' ... ', flush=True)
                 start = time.perf_counter()
                 try:
                     response = client.post(f'{gateway}/v1/generate', headers={'X-Local-AI-Key': api_key}, json=body)

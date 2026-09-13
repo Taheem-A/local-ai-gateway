@@ -86,9 +86,11 @@ Request:
 
 The gateway's extraction API uses `format: "time"` as a convenience for a **local 24-hour `HH:MM` clock value**. This is intentionally narrower than standard JSON Schema's RFC 3339 `time` format, which can contain seconds and a timezone suffix.
 
-Before the schema is sent to LM Studio, the gateway makes a model-facing copy and translates a string field with `format: "time"` to an exact `HH:MM` regular-expression constraint. For example, a source value of `11:59 PM` must be returned as `23:59`; the model should not convert it to UTC or append `:00Z`.
+Before the schema is sent to LM Studio, the gateway makes a model-facing copy and translates a string field with `format: "time"` to an explicit `HH:MM` regular-expression constraint using ordinary digit ranges rather than regex shorthand classes. It also injects a natural-language canonical-output requirement into the model prompt because constrained-decoding schemas are primarily syntax constraints, not a replacement for semantic instructions such as preserving the source's local clock time.
 
 The original caller schema remains authoritative for gateway-side normalization and validation. Private gateway annotations such as `x-normalize` are stripped from the model-facing copy.
+
+The normalizer treats local values such as `23:59:00` as the same clock time as `23:59` **only when the seconds component is exactly zero and no timezone/offset is present**. It canonicalizes that value to `23:59`. It deliberately does not rewrite timezone-qualified values such as `18:59:00Z`, because silently removing the suffix could hide an incorrect timezone conversion.
 
 Response:
 

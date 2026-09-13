@@ -1,0 +1,41 @@
+﻿id,category,model,automatic_semantic,reviewed_semantic,format,instructions,review_notes
+extract_001,structured_extraction,google/gemma-4-12b-qat,True,True,False,False,
+extract_002,structured_extraction,google/gemma-4-12b-qat,True,True,False,False,
+extract_003,structured_extraction,google/gemma-4-12b-qat,True,True,False,False,
+extract_004,structured_extraction,google/gemma-4-12b-qat,True,True,False,False,
+extract_005,structured_extraction,google/gemma-4-12b-qat,True,True,False,False,
+classify_001,classification,google/gemma-4-12b-qat,True,True,True,True,
+classify_002,classification,google/gemma-4-12b-qat,True,True,True,True,
+classify_003,classification,google/gemma-4-12b-qat,True,True,True,True,
+classify_004,classification,google/gemma-4-12b-qat,False,False,True,True,Returned announcement; fixed expected label is irrelevant. The cafeteria notice can reasonably be called an announcement because the prompt does not define academic relevance. Retain original failure and report sensitivity excluding this case.
+classify_005,classification,google/gemma-4-12b-qat,True,True,True,True,
+instruction_001,instruction_following,google/gemma-4-12b-qat,True,True,True,True,
+instruction_002,instruction_following,google/gemma-4-12b-qat,True,True,True,True,
+instruction_003,instruction_following,google/gemma-4-12b-qat,True,True,True,True,
+instruction_004,instruction_following,google/gemma-4-12b-qat,True,True,True,True,
+instruction_005,instruction_following,google/gemma-4-12b-qat,True,True,False,False,
+reason_001,reasoning,google/gemma-4-12b-qat,True,True,True,True,
+reason_002,reasoning,google/gemma-4-12b-qat,True,True,False,False,
+reason_003,reasoning,google/gemma-4-12b-qat,True,True,True,True,
+reason_004,reasoning,google/gemma-4-12b-qat,True,True,True,True,
+reason_005,reasoning,google/gemma-4-12b-qat,True,True,False,False,
+coding_001,coding,google/gemma-4-12b-qat,True,True,True,True,
+coding_002,coding,google/gemma-4-12b-qat,True,True,True,True,
+coding_003,coding,google/gemma-4-12b-qat,True,True,True,True,
+coding_004,coding,google/gemma-4-12b-qat,True,True,True,True,
+summary_001,summarization,google/gemma-4-12b-qat,,True,True,True,"All five required concepts covered: v2.4, slowdown, database query, rollback, and redesign before redeployment. Accurate and within 50 words."
+summary_002,summarization,google/gemma-4-12b-qat,,False,False,False,"No final answer: all 4096 generated tokens were consumed before a message was delivered. Covers zero rubric concepts and fails the two-sentence requirement. This is a generation-budget failure, not a request error."
+summary_003,summarization,google/gemma-4-12b-qat,,True,True,True,"Covers all four concepts: local gateway abstraction, provider-independent requests, routing/model selection, and replacement without app changes. No material unsupported claim; 47 words."
+summary_004,summarization,google/gemma-4-12b-qat,,True,False,True,All six incident facts and actions are covered accurately. Four bullets plus an introductory line fail the existing canonical bullet-only format check. The prompt only limits the number of bullets and does not forbid an introduction; reviewed instruction following therefore passes.
+long_001,long_context_retrieval,google/gemma-4-12b-qat,,True,False,False,"Root cause explicitly states that the deployed model identifier did not exist, equivalent to invalid model identifier. First failure 08:48 and restored inference 09:02 are correct. Markdown fence remains a format/instruction failure."
+long_002,long_context_retrieval,google/gemma-4-12b-qat,False,True,False,False,"All four final deadlines and 24-hour times are correct, but each is represented as one date-time string rather than the benchmark nested date/time object. The prompt does not specify that nesting. Reviewed semantic pass; canonical schema and Markdown-fence instruction failures retained. No expected value changed."
+long_003,long_context_reasoning,google/gemma-4-12b-qat,True,True,True,True,
+long_004,long_context_analysis,google/gemma-4-12b-qat,True,True,False,False,
+project_001,itqaan_metadata,google/gemma-4-12b-qat,True,True,False,False,
+project_002,itqaan_metadata,google/gemma-4-12b-qat,True,True,False,False,
+project_003,listening_data,google/gemma-4-12b-qat,True,True,False,False,
+project_004,listening_data,google/gemma-4-12b-qat,True,True,False,False,
+project_005,university_tooling,google/gemma-4-12b-qat,False,True,False,False,"Chemistry lecture is a precise description of the stated lecture; prompt supplies no restricted event_type vocabulary. Date, course, room and equivalent 12-hour times are correct. Retain canonical date/time format and Markdown-fence failures."
+project_006,university_tooling,google/gemma-4-12b-qat,True,True,True,True,
+project_007,gateway_operations,google/gemma-4-12b-qat,True,True,False,False,
+project_008,gateway_operations,google/gemma-4-12b-qat,True,True,False,False,

@@ -1,0 +1,8 @@
+{
+  "identical_suite_and_request_parameters_except_quality": true,
+  "source_hashes_match_both_runs_and_current_files": true,
+  "preserved_live_requests": 95,
+  "all_required_artifacts_parse": true,
+  "all_reviews_complete": true,
+  "code_tests_passed_per_model": 13
+}

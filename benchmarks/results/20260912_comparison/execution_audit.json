@@ -1,0 +1,48 @@
+{
+  "initial_pilot": {
+    "run": "20260912_173833_420409_gemma-extraction-pilot-initial_ad77f4",
+    "findings": {
+      "extract_001": "Generation reached original total token cap; only incomplete reasoning was returned. No complete final answer; semantic delivery fails on review, format and instructions fail. Gateway concatenated reasoning with messages.",
+      "extract_002": "Generation reached original total token cap; only incomplete reasoning was returned. No complete final answer; semantic delivery fails on review, format and instructions fail. Gateway concatenated reasoning with messages.",
+      "extract_003": "Generation reached original total token cap; only incomplete reasoning was returned. No complete final answer; semantic delivery fails on review, format and instructions fail. Gateway concatenated reasoning with messages.",
+      "extract_004": "Generation reached original total token cap; only incomplete reasoning was returned. No complete final answer; semantic delivery fails on review, format and instructions fail. Gateway concatenated reasoning with messages.",
+      "extract_005": "Generation reached original total token cap; only incomplete reasoning was returned. No complete final answer; semantic delivery fails on review, format and instructions fail. Gateway concatenated reasoning with messages."
+    }
+  },
+  "corrected_pilot": {
+    "run": "20260912_174013_835556_gemma-extraction-pilot-corrected_d92408",
+    "findings": {
+      "extract_001": "Correct content, named-month date/12-hour time accepted semantically; Markdown fence fails JSON-only instruction.",
+      "extract_002": "Correct receipt values; Markdown fence fails JSON-only instruction.",
+      "extract_003": "Correct values under explicit field aliases; canonical schema differs and Markdown fence fails JSON-only instruction.",
+      "extract_004": "All Friday events correct; Markdown fence fails JSON-only instruction.",
+      "extract_005": "Correct final configuration. False negative arose from enabled/disabled strings versus booleans; prompt specifies keys but not types. Corrected with a field-specific enabled_state rule, with types still failing canonical schema."
+    }
+  },
+  "validated_pilot": {
+    "run": "20260912_174141_002517_gemma-extraction-pilot-validated_1fcec7",
+    "findings": {
+      "extract_001": "Semantic PASS; format/instructions FAIL due to Markdown fence. Full answer inspected and compared to source.",
+      "extract_002": "Semantic PASS; format/instructions FAIL due to Markdown fence. Full answer inspected and compared to source.",
+      "extract_003": "Semantic PASS; format/instructions FAIL due to Markdown fence. Full answer inspected and compared to source.",
+      "extract_004": "Semantic PASS; format/instructions FAIL due to Markdown fence. Full answer inspected and compared to source.",
+      "extract_005": "Semantic PASS; format/instructions FAIL due to Markdown fence. Full answer inspected and compared to source."
+    }
+  },
+  "changes": [
+    "Restored LM Studio output item type==message filter in app/lmstudio.py.",
+    "Added reasoning_output_tokens to provider and gateway response schema and reporting.",
+    "Added optional --max-output-tokens override; legacy CLI/default budgets preserved.",
+    "Added benchmark/gateway source SHA-256 metadata per run.",
+    "Added controlled enabled_state normalization only to extract_005 authentication/cors.",
+    "Added manual fallback for unmatched long_001 root_cause prose.",
+    "Added regression tests for enabled_state guardrails and free-text review; 15 benchmark tests and provider response regression pass."
+  ],
+  "unchanged": [
+    "All 40 prompts and expected values/tests.",
+    "All four requested ambiguity fixes already present.",
+    "Model IDs, routing and reasoning defaults.",
+    "Localhost binding and credentials.",
+    "Existing result history."
+  ]
+}

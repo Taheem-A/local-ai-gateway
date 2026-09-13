@@ -1,0 +1,9 @@
+# Review policy frozen before full runs
+
+All original prompts, expected values, normalization rules, and summary rubrics remain fixed. Full runs use temperature 0, context 16384, and an equal 4096 total output-token budget including reasoning. Balanced retains the model default reasoning setting (on); deep retains the gateway setting medium. Requests are sequential through the localhost gateway. No OpenAI grading API is used.
+
+Preserve automatic grades separately from reviewed grades. Review every automatic semantic failure or unknown result. Do not infer missing final answers from reasoning. Empty/truncated answers fail semantic delivery. For JSON prose fields and unspecified key names, an objectively equivalent complete answer may pass reviewed semantics with a written justification; benchmark canonical schema/format remains separately visible. Instruction following measures explicit prompt constraints, not unstated canonical schema choices. Do not change any expected answer in response to model output.
+
+For each summary, score each pre-existing must_include_concepts item 1 when accurately covered and 0 otherwise. Record coverage numerator/denominator, unsupported claims, forbidden claims, and a concise justification. Semantic pass requires all required concepts and no material unsupported or forbidden claim. Mechanical constraints remain separate. These coverage scores operationalize the existing rubric; they do not add new subject-matter criteria.
+
+Report both automatic and reviewed results with denominators. Report errors, budget hits, absent final messages, and manual review counts independently. First-token latency may include reasoning and is not time to final answer. Output tokens and throughput include reasoning. Cold load measurements are single observations, not repeated distributions. This 40-case suite contains simple curated coding and reasoning; it does not establish broad model superiority.

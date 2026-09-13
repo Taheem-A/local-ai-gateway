@@ -1,0 +1,151 @@
+{
+  "metadata": {
+    "version": 2,
+    "started_at": "2026-09-12T17:24:01.775583-04:00",
+    "forced_quality": null,
+    "name": "gemma-extraction-v2-review",
+    "case_count": 5,
+    "state": "completed",
+    "execute_code": true,
+    "source_run": "C:\\Projects\\local-ai-gateway\\benchmarks\\results\\20260912_170626_gemma-extraction-test\\raw_results.json",
+    "source_metadata": {
+      "started_at": "2026-09-12T17:06:26.160056-04:00",
+      "forced_quality": "balanced",
+      "name": "gemma-extraction-test",
+      "case_count": 5,
+      "finished_at": "2026-09-12T17:07:01.968626-04:00"
+    },
+    "historical_prompts_unchanged": true,
+    "finished_at": "2026-09-12T17:24:01.837344-04:00"
+  },
+  "summary": {
+    "total_cases": 5,
+    "scores": {
+      "semantic_correct": {
+        "passed": 0,
+        "evaluated": 0,
+        "percent": null
+      },
+      "format_correct": {
+        "passed": 0,
+        "evaluated": 5,
+        "percent": 0.0
+      },
+      "instruction_following": {
+        "passed": 0,
+        "evaluated": 5,
+        "percent": 0.0
+      }
+    },
+    "manual_review": 5,
+    "errors": 0,
+    "code_tests": {
+      "passed": 0,
+      "evaluated": 0
+    },
+    "performance": {
+      "wall_time_seconds": {
+        "observed": 5,
+        "mean": 7.1422,
+        "median": 6.859,
+        "total": 35.711
+      },
+      "input_tokens": {
+        "observed": 5,
+        "mean": 121,
+        "median": 105,
+        "total": 605
+      },
+      "output_tokens": {
+        "observed": 5,
+        "mean": 307.2,
+        "median": 256,
+        "total": 1536
+      },
+      "tokens_per_second": {
+        "observed": 5,
+        "mean": 57.6245552468581,
+        "median": 57.435161896207234,
+        "total": 288.1227762342905
+      },
+      "time_to_first_token_seconds": {
+        "observed": 5,
+        "mean": 0.1412144,
+        "median": 0.133251,
+        "total": 0.706072
+      },
+      "model_load_time_seconds": {
+        "observed": 1,
+        "mean": 7.887,
+        "median": 7.887,
+        "total": 7.887
+      }
+    },
+    "by_category": {
+      "structured_extraction": {
+        "total_cases": 5,
+        "scores": {
+          "semantic_correct": {
+            "passed": 0,
+            "evaluated": 0,
+            "percent": null
+          },
+          "format_correct": {
+            "passed": 0,
+            "evaluated": 5,
+            "percent": 0.0
+          },
+          "instruction_following": {
+            "passed": 0,
+            "evaluated": 5,
+            "percent": 0.0
+          }
+        },
+        "manual_review": 5,
+        "errors": 0,
+        "code_tests": {
+          "passed": 0,
+          "evaluated": 0
+        },
+        "performance": {
+          "wall_time_seconds": {
+            "observed": 5,
+            "mean": 7.1422,
+            "median": 6.859,
+            "total": 35.711
+          },
+          "input_tokens": {
+            "observed": 5,
+            "mean": 121,
+            "median": 105,
+            "total": 605
+          },
+          "output_tokens": {
+            "observed": 5,
+            "mean": 307.2,
+            "median": 256,
+            "total": 1536
+          },
+          "tokens_per_second": {
+            "observed": 5,
+            "mean": 57.6245552468581,
+            "median": 57.435161896207234,
+            "total": 288.1227762342905
+          },
+          "time_to_first_token_seconds": {
+            "observed": 5,
+            "mean": 0.1412144,
+            "median": 0.133251,
+            "total": 0.706072
+          },
+          "model_load_time_seconds": {
+            "observed": 1,
+            "mean": 7.887,
+            "median": 7.887,
+            "total": 7.887
+          }
+        }
+      }
+    }
+  }
+}

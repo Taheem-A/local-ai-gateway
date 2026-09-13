@@ -1,0 +1,2990 @@
+{
+  "metadata": {
+    "version": 2,
+    "started_at": "2026-09-12T17:42:51.734198-04:00",
+    "forced_quality": "balanced",
+    "name": "gemma-full-validated",
+    "case_count": 40,
+    "state": "completed",
+    "execute_code": true,
+    "max_output_tokens_override": 4096,
+    "source_sha256": {
+      "benchmarks\\cases_core.json": "076f8b97ceb4ebc3f076499c86b8fc90a61e74b82ca69fb7728ecf2014c13702",
+      "benchmarks\\cases_long_context.json": "b04713ebde937789fa9d12f9cf8fd274139ea0f84e549d480b12d56c360d7c4d",
+      "benchmarks\\cases_project.json": "49e49a80d121adb7bb2d8bd5771592f81fad3e43d6e77527c35e0867b406873a",
+      "benchmarks\\code_execution.py": "679e059ab20131cb65a28a2f1fb7d1dcd8f47339e97874b1f5d3f1ed1a89e65e",
+      "benchmarks\\grading.py": "b78ff6a13892135a0e36a94c3351b0fd62eeeb38b25d85a8f94837af283e046c",
+      "benchmarks\\reporting.py": "c936af8e272a50339db406fc643b680e434598d9cfafdc6a444ff0eb05f3742c",
+      "benchmarks\\run_benchmarks.py": "958346a65905bcb5d6c3ccf217fe2fd1861a80b83b68a315522d5d2a483f9259",
+      "benchmarks\\test_benchmarks.py": "e200c42450d70d8e3aaf067a6f74327fc2b37e81fb54d459e3588d1b058ebe67",
+      "app\\__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "app\\config.py": "79ca8443a6c2d5ac3b7795720146cb7ad5e4b328b562304fbf5bb787ca0375d5",
+      "app\\lmstudio.py": "fa17cf55c59136d77b84258d08e554abb0e9cd04882b376dee5c8173e72a30a2",
+      "app\\main.py": "eb716f71edb6afe49d902ca38149a606df08c1550f7184e8e9ba1e15dd6472c7",
+      "app\\routing.py": "d9dcf3dca08bc6151fe600a5e265bcf43de7cc0fd93150d1cdd12efc52889a61",
+      "app\\schemas.py": "6db8245e4bdf8af23643564f08ed6467eb9c030aa7aaae8f979b4c987097fe4d"
+    },
+    "finished_at": "2026-09-12T17:52:27.445094-04:00"
+  },
+  "results": [
+    {
+      "id": "extract_001",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "structured_extraction",
+      "difficulty": "easy",
+      "quality": "balanced",
+      "prompt": "Extract the course code, assignment name, due date, due time, and timezone from the following announcement. Return only JSON with keys course, assignment, due_date, due_time, timezone.\n\nAnnouncement:\nMAT186 students: Problem Set 2 is due Friday, September 18, 2026 at 11:59 PM Eastern Time. Submit through Quercus.",
+      "expected": {
+        "mode": "semantic_json",
+        "value": {
+          "course": "MAT186",
+          "assignment": "Problem Set 2",
+          "due_date": "2026-09-18",
+          "due_time": "23:59",
+          "timezone": "Eastern Time"
+        },
+        "normalize": {
+          "course": "text",
+          "assignment": "text",
+          "due_date": "date",
+          "due_time": "time",
+          "timezone": "timezone"
+        }
+      },
+      "request": {
+        "prompt": "Extract the course code, assignment name, due date, due time, and timezone from the following announcement. Return only JSON with keys course, assignment, due_date, due_time, timezone.\n\nAnnouncement:\nMAT186 students: Problem Set 2 is due Friday, September 18, 2026 at 11:59 PM Eastern Time. Submit through Quercus.",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "```json\n{\n  \"course\": \"MAT186\",\n  \"assignment\": \"Problem Set 2\",\n  \"due_date\": \"September 18, 2026\",\n  \"due_time\": \"11:59 PM\",\n  \"timezone\": \"Eastern Time\"\n}\n```",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 100,
+        "output_tokens": 476,
+        "reasoning_output_tokens": 398,
+        "tokens_per_second": 53.906483712978726,
+        "time_to_first_token_seconds": 0.162394,
+        "model_load_time_seconds": 6.248
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass_with_format_issue",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": false,
+        "instruction_following": false,
+        "schema_correct": true,
+        "differences": [],
+        "actual": {
+          "course": "MAT186",
+          "assignment": "Problem Set 2",
+          "due_date": "September 18, 2026",
+          "due_time": "11:59 PM",
+          "timezone": "Eastern Time"
+        },
+        "expected": {
+          "course": "MAT186",
+          "assignment": "Problem Set 2",
+          "due_date": "2026-09-18",
+          "due_time": "23:59",
+          "timezone": "Eastern Time"
+        }
+      },
+      "error": null,
+      "wall_time_seconds": 15.252
+    },
+    {
+      "id": "extract_002",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "structured_extraction",
+      "difficulty": "easy",
+      "quality": "balanced",
+      "prompt": "Extract the customer name, order number, item count, subtotal, tax, and total. Return only JSON.\n\nReceipt:\nCustomer: Amir Rahman\nOrder #A18492\nItems purchased: 4\nSubtotal: $82.50\nHST: $10.73\nTotal paid: $93.23",
+      "expected": {
+        "mode": "semantic_json",
+        "value": {
+          "customer_name": "Amir Rahman",
+          "order_number": "A18492",
+          "item_count": 4,
+          "subtotal": 82.5,
+          "tax": 10.73,
+          "total": 93.23
+        },
+        "normalize": {
+          "customer_name": "text",
+          "item_count": "number",
+          "subtotal": "number",
+          "tax": "number",
+          "total": "number"
+        }
+      },
+      "request": {
+        "prompt": "Extract the customer name, order number, item count, subtotal, tax, and total. Return only JSON.\n\nReceipt:\nCustomer: Amir Rahman\nOrder #A18492\nItems purchased: 4\nSubtotal: $82.50\nHST: $10.73\nTotal paid: $93.23",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "```json\n{\n  \"customer_name\": \"Amir Rahman\",\n  \"order_number\": \"A18492\",\n  \"item_count\": 4,\n  \"subtotal\": 82.50,\n  \"tax\": 10.73,\n  \"total\": 93.23\n}\n```",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 91,
+        "output_tokens": 421,
+        "reasoning_output_tokens": 335,
+        "tokens_per_second": 51.63767027060722,
+        "time_to_first_token_seconds": 0.10147199999999999,
+        "model_load_time_seconds": null
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass_with_format_issue",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": false,
+        "instruction_following": false,
+        "schema_correct": true,
+        "differences": [],
+        "actual": {
+          "customer_name": "Amir Rahman",
+          "order_number": "A18492",
+          "item_count": 4,
+          "subtotal": 82.5,
+          "tax": 10.73,
+          "total": 93.23
+        },
+        "expected": {
+          "customer_name": "Amir Rahman",
+          "order_number": "A18492",
+          "item_count": 4,
+          "subtotal": 82.5,
+          "tax": 10.73,
+          "total": 93.23
+        }
+      },
+      "error": null,
+      "wall_time_seconds": 8.345
+    },
+    {
+      "id": "extract_003",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "structured_extraction",
+      "difficulty": "medium",
+      "quality": "balanced",
+      "prompt": "Extract only the error code, service name, affected user count, first occurrence time, and resolved time. Return JSON only.\n\nIncident report:\nAt 14:03, several users began reporting failed uploads. The StorageProxy service logged error E_UPLOAD_17. Monitoring showed 218 affected users. The issue was traced to an expired internal credential. Service was fully restored at 14:41.",
+      "expected": {
+        "mode": "semantic_json",
+        "value": {
+          "error_code": "E_UPLOAD_17",
+          "service": "StorageProxy",
+          "affected_users": 218,
+          "first_occurrence": "14:03",
+          "resolved": "14:41"
+        },
+        "normalize": {
+          "service": "text",
+          "affected_users": "number",
+          "first_occurrence": "time",
+          "resolved": "time"
+        },
+        "key_aliases": {
+          "": {
+            "service_name": "service",
+            "affected_user_count": "affected_users",
+            "first_occurrence_time": "first_occurrence",
+            "resolved_time": "resolved"
+          }
+        }
+      },
+      "request": {
+        "prompt": "Extract only the error code, service name, affected user count, first occurrence time, and resolved time. Return JSON only.\n\nIncident report:\nAt 14:03, several users began reporting failed uploads. The StorageProxy service logged error E_UPLOAD_17. Monitoring showed 218 affected users. The issue was traced to an expired internal credential. Service was fully restored at 14:41.",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "```json\n{\n  \"error_code\": \"E_UPLOAD_17\",\n  \"service_name\": \"StorageProxy\",\n  \"affected_user_count\": 218,\n  \"first_occurrence_time\": \"14:03\",\n  \"resolved_time\": \"14:41\"\n}\n```",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 105,
+        "output_tokens": 431,
+        "reasoning_output_tokens": 348,
+        "tokens_per_second": 57.604635806746906,
+        "time_to_first_token_seconds": 0.112265,
+        "model_load_time_seconds": null
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass_with_format_issue",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": false,
+        "instruction_following": false,
+        "schema_correct": false,
+        "differences": [],
+        "actual": {
+          "error_code": "E_UPLOAD_17",
+          "service_name": "StorageProxy",
+          "affected_user_count": 218,
+          "first_occurrence_time": "14:03",
+          "resolved_time": "14:41"
+        },
+        "expected": {
+          "error_code": "E_UPLOAD_17",
+          "service": "StorageProxy",
+          "affected_users": 218,
+          "first_occurrence": "14:03",
+          "resolved": "14:41"
+        }
+      },
+      "error": null,
+      "wall_time_seconds": 7.672
+    },
+    {
+      "id": "extract_004",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "structured_extraction",
+      "difficulty": "medium",
+      "quality": "balanced",
+      "prompt": "Read the schedule and return a JSON array containing only events occurring on Friday. Each object must contain name, start, end, and room.\n\nSchedule:\nMonday 09:00-10:00 Calculus Lecture, BA1170\nWednesday 13:00-14:00 Chemistry Tutorial, WB130\nFriday 10:00-11:00 Programming Lecture, MY150\nFriday 12:00-13:00 Design Studio, SF1101\nFriday 15:00-16:00 Chemistry Lecture, MS2158",
+      "expected": {
+        "mode": "semantic_json",
+        "value": [
+          {
+            "name": "Programming Lecture",
+            "start": "10:00",
+            "end": "11:00",
+            "room": "MY150"
+          },
+          {
+            "name": "Design Studio",
+            "start": "12:00",
+            "end": "13:00",
+            "room": "SF1101"
+          },
+          {
+            "name": "Chemistry Lecture",
+            "start": "15:00",
+            "end": "16:00",
+            "room": "MS2158"
+          }
+        ],
+        "normalize": {
+          "*.name": "text",
+          "*.start": "time",
+          "*.end": "time",
+          "*.room": "text"
+        }
+      },
+      "request": {
+        "prompt": "Read the schedule and return a JSON array containing only events occurring on Friday. Each object must contain name, start, end, and room.\n\nSchedule:\nMonday 09:00-10:00 Calculus Lecture, BA1170\nWednesday 13:00-14:00 Chemistry Tutorial, WB130\nFriday 10:00-11:00 Programming Lecture, MY150\nFriday 12:00-13:00 Design Studio, SF1101\nFriday 15:00-16:00 Chemistry Lecture, MS2158",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "```json\n[\n  {\n    \"name\": \"Programming Lecture\",\n    \"start\": \"10:00\",\n    \"end\": \"11:00\",\n    \"room\": \"MY150\"\n  },\n  {\n    \"name\": \"Design Studio\",\n    \"start\": \"12:00\",\n    \"end\": \"13:00\",\n    \"room\": \"SF1101\"\n  },\n  {\n    \"name\": \"Chemistry Lecture\",\n    \"start\": \"15:00\",\n    \"end\": \"16:00\",\n    \"room\": \"MS2158\"\n  }\n]\n```",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 155,
+        "output_tokens": 770,
+        "reasoning_output_tokens": 605,
+        "tokens_per_second": 51.45841099772639,
+        "time_to_first_token_seconds": 0.139223,
+        "model_load_time_seconds": null
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass_with_format_issue",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": false,
+        "instruction_following": false,
+        "schema_correct": true,
+        "differences": [],
+        "actual": [
+          {
+            "name": "Programming Lecture",
+            "start": "10:00",
+            "end": "11:00",
+            "room": "MY150"
+          },
+          {
+            "name": "Design Studio",
+            "start": "12:00",
+            "end": "13:00",
+            "room": "SF1101"
+          },
+          {
+            "name": "Chemistry Lecture",
+            "start": "15:00",
+            "end": "16:00",
+            "room": "MS2158"
+          }
+        ],
+        "expected": [
+          {
+            "name": "Programming Lecture",
+            "start": "10:00",
+            "end": "11:00",
+            "room": "MY150"
+          },
+          {
+            "name": "Design Studio",
+            "start": "12:00",
+            "end": "13:00",
+            "room": "SF1101"
+          },
+          {
+            "name": "Chemistry Lecture",
+            "start": "15:00",
+            "end": "16:00",
+            "room": "MS2158"
+          }
+        ]
+      },
+      "error": null,
+      "wall_time_seconds": 15.183
+    },
+    {
+      "id": "extract_005",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "structured_extraction",
+      "difficulty": "hard",
+      "quality": "balanced",
+      "prompt": "Extract the final configuration after all changes have been applied. Ignore superseded values. Return JSON only with keys port, context_length, ttl_seconds, authentication, cors.\n\nConfiguration history:\nInitial port was 8000.\nContext length started at 8192.\nAuthentication was disabled during testing.\nPort was later changed from 8000 to 4812.\nTTL was initially 120 seconds.\nContext length was increased to 16384.\nCORS remained disabled throughout.\nAuthentication was enabled before deployment.\nTTL was finally changed from 120 to 300 seconds.",
+      "expected": {
+        "mode": "semantic_json",
+        "value": {
+          "port": 4812,
+          "context_length": 16384,
+          "ttl_seconds": 300,
+          "authentication": true,
+          "cors": false
+        },
+        "normalize": {
+          "port": "number",
+          "context_length": "number",
+          "ttl_seconds": "number",
+          "authentication": "enabled_state",
+          "cors": "enabled_state"
+        }
+      },
+      "request": {
+        "prompt": "Extract the final configuration after all changes have been applied. Ignore superseded values. Return JSON only with keys port, context_length, ttl_seconds, authentication, cors.\n\nConfiguration history:\nInitial port was 8000.\nContext length started at 8192.\nAuthentication was disabled during testing.\nPort was later changed from 8000 to 4812.\nTTL was initially 120 seconds.\nContext length was increased to 16384.\nCORS remained disabled throughout.\nAuthentication was enabled before deployment.\nTTL was finally changed from 120 to 300 seconds.",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "```json\n{\n  \"port\": 4812,\n  \"context_length\": 16384,\n  \"ttl_seconds\": 300,\n  \"authentication\": \"enabled\",\n  \"cors\": \"disabled\"\n}\n```",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 154,
+        "output_tokens": 563,
+        "reasoning_output_tokens": 497,
+        "tokens_per_second": 54.40016509772525,
+        "time_to_first_token_seconds": 0.147935,
+        "model_load_time_seconds": null
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass_with_format_issue",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": false,
+        "instruction_following": false,
+        "schema_correct": false,
+        "differences": [],
+        "actual": {
+          "port": 4812,
+          "context_length": 16384,
+          "ttl_seconds": 300,
+          "authentication": "enabled",
+          "cors": "disabled"
+        },
+        "expected": {
+          "port": 4812,
+          "context_length": 16384,
+          "ttl_seconds": 300,
+          "authentication": true,
+          "cors": false
+        }
+      },
+      "error": null,
+      "wall_time_seconds": 10.631
+    },
+    {
+      "id": "classify_001",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "classification",
+      "difficulty": "easy",
+      "quality": "balanced",
+      "prompt": "Classify the message as exactly one of: assignment, exam, announcement, irrelevant. Return only the label.\n\nMessage: Homework 4 has been posted and must be submitted by Sunday at 11:59 PM.",
+      "expected": {
+        "mode": "label",
+        "value": "assignment",
+        "labels": [
+          "assignment",
+          "exam",
+          "announcement",
+          "irrelevant"
+        ]
+      },
+      "request": {
+        "prompt": "Classify the message as exactly one of: assignment, exam, announcement, irrelevant. Return only the label.\n\nMessage: Homework 4 has been posted and must be submitted by Sunday at 11:59 PM.",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "assignment",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 62,
+        "output_tokens": 236,
+        "reasoning_output_tokens": 230,
+        "tokens_per_second": 49.803804798755536,
+        "time_to_first_token_seconds": 0.10585699999999999,
+        "model_load_time_seconds": null
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": true,
+        "instruction_following": true,
+        "actual": "assignment",
+        "reason": "Unambiguous label"
+      },
+      "error": null,
+      "wall_time_seconds": 4.966
+    },
+    {
+      "id": "classify_002",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "classification",
+      "difficulty": "easy",
+      "quality": "balanced",
+      "prompt": "Classify the message as exactly one of: assignment, exam, announcement, irrelevant. Return only the label.\n\nMessage: The midterm will take place next Wednesday from 6:00 PM to 8:00 PM.",
+      "expected": {
+        "mode": "label",
+        "value": "exam",
+        "labels": [
+          "assignment",
+          "exam",
+          "announcement",
+          "irrelevant"
+        ]
+      },
+      "request": {
+        "prompt": "Classify the message as exactly one of: assignment, exam, announcement, irrelevant. Return only the label.\n\nMessage: The midterm will take place next Wednesday from 6:00 PM to 8:00 PM.",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "exam",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 63,
+        "output_tokens": 291,
+        "reasoning_output_tokens": 285,
+        "tokens_per_second": 52.069895036069184,
+        "time_to_first_token_seconds": 0.100163,
+        "model_load_time_seconds": null
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": true,
+        "instruction_following": true,
+        "actual": "exam",
+        "reason": "Unambiguous label"
+      },
+      "error": null,
+      "wall_time_seconds": 5.749
+    },
+    {
+      "id": "classify_003",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "classification",
+      "difficulty": "easy",
+      "quality": "balanced",
+      "prompt": "Classify the message as exactly one of: assignment, exam, announcement, irrelevant. Return only the label.\n\nMessage: Friday's lecture has been moved from room BA1130 to BA1170.",
+      "expected": {
+        "mode": "label",
+        "value": "announcement",
+        "labels": [
+          "assignment",
+          "exam",
+          "announcement",
+          "irrelevant"
+        ]
+      },
+      "request": {
+        "prompt": "Classify the message as exactly one of: assignment, exam, announcement, irrelevant. Return only the label.\n\nMessage: Friday's lecture has been moved from room BA1130 to BA1170.",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "announcement",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 62,
+        "output_tokens": 216,
+        "reasoning_output_tokens": 209,
+        "tokens_per_second": 49.84554835203662,
+        "time_to_first_token_seconds": 0.096281,
+        "model_load_time_seconds": null
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": true,
+        "instruction_following": true,
+        "actual": "announcement",
+        "reason": "Unambiguous label"
+      },
+      "error": null,
+      "wall_time_seconds": 4.489
+    },
+    {
+      "id": "classify_004",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "classification",
+      "difficulty": "easy",
+      "quality": "balanced",
+      "prompt": "Classify the message as exactly one of: assignment, exam, announcement, irrelevant. Return only the label.\n\nMessage: The engineering cafeteria will be serving tacos today.",
+      "expected": {
+        "mode": "label",
+        "value": "irrelevant",
+        "labels": [
+          "assignment",
+          "exam",
+          "announcement",
+          "irrelevant"
+        ]
+      },
+      "request": {
+        "prompt": "Classify the message as exactly one of: assignment, exam, announcement, irrelevant. Return only the label.\n\nMessage: The engineering cafeteria will be serving tacos today.",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "announcement",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 50,
+        "output_tokens": 233,
+        "reasoning_output_tokens": 226,
+        "tokens_per_second": 52.449113621283495,
+        "time_to_first_token_seconds": 0.10029,
+        "model_load_time_seconds": null
+      },
+      "grade": {
+        "version": 2,
+        "status": "fail",
+        "passed": false,
+        "semantic_correct": false,
+        "format_correct": true,
+        "instruction_following": true,
+        "actual": "announcement",
+        "reason": "Unambiguous label"
+      },
+      "error": null,
+      "wall_time_seconds": 4.603,
+      "automatic_grade": {
+        "version": 2,
+        "status": "fail",
+        "passed": false,
+        "semantic_correct": false,
+        "format_correct": true,
+        "instruction_following": true,
+        "actual": "announcement",
+        "reason": "Unambiguous label"
+      },
+      "review": {
+        "semantic_correct": false,
+        "notes": "Returned announcement; fixed expected label is irrelevant. The cafeteria notice can reasonably be called an announcement because the prompt does not define academic relevance. Retain original failure and report sensitivity excluding this case."
+      }
+    },
+    {
+      "id": "classify_005",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "classification",
+      "difficulty": "medium",
+      "quality": "balanced",
+      "prompt": "Classify the message as exactly one of: assignment, exam, announcement, irrelevant. Return only the label.\n\nMessage: Reminder: Project Milestone 1 is still due tomorrow despite the campus closure announcement.",
+      "expected": {
+        "mode": "label",
+        "value": "assignment",
+        "labels": [
+          "assignment",
+          "exam",
+          "announcement",
+          "irrelevant"
+        ]
+      },
+      "request": {
+        "prompt": "Classify the message as exactly one of: assignment, exam, announcement, irrelevant. Return only the label.\n\nMessage: Reminder: Project Milestone 1 is still due tomorrow despite the campus closure announcement.",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "assignment",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 57,
+        "output_tokens": 245,
+        "reasoning_output_tokens": 239,
+        "tokens_per_second": 51.249145409998405,
+        "time_to_first_token_seconds": 0.10071899999999999,
+        "model_load_time_seconds": null
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": true,
+        "instruction_following": true,
+        "actual": "assignment",
+        "reason": "Unambiguous label"
+      },
+      "error": null,
+      "wall_time_seconds": 4.935
+    },
+    {
+      "id": "instruction_001",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "instruction_following",
+      "difficulty": "easy",
+      "quality": "balanced",
+      "prompt": "Return exactly the following JSON object and nothing else: {\"status\":\"ok\",\"count\":3}",
+      "expected": {
+        "mode": "exact_json",
+        "value": {
+          "status": "ok",
+          "count": 3
+        }
+      },
+      "request": {
+        "prompt": "Return exactly the following JSON object and nothing else: {\"status\":\"ok\",\"count\":3}",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "{\"status\":\"ok\",\"count\":3}",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 35,
+        "output_tokens": 71,
+        "reasoning_output_tokens": 57,
+        "tokens_per_second": 53.283601971493276,
+        "time_to_first_token_seconds": 0.096275,
+        "model_load_time_seconds": null
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": true,
+        "instruction_following": true,
+        "schema_correct": true,
+        "differences": [],
+        "actual": {
+          "status": "ok",
+          "count": 3
+        },
+        "expected": {
+          "status": "ok",
+          "count": 3
+        }
+      },
+      "error": null,
+      "wall_time_seconds": 1.477
+    },
+    {
+      "id": "instruction_002",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "instruction_following",
+      "difficulty": "easy",
+      "quality": "balanced",
+      "prompt": "Sort these words alphabetically and return them as a JSON array only: zebra, apple, mango, banana.",
+      "expected": {
+        "mode": "exact_json",
+        "value": [
+          "apple",
+          "banana",
+          "mango",
+          "zebra"
+        ]
+      },
+      "request": {
+        "prompt": "Sort these words alphabetically and return them as a JSON array only: zebra, apple, mango, banana.",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "[\"apple\", \"banana\", \"mango\", \"zebra\"]",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 37,
+        "output_tokens": 113,
+        "reasoning_output_tokens": 96,
+        "tokens_per_second": 53.09735352360201,
+        "time_to_first_token_seconds": 0.09956999999999999,
+        "model_load_time_seconds": null
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": true,
+        "instruction_following": true,
+        "schema_correct": true,
+        "differences": [],
+        "actual": [
+          "apple",
+          "banana",
+          "mango",
+          "zebra"
+        ],
+        "expected": [
+          "apple",
+          "banana",
+          "mango",
+          "zebra"
+        ]
+      },
+      "error": null,
+      "wall_time_seconds": 2.261
+    },
+    {
+      "id": "instruction_003",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "instruction_following",
+      "difficulty": "medium",
+      "quality": "balanced",
+      "prompt": "Convert the following phrase to lowercase, replace spaces with hyphens, and output nothing except the result:\n\nLocal Artificial Intelligence Gateway",
+      "expected": {
+        "mode": "exact_text",
+        "value": "local-artificial-intelligence-gateway"
+      },
+      "request": {
+        "prompt": "Convert the following phrase to lowercase, replace spaces with hyphens, and output nothing except the result:\n\nLocal Artificial Intelligence Gateway",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "local-artificial-intelligence-gateway",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 41,
+        "output_tokens": 132,
+        "reasoning_output_tokens": 120,
+        "tokens_per_second": 52.924417467804986,
+        "time_to_first_token_seconds": 0.094444,
+        "model_load_time_seconds": null
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": true,
+        "instruction_following": true,
+        "actual": "local-artificial-intelligence-gateway",
+        "expected": "local-artificial-intelligence-gateway"
+      },
+      "error": null,
+      "wall_time_seconds": 2.62
+    },
+    {
+      "id": "instruction_004",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "instruction_following",
+      "difficulty": "medium",
+      "quality": "balanced",
+      "prompt": "Return exactly three lines. Line 1 must be RED. Line 2 must be GREEN. Line 3 must be BLUE. Do not add numbering, punctuation, Markdown, or any other text.",
+      "expected": {
+        "mode": "exact_text",
+        "value": "RED\nGREEN\nBLUE"
+      },
+      "request": {
+        "prompt": "Return exactly three lines. Line 1 must be RED. Line 2 must be GREEN. Line 3 must be BLUE. Do not add numbering, punctuation, Markdown, or any other text.",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "RED\nGREEN\nBLUE",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 56,
+        "output_tokens": 199,
+        "reasoning_output_tokens": 189,
+        "tokens_per_second": 52.161322853298124,
+        "time_to_first_token_seconds": 0.10345900000000001,
+        "model_load_time_seconds": null
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": true,
+        "instruction_following": true,
+        "actual": "RED\nGREEN\nBLUE",
+        "expected": "RED\nGREEN\nBLUE"
+      },
+      "error": null,
+      "wall_time_seconds": 3.956
+    },
+    {
+      "id": "instruction_005",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "instruction_following",
+      "difficulty": "hard",
+      "quality": "balanced",
+      "prompt": "Read the values below. Return only a JSON object with exactly two keys in this order: even and odd. Each value must be an array containing the corresponding numbers in ascending order. Do not include duplicates.\n\nValues: 9, 4, 2, 9, 7, 8, 4, 3, 6, 2",
+      "expected": {
+        "mode": "exact_json",
+        "value": {
+          "even": [
+            2,
+            4,
+            6,
+            8
+          ],
+          "odd": [
+            3,
+            7,
+            9
+          ]
+        },
+        "key_order": [
+          "even",
+          "odd"
+        ]
+      },
+      "request": {
+        "prompt": "Read the values below. Return only a JSON object with exactly two keys in this order: even and odd. Each value must be an array containing the corresponding numbers in ascending order. Do not include duplicates.\n\nValues: 9, 4, 2, 9, 7, 8, 4, 3, 6, 2",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "```json\n{\n  \"even\": [2, 4, 6, 8],\n  \"odd\": [3, 7, 9]\n}\n```",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 89,
+        "output_tokens": 450,
+        "reasoning_output_tokens": 406,
+        "tokens_per_second": 48.90079401166758,
+        "time_to_first_token_seconds": 0.113665,
+        "model_load_time_seconds": null
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass_with_format_issue",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": false,
+        "instruction_following": false,
+        "schema_correct": true,
+        "differences": [],
+        "actual": {
+          "even": [
+            2,
+            4,
+            6,
+            8
+          ],
+          "odd": [
+            3,
+            7,
+            9
+          ]
+        },
+        "expected": {
+          "even": [
+            2,
+            4,
+            6,
+            8
+          ],
+          "odd": [
+            3,
+            7,
+            9
+          ]
+        }
+      },
+      "error": null,
+      "wall_time_seconds": 9.359
+    },
+    {
+      "id": "reason_001",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "reasoning",
+      "difficulty": "easy",
+      "quality": "balanced",
+      "prompt": "A bag contains 3 red balls and 2 blue balls. Two balls are drawn without replacement. What is the probability that both are red? Return only a decimal number.",
+      "expected": {
+        "mode": "numeric",
+        "value": 0.3,
+        "tolerance": 0.0001
+      },
+      "request": {
+        "prompt": "A bag contains 3 red balls and 2 blue balls. Two balls are drawn without replacement. What is the probability that both are red? Return only a decimal number.",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "0.3",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 51,
+        "output_tokens": 489,
+        "reasoning_output_tokens": 481,
+        "tokens_per_second": 51.650574549137055,
+        "time_to_first_token_seconds": 0.093889,
+        "model_load_time_seconds": null
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": true,
+        "instruction_following": true,
+        "actual": "0.3",
+        "expected": 0.3
+      },
+      "error": null,
+      "wall_time_seconds": 9.657
+    },
+    {
+      "id": "reason_002",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "reasoning",
+      "difficulty": "medium",
+      "quality": "balanced",
+      "prompt": "Four tasks A, B, C, and D must be scheduled Monday through Thursday, one task per day. C must occur on Thursday. B must occur immediately after A. D cannot occur on Thursday. D must occur after B. Determine the schedule. Return only a JSON object mapping Monday, Tuesday, Wednesday, Thursday to task letters.",
+      "expected": {
+        "mode": "semantic_json",
+        "value": {
+          "Monday": "A",
+          "Tuesday": "B",
+          "Wednesday": "D",
+          "Thursday": "C"
+        },
+        "normalize": {
+          "Monday": "text",
+          "Tuesday": "text",
+          "Wednesday": "text",
+          "Thursday": "text"
+        }
+      },
+      "request": {
+        "prompt": "Four tasks A, B, C, and D must be scheduled Monday through Thursday, one task per day. C must occur on Thursday. B must occur immediately after A. D cannot occur on Thursday. D must occur after B. Determine the schedule. Return only a JSON object mapping Monday, Tuesday, Wednesday, Thursday to task letters.",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "```json\n{\n  \"Monday\": \"A\",\n  \"Tuesday\": \"B\",\n  \"Wednesday\": \"D\",\n  \"Thursday\": \"C\"\n}\n```",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 84,
+        "output_tokens": 462,
+        "reasoning_output_tokens": 417,
+        "tokens_per_second": 48.90579386197278,
+        "time_to_first_token_seconds": 0.106434,
+        "model_load_time_seconds": null
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass_with_format_issue",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": false,
+        "instruction_following": false,
+        "schema_correct": true,
+        "differences": [],
+        "actual": {
+          "Monday": "A",
+          "Tuesday": "B",
+          "Wednesday": "D",
+          "Thursday": "C"
+        },
+        "expected": {
+          "Monday": "A",
+          "Tuesday": "B",
+          "Wednesday": "D",
+          "Thursday": "C"
+        }
+      },
+      "error": null,
+      "wall_time_seconds": 9.636
+    },
+    {
+      "id": "reason_003",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "reasoning",
+      "difficulty": "easy",
+      "quality": "balanced",
+      "prompt": "Solve for x: 3(x - 2) + 4 = 2x + 9. Return only the number.",
+      "expected": {
+        "mode": "numeric",
+        "value": 11,
+        "tolerance": 0.0001
+      },
+      "request": {
+        "prompt": "Solve for x: 3(x - 2) + 4 = 2x + 9. Return only the number.",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "11",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 44,
+        "output_tokens": 320,
+        "reasoning_output_tokens": 313,
+        "tokens_per_second": 50.47498703314988,
+        "time_to_first_token_seconds": 0.092503,
+        "model_load_time_seconds": null
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": true,
+        "instruction_following": true,
+        "actual": "11",
+        "expected": 11
+      },
+      "error": null,
+      "wall_time_seconds": 6.531
+    },
+    {
+      "id": "reason_004",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "reasoning",
+      "difficulty": "medium",
+      "quality": "balanced",
+      "prompt": "Consider this pseudocode:\n\nfor i = 1 to n:\n    for j = 1 to i:\n        doConstantTimeWork()\n\nWhat is the asymptotic time complexity? Return only one of: O(1), O(log n), O(n), O(n log n), O(n^2), O(n^3).",
+      "expected": {
+        "mode": "label",
+        "value": "O(n^2)",
+        "labels": [
+          "O(1)",
+          "O(log n)",
+          "O(n)",
+          "O(n log n)",
+          "O(n^2)",
+          "O(n^3)"
+        ]
+      },
+      "request": {
+        "prompt": "Consider this pseudocode:\n\nfor i = 1 to n:\n    for j = 1 to i:\n        doConstantTimeWork()\n\nWhat is the asymptotic time complexity? Return only one of: O(1), O(log n), O(n), O(n log n), O(n^2), O(n^3).",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "O(n^2)",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 91,
+        "output_tokens": 381,
+        "reasoning_output_tokens": 370,
+        "tokens_per_second": 52.941462485610025,
+        "time_to_first_token_seconds": 0.106874,
+        "model_load_time_seconds": null
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": true,
+        "instruction_following": true,
+        "actual": "O(n^2)",
+        "reason": "Unambiguous label"
+      },
+      "error": null,
+      "wall_time_seconds": 7.367
+    },
+    {
+      "id": "reason_005",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "reasoning",
+      "difficulty": "medium",
+      "quality": "balanced",
+      "prompt": "A 6-ohm resistor and a 3-ohm resistor are connected in parallel. That parallel combination is connected in series with a 4-ohm resistor. The circuit is connected to a 12-volt source. Return JSON only with equivalent_parallel_resistance_ohms, total_resistance_ohms, and total_current_amps.",
+      "expected": {
+        "mode": "semantic_json",
+        "value": {
+          "equivalent_parallel_resistance_ohms": 2,
+          "total_resistance_ohms": 6,
+          "total_current_amps": 2
+        },
+        "normalize": {
+          "equivalent_parallel_resistance_ohms": "number",
+          "total_resistance_ohms": "number",
+          "total_current_amps": "number"
+        }
+      },
+      "request": {
+        "prompt": "A 6-ohm resistor and a 3-ohm resistor are connected in parallel. That parallel combination is connected in series with a 4-ohm resistor. The circuit is connected to a 12-volt source. Return JSON only with equivalent_parallel_resistance_ohms, total_resistance_ohms, and total_current_amps.",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "```json\n{\n  \"equivalent_parallel_resistance_ohms\": 2,\n  \"total_resistance_ohms\": 6,\n  \"total_current_amps\": 2\n}\n```",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 87,
+        "output_tokens": 509,
+        "reasoning_output_tokens": 459,
+        "tokens_per_second": 47.97511036164167,
+        "time_to_first_token_seconds": 0.10729999999999999,
+        "model_load_time_seconds": null
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass_with_format_issue",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": false,
+        "instruction_following": false,
+        "schema_correct": true,
+        "differences": [],
+        "actual": {
+          "equivalent_parallel_resistance_ohms": 2,
+          "total_resistance_ohms": 6,
+          "total_current_amps": 2
+        },
+        "expected": {
+          "equivalent_parallel_resistance_ohms": 2,
+          "total_resistance_ohms": 6,
+          "total_current_amps": 2
+        }
+      },
+      "error": null,
+      "wall_time_seconds": 10.796
+    },
+    {
+      "id": "coding_001",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "coding",
+      "difficulty": "easy",
+      "quality": "balanced",
+      "prompt": "Write a Python function named clamp(value, minimum, maximum). It must return minimum when value is below minimum, maximum when value is above maximum, and value otherwise. Return only Python code with no Markdown fences.",
+      "expected": {
+        "mode": "code_tests",
+        "language": "python",
+        "tests": [
+          {
+            "expression": "clamp(5, 0, 10)",
+            "expected": 5
+          },
+          {
+            "expression": "clamp(-3, 0, 10)",
+            "expected": 0
+          },
+          {
+            "expression": "clamp(22, 0, 10)",
+            "expected": 10
+          },
+          {
+            "expression": "clamp(4.5, 2.0, 4.0)",
+            "expected": 4.0
+          }
+        ]
+      },
+      "request": {
+        "prompt": "Write a Python function named clamp(value, minimum, maximum). It must return minimum when value is below minimum, maximum when value is above maximum, and value otherwise. Return only Python code with no Markdown fences.",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "def clamp(value, minimum, maximum):\n    if value < minimum:\n        return minimum\n    if value > maximum:\n        return maximum\n    return value",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 59,
+        "output_tokens": 487,
+        "reasoning_output_tokens": 447,
+        "tokens_per_second": 50.17542298346162,
+        "time_to_first_token_seconds": 0.102948,
+        "model_load_time_seconds": null
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": true,
+        "instruction_following": true,
+        "tests": [
+          {
+            "expression": "clamp(5, 0, 10)",
+            "passed": true,
+            "actual": "5",
+            "expected": "5"
+          },
+          {
+            "expression": "clamp(-3, 0, 10)",
+            "passed": true,
+            "actual": "0",
+            "expected": "0"
+          },
+          {
+            "expression": "clamp(22, 0, 10)",
+            "passed": true,
+            "actual": "10",
+            "expected": "10"
+          },
+          {
+            "expression": "clamp(4.5, 2.0, 4.0)",
+            "passed": true,
+            "actual": "4.0",
+            "expected": "4.0"
+          }
+        ],
+        "reason": null
+      },
+      "error": null,
+      "wall_time_seconds": 9.926
+    },
+    {
+      "id": "coding_002",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "coding",
+      "difficulty": "medium",
+      "quality": "balanced",
+      "prompt": "Write a Python function named dedupe_preserve_order(items) that removes duplicate values while preserving the order in which each value first appeared. Assume all values are hashable. Return only Python code with no Markdown fences.",
+      "expected": {
+        "mode": "code_tests",
+        "language": "python",
+        "tests": [
+          {
+            "expression": "dedupe_preserve_order([1, 2, 1, 3, 2, 4])",
+            "expected": [
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          {
+            "expression": "dedupe_preserve_order(['a', 'b', 'a', 'c'])",
+            "expected": [
+              "a",
+              "b",
+              "c"
+            ]
+          },
+          {
+            "expression": "dedupe_preserve_order([])",
+            "expected": []
+          }
+        ]
+      },
+      "request": {
+        "prompt": "Write a Python function named dedupe_preserve_order(items) that removes duplicate values while preserving the order in which each value first appeared. Assume all values are hashable. Return only Python code with no Markdown fences.",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "def dedupe_preserve_order(items):\n    seen = set()\n    result = []\n    for item in items:\n        if item not in seen:\n            seen.add(item)\n            result.append(item)\n    return result",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 61,
+        "output_tokens": 1042,
+        "reasoning_output_tokens": 981,
+        "tokens_per_second": 48.94500246135531,
+        "time_to_first_token_seconds": 0.09709699999999999,
+        "model_load_time_seconds": null
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": true,
+        "instruction_following": true,
+        "tests": [
+          {
+            "expression": "dedupe_preserve_order([1, 2, 1, 3, 2, 4])",
+            "passed": true,
+            "actual": "[1, 2, 3, 4]",
+            "expected": "[1, 2, 3, 4]"
+          },
+          {
+            "expression": "dedupe_preserve_order(['a', 'b', 'a', 'c'])",
+            "passed": true,
+            "actual": "['a', 'b', 'c']",
+            "expected": "['a', 'b', 'c']"
+          },
+          {
+            "expression": "dedupe_preserve_order([])",
+            "passed": true,
+            "actual": "[]",
+            "expected": "[]"
+          }
+        ],
+        "reason": null
+      },
+      "error": null,
+      "wall_time_seconds": 21.482
+    },
+    {
+      "id": "coding_003",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "coding",
+      "difficulty": "medium",
+      "quality": "balanced",
+      "prompt": "The following Python function is intended to return the largest number in a non-empty list, but it is incorrect:\n\ndef largest(numbers):\n    result = 0\n    for number in numbers:\n        if number > result:\n            result = number\n    return result\n\nFix the function so that it works for any non-empty list of integers, including lists containing only negative numbers. Return only the corrected Python function with no Markdown fences.",
+      "expected": {
+        "mode": "code_tests",
+        "language": "python",
+        "tests": [
+          {
+            "expression": "largest([3, 1, 8, 2])",
+            "expected": 8
+          },
+          {
+            "expression": "largest([-8, -2, -14, -3])",
+            "expected": -2
+          },
+          {
+            "expression": "largest([7])",
+            "expected": 7
+          }
+        ]
+      },
+      "request": {
+        "prompt": "The following Python function is intended to return the largest number in a non-empty list, but it is incorrect:\n\ndef largest(numbers):\n    result = 0\n    for number in numbers:\n        if number > result:\n            result = number\n    return result\n\nFix the function so that it works for any non-empty list of integers, including lists containing only negative numbers. Return only the corrected Python function with no Markdown fences.",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "def largest(numbers):\n    result = numbers[0]\n    for number in numbers:\n        if number > result:\n            result = number\n    return result",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 109,
+        "output_tokens": 1599,
+        "reasoning_output_tokens": 1558,
+        "tokens_per_second": 48.27401369362786,
+        "time_to_first_token_seconds": 0.123684,
+        "model_load_time_seconds": null
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": true,
+        "instruction_following": true,
+        "tests": [
+          {
+            "expression": "largest([3, 1, 8, 2])",
+            "passed": true,
+            "actual": "8",
+            "expected": "8"
+          },
+          {
+            "expression": "largest([-8, -2, -14, -3])",
+            "passed": true,
+            "actual": "-2",
+            "expected": "-2"
+          },
+          {
+            "expression": "largest([7])",
+            "passed": true,
+            "actual": "7",
+            "expected": "7"
+          }
+        ],
+        "reason": null
+      },
+      "error": null,
+      "wall_time_seconds": 33.392
+    },
+    {
+      "id": "coding_004",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "coding",
+      "difficulty": "hard",
+      "quality": "balanced",
+      "prompt": "Write a Python function named flatten_dict(data, prefix='') that converts a nested dictionary into a flat dictionary using dots between nested keys. You only need to support nested dictionaries; lists should remain unchanged. Return only Python code with no Markdown fences.\n\nExample:\n{'user': {'name': 'Ali', 'settings': {'theme': 'dark'}}, 'active': True}\nbecomes\n{'user.name': 'Ali', 'user.settings.theme': 'dark', 'active': True}",
+      "expected": {
+        "mode": "code_tests",
+        "language": "python",
+        "tests": [
+          {
+            "expression": "flatten_dict({'a': {'b': 1}, 'c': 2})",
+            "expected": {
+              "a.b": 1,
+              "c": 2
+            }
+          },
+          {
+            "expression": "flatten_dict({'user': {'name': 'Ali', 'settings': {'theme': 'dark'}}, 'active': True})",
+            "expected": {
+              "user.name": "Ali",
+              "user.settings.theme": "dark",
+              "active": true
+            }
+          },
+          {
+            "expression": "flatten_dict({'items': [1, 2, 3]})",
+            "expected": {
+              "items": [
+                1,
+                2,
+                3
+              ]
+            }
+          }
+        ]
+      },
+      "request": {
+        "prompt": "Write a Python function named flatten_dict(data, prefix='') that converts a nested dictionary into a flat dictionary using dots between nested keys. You only need to support nested dictionaries; lists should remain unchanged. Return only Python code with no Markdown fences.\n\nExample:\n{'user': {'name': 'Ali', 'settings': {'theme': 'dark'}}, 'active': True}\nbecomes\n{'user.name': 'Ali', 'user.settings.theme': 'dark', 'active': True}",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "def flatten_dict(data, prefix=''):\n    result = {}\n    for key, value in data.items():\n        new_key = f\"{prefix}{key}\"\n        if isinstance(value, dict):\n            result.update(flatten_dict(value, f\"{new_key}.\"))\n        else:\n            result[new_key] = value\n    return result",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 120,
+        "output_tokens": 2113,
+        "reasoning_output_tokens": 2024,
+        "tokens_per_second": 46.923500253169166,
+        "time_to_first_token_seconds": 0.144112,
+        "model_load_time_seconds": null
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": true,
+        "instruction_following": true,
+        "tests": [
+          {
+            "expression": "flatten_dict({'a': {'b': 1}, 'c': 2})",
+            "passed": true,
+            "actual": "{'a.b': 1, 'c': 2}",
+            "expected": "{'a.b': 1, 'c': 2}"
+          },
+          {
+            "expression": "flatten_dict({'user': {'name': 'Ali', 'settings': {'theme': 'dark'}}, 'active': True})",
+            "passed": true,
+            "actual": "{'user.name': 'Ali', 'user.settings.theme': 'dark', 'active': True}",
+            "expected": "{'user.name': 'Ali', 'user.settings.theme': 'dark', 'active': True}"
+          },
+          {
+            "expression": "flatten_dict({'items': [1, 2, 3]})",
+            "passed": true,
+            "actual": "{'items': [1, 2, 3]}",
+            "expected": "{'items': [1, 2, 3]}"
+          }
+        ],
+        "reason": null
+      },
+      "error": null,
+      "wall_time_seconds": 45.337
+    },
+    {
+      "id": "summary_001",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "summarization",
+      "difficulty": "easy",
+      "quality": "balanced",
+      "prompt": "Summarize the following in no more than 50 words:\n\nThe development team deployed version 2.4 on Tuesday morning. Shortly after deployment, users began experiencing slower page loads. Engineers discovered that a new database query was performing a full table scan. The deployment was rolled back at 10:35 AM, restoring normal performance. The query will be redesigned before version 2.4 is deployed again.",
+      "expected": {
+        "mode": "summary_rubric",
+        "max_words": 50,
+        "must_include_concepts": [
+          "version 2.4",
+          "slow performance after deployment",
+          "database query or full table scan",
+          "rollback",
+          "query will be redesigned"
+        ]
+      },
+      "request": {
+        "prompt": "Summarize the following in no more than 50 words:\n\nThe development team deployed version 2.4 on Tuesday morning. Shortly after deployment, users began experiencing slower page loads. Engineers discovered that a new database query was performing a full table scan. The deployment was rolled back at 10:35 AM, restoring normal performance. The query will be redesigned before version 2.4 is deployed again.",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "Version 2.4 was rolled back at 10:35 AM on Tuesday after causing slow page loads due to an inefficient database query. Engineers will redesign the query before redeploying the update.",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 101,
+        "output_tokens": 617,
+        "reasoning_output_tokens": 570,
+        "tokens_per_second": 48.38769984669897,
+        "time_to_first_token_seconds": 0.137804,
+        "model_load_time_seconds": null
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": true,
+        "instruction_following": true,
+        "mechanical_checks": {
+          "nonempty": true,
+          "word_limit": true
+        },
+        "counts": {
+          "words": 32
+        },
+        "rubric": {
+          "mode": "summary_rubric",
+          "max_words": 50,
+          "must_include_concepts": [
+            "version 2.4",
+            "slow performance after deployment",
+            "database query or full table scan",
+            "rollback",
+            "query will be redesigned"
+          ]
+        },
+        "reason": "Manual semantic review: accuracy, coverage, unsupported claims. Sentence counting is heuristic."
+      },
+      "error": null,
+      "wall_time_seconds": 13.057,
+      "automatic_grade": {
+        "version": 2,
+        "status": "manual",
+        "passed": null,
+        "semantic_correct": null,
+        "format_correct": true,
+        "instruction_following": true,
+        "mechanical_checks": {
+          "nonempty": true,
+          "word_limit": true
+        },
+        "counts": {
+          "words": 32
+        },
+        "rubric": {
+          "mode": "summary_rubric",
+          "max_words": 50,
+          "must_include_concepts": [
+            "version 2.4",
+            "slow performance after deployment",
+            "database query or full table scan",
+            "rollback",
+            "query will be redesigned"
+          ]
+        },
+        "reason": "Manual semantic review: accuracy, coverage, unsupported claims. Sentence counting is heuristic."
+      },
+      "review": {
+        "semantic_correct": true,
+        "concept_scores": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "coverage_score": 5,
+        "coverage_max": 5,
+        "unsupported_claims": [],
+        "notes": "All five required concepts covered: v2.4, slowdown, database query, rollback, and redesign before redeployment. Accurate and within 50 words."
+      }
+    },
+    {
+      "id": "summary_002",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "summarization",
+      "difficulty": "medium",
+      "quality": "balanced",
+      "prompt": "Summarize the following in exactly two sentences. Do not add information that is not present in the text.\n\nStudents may submit Lab 3 until 11:59 PM on October 2 without penalty. The original deadline was September 30. The extension applies to all sections and does not require students to contact their instructor. Lab 4 has not been extended and remains due October 7.",
+      "expected": {
+        "mode": "summary_rubric",
+        "sentence_count": 2,
+        "must_include_concepts": [
+          "Lab 3 extended to October 2 at 11:59 PM",
+          "extension applies to all sections",
+          "Lab 4 remains due October 7"
+        ],
+        "must_not_claim": [
+          "Lab 4 was extended"
+        ]
+      },
+      "request": {
+        "prompt": "Summarize the following in exactly two sentences. Do not add information that is not present in the text.\n\nStudents may submit Lab 3 until 11:59 PM on October 2 without penalty. The original deadline was September 30. The extension applies to all sections and does not require students to contact their instructor. Lab 4 has not been extended and remains due October 7.",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 98,
+        "output_tokens": 4096,
+        "reasoning_output_tokens": 4093,
+        "tokens_per_second": 46.024819999682606,
+        "time_to_first_token_seconds": 0.111246,
+        "model_load_time_seconds": null
+      },
+      "grade": {
+        "version": 2,
+        "status": "fail",
+        "passed": false,
+        "semantic_correct": false,
+        "format_correct": false,
+        "instruction_following": false,
+        "mechanical_checks": {
+          "nonempty": false,
+          "sentence_count": false
+        },
+        "counts": {
+          "sentences": 0
+        },
+        "rubric": {
+          "mode": "summary_rubric",
+          "sentence_count": 2,
+          "must_include_concepts": [
+            "Lab 3 extended to October 2 at 11:59 PM",
+            "extension applies to all sections",
+            "Lab 4 remains due October 7"
+          ],
+          "must_not_claim": [
+            "Lab 4 was extended"
+          ]
+        },
+        "reason": "Manual semantic review: accuracy, coverage, unsupported claims. Sentence counting is heuristic."
+      },
+      "error": null,
+      "wall_time_seconds": 89.216,
+      "automatic_grade": {
+        "version": 2,
+        "status": "manual",
+        "passed": null,
+        "semantic_correct": null,
+        "format_correct": false,
+        "instruction_following": false,
+        "mechanical_checks": {
+          "nonempty": false,
+          "sentence_count": false
+        },
+        "counts": {
+          "sentences": 0
+        },
+        "rubric": {
+          "mode": "summary_rubric",
+          "sentence_count": 2,
+          "must_include_concepts": [
+            "Lab 3 extended to October 2 at 11:59 PM",
+            "extension applies to all sections",
+            "Lab 4 remains due October 7"
+          ],
+          "must_not_claim": [
+            "Lab 4 was extended"
+          ]
+        },
+        "reason": "Manual semantic review: accuracy, coverage, unsupported claims. Sentence counting is heuristic."
+      },
+      "review": {
+        "semantic_correct": false,
+        "concept_scores": [
+          0,
+          0,
+          0
+        ],
+        "coverage_score": 0,
+        "coverage_max": 3,
+        "unsupported_claims": [],
+        "notes": "No final answer: all 4096 generated tokens were consumed before a message was delivered. Covers zero rubric concepts and fails the two-sentence requirement. This is a generation-budget failure, not a request error."
+      }
+    },
+    {
+      "id": "summary_003",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "summarization",
+      "difficulty": "medium",
+      "quality": "balanced",
+      "prompt": "Write a concise technical summary in no more than 70 words.\n\nThe application currently sends every AI request directly to a specific model endpoint. This makes model replacement difficult because each application contains provider-specific code. The proposed architecture introduces a local gateway between applications and model providers. Applications send provider-independent requests to the gateway, while the gateway handles routing, authentication, model selection, and future fallback behavior. This allows model providers to change without requiring modifications to every application.",
+      "expected": {
+        "mode": "summary_rubric",
+        "max_words": 70,
+        "must_include_concepts": [
+          "gateway abstraction",
+          "applications become provider-independent",
+          "gateway handles routing or model selection",
+          "providers can change without modifying every application"
+        ]
+      },
+      "request": {
+        "prompt": "Write a concise technical summary in no more than 70 words.\n\nThe application currently sends every AI request directly to a specific model endpoint. This makes model replacement difficult because each application contains provider-specific code. The proposed architecture introduces a local gateway between applications and model providers. Applications send provider-independent requests to the gateway, while the gateway handles routing, authentication, model selection, and future fallback behavior. This allows model providers to change without requiring modifications to every application.",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "The proposed architecture introduces a local gateway to decouple applications from provider-specific model endpoints. By centralizing routing, authentication, model selection, and fallback logic, the gateway allows applications to send provider-independent requests. This abstraction simplifies model replacement, enabling seamless provider swaps without requiring modifications to individual application codebases.",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 111,
+        "output_tokens": 965,
+        "reasoning_output_tokens": 899,
+        "tokens_per_second": 48.83543693835448,
+        "time_to_first_token_seconds": 0.120365,
+        "model_load_time_seconds": null
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": true,
+        "instruction_following": true,
+        "mechanical_checks": {
+          "nonempty": true,
+          "word_limit": true
+        },
+        "counts": {
+          "words": 47
+        },
+        "rubric": {
+          "mode": "summary_rubric",
+          "max_words": 70,
+          "must_include_concepts": [
+            "gateway abstraction",
+            "applications become provider-independent",
+            "gateway handles routing or model selection",
+            "providers can change without modifying every application"
+          ]
+        },
+        "reason": "Manual semantic review: accuracy, coverage, unsupported claims. Sentence counting is heuristic."
+      },
+      "error": null,
+      "wall_time_seconds": 20.062,
+      "automatic_grade": {
+        "version": 2,
+        "status": "manual",
+        "passed": null,
+        "semantic_correct": null,
+        "format_correct": true,
+        "instruction_following": true,
+        "mechanical_checks": {
+          "nonempty": true,
+          "word_limit": true
+        },
+        "counts": {
+          "words": 47
+        },
+        "rubric": {
+          "mode": "summary_rubric",
+          "max_words": 70,
+          "must_include_concepts": [
+            "gateway abstraction",
+            "applications become provider-independent",
+            "gateway handles routing or model selection",
+            "providers can change without modifying every application"
+          ]
+        },
+        "reason": "Manual semantic review: accuracy, coverage, unsupported claims. Sentence counting is heuristic."
+      },
+      "review": {
+        "semantic_correct": true,
+        "concept_scores": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "coverage_score": 4,
+        "coverage_max": 4,
+        "unsupported_claims": [],
+        "notes": "Covers all four concepts: local gateway abstraction, provider-independent requests, routing/model selection, and replacement without app changes. No material unsupported claim; 47 words."
+      }
+    },
+    {
+      "id": "summary_004",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "summarization",
+      "difficulty": "hard",
+      "quality": "balanced",
+      "prompt": "Summarize the incident below for a technical project lead. Use no more than four bullet points.\n\nAt 08:12, monitoring detected elevated latency on the recommendation service. CPU usage remained normal, but database connection counts were close to their maximum. At 08:19, engineers discovered that a recently deployed worker was failing to release connections after completed jobs. The worker deployment was disabled at 08:26. Connection counts began falling immediately and latency returned to normal by 08:31. No data loss occurred. A code fix and regression test are required before the worker is re-enabled.",
+      "expected": {
+        "mode": "summary_rubric",
+        "max_bullets": 4,
+        "must_include_concepts": [
+          "latency detected at 08:12",
+          "connection leak in newly deployed worker",
+          "worker disabled at 08:26",
+          "service recovered by 08:31",
+          "no data loss",
+          "fix and regression test required"
+        ]
+      },
+      "request": {
+        "prompt": "Summarize the incident below for a technical project lead. Use no more than four bullet points.\n\nAt 08:12, monitoring detected elevated latency on the recommendation service. CPU usage remained normal, but database connection counts were close to their maximum. At 08:19, engineers discovered that a recently deployed worker was failing to release connections after completed jobs. The worker deployment was disabled at 08:26. Connection counts began falling immediately and latency returned to normal by 08:31. No data loss occurred. A code fix and regression test are required before the worker is re-enabled.",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "Here is the incident summary:\n\n*   **Issue:** Recommendation service experienced elevated latency starting at 08:12 due to database connection exhaustion.\n*   **Root Cause:** A recently deployed worker was failing to release database connections after completing jobs.\n*   **Resolution:** The faulty worker was disabled at 08:26, restoring normal latency by 08:31 with no data loss.\n*   **Next Steps:** A code fix and regression testing are required before the worker can be re-enabled.",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 144,
+        "output_tokens": 628,
+        "reasoning_output_tokens": 513,
+        "tokens_per_second": 50.338932756820086,
+        "time_to_first_token_seconds": 0.14184,
+        "model_load_time_seconds": null
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass_with_format_issue",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": false,
+        "instruction_following": true,
+        "mechanical_checks": {
+          "nonempty": true,
+          "bullet_limit": true,
+          "bullet_format": false
+        },
+        "counts": {
+          "bullets": 4
+        },
+        "rubric": {
+          "mode": "summary_rubric",
+          "max_bullets": 4,
+          "must_include_concepts": [
+            "latency detected at 08:12",
+            "connection leak in newly deployed worker",
+            "worker disabled at 08:26",
+            "service recovered by 08:31",
+            "no data loss",
+            "fix and regression test required"
+          ]
+        },
+        "reason": "Manual semantic review: accuracy, coverage, unsupported claims. Sentence counting is heuristic."
+      },
+      "error": null,
+      "wall_time_seconds": 12.788,
+      "automatic_grade": {
+        "version": 2,
+        "status": "manual",
+        "passed": null,
+        "semantic_correct": null,
+        "format_correct": false,
+        "instruction_following": false,
+        "mechanical_checks": {
+          "nonempty": true,
+          "bullet_limit": true,
+          "bullet_format": false
+        },
+        "counts": {
+          "bullets": 4
+        },
+        "rubric": {
+          "mode": "summary_rubric",
+          "max_bullets": 4,
+          "must_include_concepts": [
+            "latency detected at 08:12",
+            "connection leak in newly deployed worker",
+            "worker disabled at 08:26",
+            "service recovered by 08:31",
+            "no data loss",
+            "fix and regression test required"
+          ]
+        },
+        "reason": "Manual semantic review: accuracy, coverage, unsupported claims. Sentence counting is heuristic."
+      },
+      "review": {
+        "semantic_correct": true,
+        "concept_scores": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "coverage_score": 6,
+        "coverage_max": 6,
+        "unsupported_claims": [],
+        "notes": "All six incident facts and actions are covered accurately. Four bullets plus an introductory line fail the existing canonical bullet-only format check. The prompt only limits the number of bullets and does not forbid an introduction; reviewed instruction following therefore passes.",
+        "instruction_following": true
+      }
+    },
+    {
+      "id": "long_001",
+      "suite": "long_context",
+      "source_file": "cases_long_context.json",
+      "category": "long_context_retrieval",
+      "difficulty": "medium",
+      "quality": "balanced",
+      "prompt": "Read the project log and answer the question at the end. Return JSON only with first_failure_time, root_cause, recovery_time.\n\nPROJECT LOG\n\n08:00 - API server started normally.\n08:04 - Health check returned 200.\n08:07 - Model registry loaded 4 entries.\n08:11 - First inference request completed in 1.8 seconds.\n08:14 - Cache cleanup completed.\n08:18 - Health check returned 200.\n08:23 - User authentication succeeded.\n08:27 - Inference request completed normally.\n08:32 - Memory usage reached 61 percent.\n08:36 - Health check returned 200.\n08:41 - Background metrics export completed.\n08:45 - New model configuration deployed.\n08:48 - First request after deployment returned HTTP 502.\n08:49 - Second request returned HTTP 502.\n08:50 - Gateway logged MODEL_LOAD_FAILED.\n08:52 - Engineers began investigation.\n08:55 - Configuration comparison showed that the newly deployed model identifier did not exist on the inference server.\n08:59 - Previous configuration restored.\n09:01 - Model loaded successfully.\n09:02 - First successful inference request completed.\n09:06 - Health check returned 200.\n09:12 - Memory usage returned to normal.\n09:20 - Incident closed.\n\nQuestion: When did the first failure occur, what caused the incident, and when was normal inference first restored?",
+      "expected": {
+        "mode": "semantic_json",
+        "value": {
+          "first_failure_time": "08:48",
+          "root_cause": "invalid model identifier",
+          "recovery_time": "09:02"
+        },
+        "normalize": {
+          "first_failure_time": "time",
+          "root_cause": "text",
+          "recovery_time": "time"
+        },
+        "review_paths": [
+          "root_cause"
+        ]
+      },
+      "request": {
+        "prompt": "Read the project log and answer the question at the end. Return JSON only with first_failure_time, root_cause, recovery_time.\n\nPROJECT LOG\n\n08:00 - API server started normally.\n08:04 - Health check returned 200.\n08:07 - Model registry loaded 4 entries.\n08:11 - First inference request completed in 1.8 seconds.\n08:14 - Cache cleanup completed.\n08:18 - Health check returned 200.\n08:23 - User authentication succeeded.\n08:27 - Inference request completed normally.\n08:32 - Memory usage reached 61 percent.\n08:36 - Health check returned 200.\n08:41 - Background metrics export completed.\n08:45 - New model configuration deployed.\n08:48 - First request after deployment returned HTTP 502.\n08:49 - Second request returned HTTP 502.\n08:50 - Gateway logged MODEL_LOAD_FAILED.\n08:52 - Engineers began investigation.\n08:55 - Configuration comparison showed that the newly deployed model identifier did not exist on the inference server.\n08:59 - Previous configuration restored.\n09:01 - Model loaded successfully.\n09:02 - First successful inference request completed.\n09:06 - Health check returned 200.\n09:12 - Memory usage returned to normal.\n09:20 - Incident closed.\n\nQuestion: When did the first failure occur, what caused the incident, and when was normal inference first restored?",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "```json\n{\n  \"first_failure_time\": \"08:48\",\n  \"root_cause\": \"The newly deployed model identifier did not exist on the inference server.\",\n  \"recovery_time\": \"09:02\"\n}\n```",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 391,
+        "output_tokens": 667,
+        "reasoning_output_tokens": 603,
+        "tokens_per_second": 47.808184947901644,
+        "time_to_first_token_seconds": 0.229273,
+        "model_load_time_seconds": null
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass_with_format_issue",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": false,
+        "instruction_following": false,
+        "schema_correct": true,
+        "differences": [
+          {
+            "path": "root_cause",
+            "actual": "The newly deployed model identifier did not exist on the inference server.",
+            "expected": "invalid model identifier",
+            "reason": "Value differs"
+          }
+        ],
+        "actual": {
+          "first_failure_time": "08:48",
+          "root_cause": "The newly deployed model identifier did not exist on the inference server.",
+          "recovery_time": "09:02"
+        },
+        "expected": {
+          "first_failure_time": "08:48",
+          "root_cause": "invalid model identifier",
+          "recovery_time": "09:02"
+        }
+      },
+      "error": null,
+      "wall_time_seconds": 14.318,
+      "automatic_grade": {
+        "version": 2,
+        "status": "manual",
+        "passed": null,
+        "semantic_correct": null,
+        "format_correct": false,
+        "instruction_following": false,
+        "schema_correct": true,
+        "differences": [
+          {
+            "path": "root_cause",
+            "actual": "The newly deployed model identifier did not exist on the inference server.",
+            "expected": "invalid model identifier",
+            "reason": "Value differs"
+          }
+        ],
+        "actual": {
+          "first_failure_time": "08:48",
+          "root_cause": "The newly deployed model identifier did not exist on the inference server.",
+          "recovery_time": "09:02"
+        },
+        "expected": {
+          "first_failure_time": "08:48",
+          "root_cause": "invalid model identifier",
+          "recovery_time": "09:02"
+        }
+      },
+      "review": {
+        "semantic_correct": true,
+        "notes": "Root cause explicitly states that the deployed model identifier did not exist, equivalent to invalid model identifier. First failure 08:48 and restored inference 09:02 are correct. Markdown fence remains a format/instruction failure."
+      }
+    },
+    {
+      "id": "long_002",
+      "suite": "long_context",
+      "source_file": "cases_long_context.json",
+      "category": "long_context_retrieval",
+      "difficulty": "hard",
+      "quality": "balanced",
+      "prompt": "Read all announcements carefully. Return JSON only containing the current deadlines for Lab 2, Lab 3, Project Milestone 1, and Problem Set 4. Later announcements override earlier announcements. All dates mentioned are in 2026.\n\nANNOUNCEMENT 1\nLab 2 is due September 16 at 11:59 PM. Lab 3 is due September 23 at 11:59 PM.\n\nANNOUNCEMENT 2\nProblem Set 4 is due September 20 at 6:00 PM. Project Milestone 1 is due September 25 at 5:00 PM.\n\nANNOUNCEMENT 3\nDue to the campus closure, Lab 2 has been extended from September 16 to September 18 at 11:59 PM. No other deadlines are affected.\n\nANNOUNCEMENT 4\nThe tutorial scheduled for September 19 will take place online. This does not affect assessment deadlines.\n\nANNOUNCEMENT 5\nProject Milestone 1 is now due September 27 at 5:00 PM instead of September 25.\n\nANNOUNCEMENT 6\nProblem Set 4 submissions will be accepted until September 21 at 6:00 PM without penalty. This replaces the previously announced September 20 deadline.\n\nANNOUNCEMENT 7\nLab 3 remains due September 23 at 11:59 PM. Students should ignore a calendar entry incorrectly showing September 24.\n\nReturn dates in YYYY-MM-DD format and times in 24-hour HH:MM format.",
+      "expected": {
+        "mode": "semantic_json",
+        "value": {
+          "Lab 2": {
+            "date": "2026-09-18",
+            "time": "23:59"
+          },
+          "Lab 3": {
+            "date": "2026-09-23",
+            "time": "23:59"
+          },
+          "Project Milestone 1": {
+            "date": "2026-09-27",
+            "time": "17:00"
+          },
+          "Problem Set 4": {
+            "date": "2026-09-21",
+            "time": "18:00"
+          }
+        },
+        "normalize": {
+          "Lab 2.date": "date",
+          "Lab 2.time": "time",
+          "Lab 3.date": "date",
+          "Lab 3.time": "time",
+          "Project Milestone 1.date": "date",
+          "Project Milestone 1.time": "time",
+          "Problem Set 4.date": "date",
+          "Problem Set 4.time": "time"
+        },
+        "require_canonical": true
+      },
+      "request": {
+        "prompt": "Read all announcements carefully. Return JSON only containing the current deadlines for Lab 2, Lab 3, Project Milestone 1, and Problem Set 4. Later announcements override earlier announcements. All dates mentioned are in 2026.\n\nANNOUNCEMENT 1\nLab 2 is due September 16 at 11:59 PM. Lab 3 is due September 23 at 11:59 PM.\n\nANNOUNCEMENT 2\nProblem Set 4 is due September 20 at 6:00 PM. Project Milestone 1 is due September 25 at 5:00 PM.\n\nANNOUNCEMENT 3\nDue to the campus closure, Lab 2 has been extended from September 16 to September 18 at 11:59 PM. No other deadlines are affected.\n\nANNOUNCEMENT 4\nThe tutorial scheduled for September 19 will take place online. This does not affect assessment deadlines.\n\nANNOUNCEMENT 5\nProject Milestone 1 is now due September 27 at 5:00 PM instead of September 25.\n\nANNOUNCEMENT 6\nProblem Set 4 submissions will be accepted until September 21 at 6:00 PM without penalty. This replaces the previously announced September 20 deadline.\n\nANNOUNCEMENT 7\nLab 3 remains due September 23 at 11:59 PM. Students should ignore a calendar entry incorrectly showing September 24.\n\nReturn dates in YYYY-MM-DD format and times in 24-hour HH:MM format.",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "```json\n{\n  \"Lab 2\": \"2026-09-18 23:59\",\n  \"Lab 3\": \"2026-09-23 23:59\",\n  \"Project Milestone 1\": \"2026-09-27 17:00\",\n  \"Problem Set 4\": \"2026-09-21 18:00\"\n}\n```",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 358,
+        "output_tokens": 1072,
+        "reasoning_output_tokens": 957,
+        "tokens_per_second": 48.6798665617133,
+        "time_to_first_token_seconds": 0.226646,
+        "model_load_time_seconds": null
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass_with_format_issue",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": false,
+        "instruction_following": false,
+        "schema_correct": false,
+        "differences": [
+          {
+            "path": "Project Milestone 1",
+            "reason": "Expected object"
+          },
+          {
+            "path": "Lab 3",
+            "reason": "Expected object"
+          },
+          {
+            "path": "Lab 2",
+            "reason": "Expected object"
+          },
+          {
+            "path": "Problem Set 4",
+            "reason": "Expected object"
+          }
+        ],
+        "actual": {
+          "Lab 2": "2026-09-18 23:59",
+          "Lab 3": "2026-09-23 23:59",
+          "Project Milestone 1": "2026-09-27 17:00",
+          "Problem Set 4": "2026-09-21 18:00"
+        },
+        "expected": {
+          "Lab 2": {
+            "date": "2026-09-18",
+            "time": "23:59"
+          },
+          "Lab 3": {
+            "date": "2026-09-23",
+            "time": "23:59"
+          },
+          "Project Milestone 1": {
+            "date": "2026-09-27",
+            "time": "17:00"
+          },
+          "Problem Set 4": {
+            "date": "2026-09-21",
+            "time": "18:00"
+          }
+        }
+      },
+      "error": null,
+      "wall_time_seconds": 22.467,
+      "automatic_grade": {
+        "version": 2,
+        "status": "fail",
+        "passed": false,
+        "semantic_correct": false,
+        "format_correct": false,
+        "instruction_following": false,
+        "schema_correct": false,
+        "differences": [
+          {
+            "path": "Project Milestone 1",
+            "reason": "Expected object"
+          },
+          {
+            "path": "Lab 3",
+            "reason": "Expected object"
+          },
+          {
+            "path": "Lab 2",
+            "reason": "Expected object"
+          },
+          {
+            "path": "Problem Set 4",
+            "reason": "Expected object"
+          }
+        ],
+        "actual": {
+          "Lab 2": "2026-09-18 23:59",
+          "Lab 3": "2026-09-23 23:59",
+          "Project Milestone 1": "2026-09-27 17:00",
+          "Problem Set 4": "2026-09-21 18:00"
+        },
+        "expected": {
+          "Lab 2": {
+            "date": "2026-09-18",
+            "time": "23:59"
+          },
+          "Lab 3": {
+            "date": "2026-09-23",
+            "time": "23:59"
+          },
+          "Project Milestone 1": {
+            "date": "2026-09-27",
+            "time": "17:00"
+          },
+          "Problem Set 4": {
+            "date": "2026-09-21",
+            "time": "18:00"
+          }
+        }
+      },
+      "review": {
+        "semantic_correct": true,
+        "notes": "All four final deadlines and 24-hour times are correct, but each is represented as one date-time string rather than the benchmark nested date/time object. The prompt does not specify that nesting. Reviewed semantic pass; canonical schema and Markdown-fence instruction failures retained. No expected value changed."
+      }
+    },
+    {
+      "id": "long_003",
+      "suite": "long_context",
+      "source_file": "cases_long_context.json",
+      "category": "long_context_reasoning",
+      "difficulty": "hard",
+      "quality": "balanced",
+      "prompt": "Read the policy and scenario, then return only PASS or FAIL.\n\nPOLICY\n1. Requests classified as low risk may run on the fast model.\n2. Requests involving ordinary summarization may run on the balanced model.\n3. Requests involving difficult multi-step reasoning must use the deep model.\n4. Any request containing private user documents must remain local unless cloud_fallback is explicitly enabled for that request.\n5. Automatic paid fallback is prohibited when cloud_fallback is false.\n6. If the requested local model fails to load and cloud_fallback is false, the gateway must return an error instead of calling a paid provider.\n7. Requests may be retried locally up to two times after the original attempt.\n8. Authentication failure must terminate processing immediately.\n9. Logging may record token counts, timing, selected model, and status code.\n10. Full prompt content must not be logged unless debug_prompt_logging is explicitly enabled.\n\nSCENARIO\nA request contains text from a private document. It is classified as deep. cloud_fallback is false and debug_prompt_logging is false. The deep local model fails to load. The gateway retries the deep model twice. Both retries fail. The gateway then sends the request to a paid cloud model and logs the complete prompt because troubleshooting information may be useful.\n\nQuestion: Does the gateway behavior comply with the policy?",
+      "expected": {
+        "mode": "label",
+        "value": "FAIL",
+        "labels": [
+          "PASS",
+          "FAIL"
+        ]
+      },
+      "request": {
+        "prompt": "Read the policy and scenario, then return only PASS or FAIL.\n\nPOLICY\n1. Requests classified as low risk may run on the fast model.\n2. Requests involving ordinary summarization may run on the balanced model.\n3. Requests involving difficult multi-step reasoning must use the deep model.\n4. Any request containing private user documents must remain local unless cloud_fallback is explicitly enabled for that request.\n5. Automatic paid fallback is prohibited when cloud_fallback is false.\n6. If the requested local model fails to load and cloud_fallback is false, the gateway must return an error instead of calling a paid provider.\n7. Requests may be retried locally up to two times after the original attempt.\n8. Authentication failure must terminate processing immediately.\n9. Logging may record token counts, timing, selected model, and status code.\n10. Full prompt content must not be logged unless debug_prompt_logging is explicitly enabled.\n\nSCENARIO\nA request contains text from a private document. It is classified as deep. cloud_fallback is false and debug_prompt_logging is false. The deep local model fails to load. The gateway retries the deep model twice. Both retries fail. The gateway then sends the request to a paid cloud model and logs the complete prompt because troubleshooting information may be useful.\n\nQuestion: Does the gateway behavior comply with the policy?",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "FAIL",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 304,
+        "output_tokens": 522,
+        "reasoning_output_tokens": 516,
+        "tokens_per_second": 49.384068813145376,
+        "time_to_first_token_seconds": 0.207274,
+        "model_load_time_seconds": null
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": true,
+        "instruction_following": true,
+        "actual": "FAIL",
+        "reason": "Unambiguous label"
+      },
+      "error": null,
+      "wall_time_seconds": 10.992
+    },
+    {
+      "id": "long_004",
+      "suite": "long_context",
+      "source_file": "cases_long_context.json",
+      "category": "long_context_analysis",
+      "difficulty": "hard",
+      "quality": "balanced",
+      "prompt": "Analyze the listening history. Return JSON only with total_listening_ms, unique_tracks, most_played_track_by_count, most_listened_track_by_ms, completed_listens. A completed listen is one where ms_played is at least 80 percent of duration_ms. If multiple tracks tie for most_played_track_by_count, choose the alphabetically earliest track.\n\nHISTORY\n1. track=Paris, ms_played=185000, duration_ms=190000\n2. track=Bad Time, ms_played=90000, duration_ms=210000\n3. track=Almost Love, ms_played=175000, duration_ms=200000\n4. track=Paris, ms_played=190000, duration_ms=190000\n5. track=Sue Me, ms_played=45000, duration_ms=180000\n6. track=Almost Love, ms_played=200000, duration_ms=200000\n7. track=Paris, ms_played=60000, duration_ms=190000\n8. track=Bad Time, ms_played=205000, duration_ms=210000\n9. track=Almost Love, ms_played=150000, duration_ms=200000\n10. track=Paris, ms_played=188000, duration_ms=190000\n11. track=Sue Me, ms_played=180000, duration_ms=180000\n12. track=Almost Love, ms_played=199000, duration_ms=200000",
+      "expected": {
+        "mode": "semantic_json",
+        "value": {
+          "total_listening_ms": 1867000,
+          "unique_tracks": 4,
+          "most_played_track_by_count": "Almost Love",
+          "most_listened_track_by_ms": "Almost Love",
+          "completed_listens": 8
+        },
+        "normalize": {
+          "total_listening_ms": "number",
+          "unique_tracks": "number",
+          "most_played_track_by_count": "text",
+          "most_listened_track_by_ms": "text",
+          "completed_listens": "number"
+        }
+      },
+      "request": {
+        "prompt": "Analyze the listening history. Return JSON only with total_listening_ms, unique_tracks, most_played_track_by_count, most_listened_track_by_ms, completed_listens. A completed listen is one where ms_played is at least 80 percent of duration_ms. If multiple tracks tie for most_played_track_by_count, choose the alphabetically earliest track.\n\nHISTORY\n1. track=Paris, ms_played=185000, duration_ms=190000\n2. track=Bad Time, ms_played=90000, duration_ms=210000\n3. track=Almost Love, ms_played=175000, duration_ms=200000\n4. track=Paris, ms_played=190000, duration_ms=190000\n5. track=Sue Me, ms_played=45000, duration_ms=180000\n6. track=Almost Love, ms_played=200000, duration_ms=200000\n7. track=Paris, ms_played=60000, duration_ms=190000\n8. track=Bad Time, ms_played=205000, duration_ms=210000\n9. track=Almost Love, ms_played=150000, duration_ms=200000\n10. track=Paris, ms_played=188000, duration_ms=190000\n11. track=Sue Me, ms_played=180000, duration_ms=180000\n12. track=Almost Love, ms_played=199000, duration_ms=200000",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "```json\n{\n  \"total_listening_ms\": 1867000,\n  \"unique_tracks\": 4,\n  \"most_played_track_by_count\": \"Almost Love\",\n  \"most_listened_track_by_ms\": \"Almost Love\",\n  \"completed_listens\": 8\n}\n```",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 449,
+        "output_tokens": 2184,
+        "reasoning_output_tokens": 2098,
+        "tokens_per_second": 46.97029545154979,
+        "time_to_first_token_seconds": 0.261375,
+        "model_load_time_seconds": null
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass_with_format_issue",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": false,
+        "instruction_following": false,
+        "schema_correct": true,
+        "differences": [],
+        "actual": {
+          "total_listening_ms": 1867000,
+          "unique_tracks": 4,
+          "most_played_track_by_count": "Almost Love",
+          "most_listened_track_by_ms": "Almost Love",
+          "completed_listens": 8
+        },
+        "expected": {
+          "total_listening_ms": 1867000,
+          "unique_tracks": 4,
+          "most_played_track_by_count": "Almost Love",
+          "most_listened_track_by_ms": "Almost Love",
+          "completed_listens": 8
+        }
+      },
+      "error": null,
+      "wall_time_seconds": 46.945
+    },
+    {
+      "id": "project_001",
+      "suite": "project",
+      "source_file": "cases_project.json",
+      "category": "itqaan_metadata",
+      "difficulty": "easy",
+      "quality": "balanced",
+      "prompt": "Normalize the following Quran software metadata. Return JSON only with keys surah_number, ayah_number, reciter_id, timestamp_seconds.\n\nInput:\nsurah = '002'\nayah = '255'\nreciter = 'abdul_baset_01'\ntimestamp = '83.4s'",
+      "expected": {
+        "mode": "semantic_json",
+        "value": {
+          "surah_number": 2,
+          "ayah_number": 255,
+          "reciter_id": "abdul_baset_01",
+          "timestamp_seconds": 83.4
+        },
+        "normalize": {
+          "surah_number": "number",
+          "ayah_number": "number",
+          "timestamp_seconds": "number"
+        }
+      },
+      "request": {
+        "prompt": "Normalize the following Quran software metadata. Return JSON only with keys surah_number, ayah_number, reciter_id, timestamp_seconds.\n\nInput:\nsurah = '002'\nayah = '255'\nreciter = 'abdul_baset_01'\ntimestamp = '83.4s'",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "```json\n{\n  \"surah_number\": 2,\n  \"ayah_number\": 255,\n  \"reciter_id\": \"abdul_baset_01\",\n  \"timestamp_seconds\": 83.4\n}\n```",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 90,
+        "output_tokens": 415,
+        "reasoning_output_tokens": 349,
+        "tokens_per_second": 50.88693218664835,
+        "time_to_first_token_seconds": 0.11812399999999999,
+        "model_load_time_seconds": null
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass_with_format_issue",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": false,
+        "instruction_following": false,
+        "schema_correct": true,
+        "differences": [],
+        "actual": {
+          "surah_number": 2,
+          "ayah_number": 255,
+          "reciter_id": "abdul_baset_01",
+          "timestamp_seconds": 83.4
+        },
+        "expected": {
+          "surah_number": 2,
+          "ayah_number": 255,
+          "reciter_id": "abdul_baset_01",
+          "timestamp_seconds": 83.4
+        }
+      },
+      "error": null,
+      "wall_time_seconds": 8.489
+    },
+    {
+      "id": "project_002",
+      "suite": "project",
+      "source_file": "cases_project.json",
+      "category": "itqaan_metadata",
+      "difficulty": "medium",
+      "quality": "balanced",
+      "prompt": "A Quran application stores playback positions as seconds. Convert the following entries into minutes and seconds. Return JSON only. Preserve the id field.\n\nEntries:\n[\n  {\"id\":\"a1\",\"seconds\":63},\n  {\"id\":\"a2\",\"seconds\":125},\n  {\"id\":\"a3\",\"seconds\":3599}\n]",
+      "expected": {
+        "mode": "semantic_json",
+        "value": [
+          {
+            "id": "a1",
+            "minutes": 1,
+            "seconds": 3
+          },
+          {
+            "id": "a2",
+            "minutes": 2,
+            "seconds": 5
+          },
+          {
+            "id": "a3",
+            "minutes": 59,
+            "seconds": 59
+          }
+        ],
+        "normalize": {
+          "*.minutes": "number",
+          "*.seconds": "number"
+        }
+      },
+      "request": {
+        "prompt": "A Quran application stores playback positions as seconds. Convert the following entries into minutes and seconds. Return JSON only. Preserve the id field.\n\nEntries:\n[\n  {\"id\":\"a1\",\"seconds\":63},\n  {\"id\":\"a2\",\"seconds\":125},\n  {\"id\":\"a3\",\"seconds\":3599}\n]",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "```json\n[\n  {\n    \"id\": \"a1\",\n    \"minutes\": 1,\n    \"seconds\": 3\n  },\n  {\n    \"id\": \"a2\",\n    \"minutes\": 2,\n    \"seconds\": 5\n  },\n  {\n    \"id\": \"a3\",\n    \"minutes\": 59,\n    \"seconds\": 59\n  }\n]\n```",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 92,
+        "output_tokens": 552,
+        "reasoning_output_tokens": 447,
+        "tokens_per_second": 50.52229601187448,
+        "time_to_first_token_seconds": 0.11055200000000001,
+        "model_load_time_seconds": null
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass_with_format_issue",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": false,
+        "instruction_following": false,
+        "schema_correct": true,
+        "differences": [],
+        "actual": [
+          {
+            "id": "a1",
+            "minutes": 1,
+            "seconds": 3
+          },
+          {
+            "id": "a2",
+            "minutes": 2,
+            "seconds": 5
+          },
+          {
+            "id": "a3",
+            "minutes": 59,
+            "seconds": 59
+          }
+        ],
+        "expected": [
+          {
+            "id": "a1",
+            "minutes": 1,
+            "seconds": 3
+          },
+          {
+            "id": "a2",
+            "minutes": 2,
+            "seconds": 5
+          },
+          {
+            "id": "a3",
+            "minutes": 59,
+            "seconds": 59
+          }
+        ]
+      },
+      "error": null,
+      "wall_time_seconds": 11.134
+    },
+    {
+      "id": "project_003",
+      "suite": "project",
+      "source_file": "cases_project.json",
+      "category": "listening_data",
+      "difficulty": "medium",
+      "quality": "balanced",
+      "prompt": "For each listening event, calculate completion_percent as ms_played divided by track_duration_ms multiplied by 100. Round to one decimal place. Return JSON only with track and completion_percent.\n\nEvents:\n[\n  {\"track\":\"Song A\",\"ms_played\":180000,\"track_duration_ms\":200000},\n  {\"track\":\"Song B\",\"ms_played\":60000,\"track_duration_ms\":240000},\n  {\"track\":\"Song C\",\"ms_played\":205000,\"track_duration_ms\":205000}\n]",
+      "expected": {
+        "mode": "semantic_json",
+        "value": [
+          {
+            "track": "Song A",
+            "completion_percent": 90.0
+          },
+          {
+            "track": "Song B",
+            "completion_percent": 25.0
+          },
+          {
+            "track": "Song C",
+            "completion_percent": 100.0
+          }
+        ],
+        "normalize": {
+          "*.track": "text",
+          "*.completion_percent": "number"
+        }
+      },
+      "request": {
+        "prompt": "For each listening event, calculate completion_percent as ms_played divided by track_duration_ms multiplied by 100. Round to one decimal place. Return JSON only with track and completion_percent.\n\nEvents:\n[\n  {\"track\":\"Song A\",\"ms_played\":180000,\"track_duration_ms\":200000},\n  {\"track\":\"Song B\",\"ms_played\":60000,\"track_duration_ms\":240000},\n  {\"track\":\"Song C\",\"ms_played\":205000,\"track_duration_ms\":205000}\n]",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "```json\n[\n  {\"track\": \"Song A\", \"completion_percent\": 90.0},\n  {\"track\": \"Song B\", \"completion_percent\": 25.0},\n  {\"track\": \"Song C\", \"completion_percent\": 100.0}\n]\n```",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 161,
+        "output_tokens": 592,
+        "reasoning_output_tokens": 518,
+        "tokens_per_second": 49.43055333447975,
+        "time_to_first_token_seconds": 0.141297,
+        "model_load_time_seconds": null
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass_with_format_issue",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": false,
+        "instruction_following": false,
+        "schema_correct": true,
+        "differences": [],
+        "actual": [
+          {
+            "track": "Song A",
+            "completion_percent": 90.0
+          },
+          {
+            "track": "Song B",
+            "completion_percent": 25.0
+          },
+          {
+            "track": "Song C",
+            "completion_percent": 100.0
+          }
+        ],
+        "expected": [
+          {
+            "track": "Song A",
+            "completion_percent": 90.0
+          },
+          {
+            "track": "Song B",
+            "completion_percent": 25.0
+          },
+          {
+            "track": "Song C",
+            "completion_percent": 100.0
+          }
+        ]
+      },
+      "error": null,
+      "wall_time_seconds": 12.218
+    },
+    {
+      "id": "project_004",
+      "suite": "project",
+      "source_file": "cases_project.json",
+      "category": "listening_data",
+      "difficulty": "hard",
+      "quality": "balanced",
+      "prompt": "Analyze the listening events below. A completed listen is any event with completion_percent greater than or equal to 80. Return JSON only with total_events, completed_events, completion_rate_percent, and most_played_track. completion_rate_percent must be rounded to one decimal place. If tracks are tied for most plays, choose the alphabetically earlier track.\n\nEvents:\n[\n  {\"track\":\"Paris\",\"completion_percent\":98},\n  {\"track\":\"Almost Love\",\"completion_percent\":91},\n  {\"track\":\"Paris\",\"completion_percent\":84},\n  {\"track\":\"Bad Time\",\"completion_percent\":42},\n  {\"track\":\"Almost Love\",\"completion_percent\":79},\n  {\"track\":\"Paris\",\"completion_percent\":100}\n]",
+      "expected": {
+        "mode": "semantic_json",
+        "value": {
+          "total_events": 6,
+          "completed_events": 4,
+          "completion_rate_percent": 66.7,
+          "most_played_track": "Paris"
+        },
+        "normalize": {
+          "total_events": "number",
+          "completed_events": "number",
+          "completion_rate_percent": "number",
+          "most_played_track": "text"
+        }
+      },
+      "request": {
+        "prompt": "Analyze the listening events below. A completed listen is any event with completion_percent greater than or equal to 80. Return JSON only with total_events, completed_events, completion_rate_percent, and most_played_track. completion_rate_percent must be rounded to one decimal place. If tracks are tied for most plays, choose the alphabetically earlier track.\n\nEvents:\n[\n  {\"track\":\"Paris\",\"completion_percent\":98},\n  {\"track\":\"Almost Love\",\"completion_percent\":91},\n  {\"track\":\"Paris\",\"completion_percent\":84},\n  {\"track\":\"Bad Time\",\"completion_percent\":42},\n  {\"track\":\"Almost Love\",\"completion_percent\":79},\n  {\"track\":\"Paris\",\"completion_percent\":100}\n]",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "```json\n{\n  \"total_events\": 6,\n  \"completed_events\": 4,\n  \"completion_rate_percent\": 66.7,\n  \"most_played_track\": \"Paris\"\n}\n```",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 188,
+        "output_tokens": 675,
+        "reasoning_output_tokens": 615,
+        "tokens_per_second": 49.555861109185166,
+        "time_to_first_token_seconds": 0.15323599999999998,
+        "model_load_time_seconds": null
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass_with_format_issue",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": false,
+        "instruction_following": false,
+        "schema_correct": true,
+        "differences": [],
+        "actual": {
+          "total_events": 6,
+          "completed_events": 4,
+          "completion_rate_percent": 66.7,
+          "most_played_track": "Paris"
+        },
+        "expected": {
+          "total_events": 6,
+          "completed_events": 4,
+          "completion_rate_percent": 66.7,
+          "most_played_track": "Paris"
+        }
+      },
+      "error": null,
+      "wall_time_seconds": 13.895
+    },
+    {
+      "id": "project_005",
+      "suite": "project",
+      "source_file": "cases_project.json",
+      "category": "university_tooling",
+      "difficulty": "medium",
+      "quality": "balanced",
+      "prompt": "Parse the following university message into structured data. Return JSON only with course, event_type, date, start_time, end_time, location. Assume the date is in 2026.\n\nMessage:\nAPS110 students: Friday's chemistry lecture will take place on September 25 from 3:00 PM to 4:00 PM in MS2158.",
+      "expected": {
+        "mode": "semantic_json",
+        "value": {
+          "course": "APS110",
+          "event_type": "lecture",
+          "date": "2026-09-25",
+          "start_time": "15:00",
+          "end_time": "16:00",
+          "location": "MS2158"
+        },
+        "normalize": {
+          "course": "text",
+          "event_type": "text",
+          "date": "date",
+          "start_time": "time",
+          "end_time": "time",
+          "location": "text"
+        }
+      },
+      "request": {
+        "prompt": "Parse the following university message into structured data. Return JSON only with course, event_type, date, start_time, end_time, location. Assume the date is in 2026.\n\nMessage:\nAPS110 students: Friday's chemistry lecture will take place on September 25 from 3:00 PM to 4:00 PM in MS2158.",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "```json\n{\n  \"course\": \"APS110\",\n  \"event_type\": \"chemistry lecture\",\n  \"date\": \"2026-09-25\",\n  \"start_time\": \"3:00 PM\",\n  \"end_time\": \"4:00 PM\",\n  \"location\": \"MS2158\"\n}\n```",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 102,
+        "output_tokens": 578,
+        "reasoning_output_tokens": 486,
+        "tokens_per_second": 50.91279494126235,
+        "time_to_first_token_seconds": 0.11522700000000001,
+        "model_load_time_seconds": null
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass_with_format_issue",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": false,
+        "instruction_following": false,
+        "schema_correct": true,
+        "differences": [
+          {
+            "path": "event_type",
+            "actual": "chemistry lecture",
+            "expected": "lecture",
+            "reason": "Value differs"
+          }
+        ],
+        "actual": {
+          "course": "APS110",
+          "event_type": "chemistry lecture",
+          "date": "2026-09-25",
+          "start_time": "3:00 PM",
+          "end_time": "4:00 PM",
+          "location": "MS2158"
+        },
+        "expected": {
+          "course": "APS110",
+          "event_type": "lecture",
+          "date": "2026-09-25",
+          "start_time": "15:00",
+          "end_time": "16:00",
+          "location": "MS2158"
+        }
+      },
+      "error": null,
+      "wall_time_seconds": 11.614,
+      "automatic_grade": {
+        "version": 2,
+        "status": "fail",
+        "passed": false,
+        "semantic_correct": false,
+        "format_correct": false,
+        "instruction_following": false,
+        "schema_correct": true,
+        "differences": [
+          {
+            "path": "event_type",
+            "actual": "chemistry lecture",
+            "expected": "lecture",
+            "reason": "Value differs"
+          }
+        ],
+        "actual": {
+          "course": "APS110",
+          "event_type": "chemistry lecture",
+          "date": "2026-09-25",
+          "start_time": "3:00 PM",
+          "end_time": "4:00 PM",
+          "location": "MS2158"
+        },
+        "expected": {
+          "course": "APS110",
+          "event_type": "lecture",
+          "date": "2026-09-25",
+          "start_time": "15:00",
+          "end_time": "16:00",
+          "location": "MS2158"
+        }
+      },
+      "review": {
+        "semantic_correct": true,
+        "notes": "Chemistry lecture is a precise description of the stated lecture; prompt supplies no restricted event_type vocabulary. Date, course, room and equivalent 12-hour times are correct. Retain canonical date/time format and Markdown-fence failures."
+      }
+    },
+    {
+      "id": "project_006",
+      "suite": "project",
+      "source_file": "cases_project.json",
+      "category": "university_tooling",
+      "difficulty": "hard",
+      "quality": "balanced",
+      "prompt": "Determine which tasks are overdue as of 2026-09-12T16:00:00-04:00. A task is overdue only if its due timestamp is earlier than the current timestamp and completed is false. Return only a JSON array of overdue task IDs in ascending order.\n\nTasks:\n[\n  {\"id\":1,\"due\":\"2026-09-12T14:00:00-04:00\",\"completed\":false},\n  {\"id\":2,\"due\":\"2026-09-12T18:00:00-04:00\",\"completed\":false},\n  {\"id\":3,\"due\":\"2026-09-11T23:59:00-04:00\",\"completed\":true},\n  {\"id\":4,\"due\":\"2026-09-10T09:00:00-04:00\",\"completed\":false},\n  {\"id\":5,\"due\":\"2026-09-13T10:00:00-04:00\",\"completed\":false}\n]",
+      "expected": {
+        "mode": "semantic_json",
+        "value": [
+          1,
+          4
+        ],
+        "normalize": {
+          "*": "number"
+        }
+      },
+      "request": {
+        "prompt": "Determine which tasks are overdue as of 2026-09-12T16:00:00-04:00. A task is overdue only if its due timestamp is earlier than the current timestamp and completed is false. Return only a JSON array of overdue task IDs in ascending order.\n\nTasks:\n[\n  {\"id\":1,\"due\":\"2026-09-12T14:00:00-04:00\",\"completed\":false},\n  {\"id\":2,\"due\":\"2026-09-12T18:00:00-04:00\",\"completed\":false},\n  {\"id\":3,\"due\":\"2026-09-11T23:59:00-04:00\",\"completed\":true},\n  {\"id\":4,\"due\":\"2026-09-10T09:00:00-04:00\",\"completed\":false},\n  {\"id\":5,\"due\":\"2026-09-13T10:00:00-04:00\",\"completed\":false}\n]",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "[1, 4]",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 285,
+        "output_tokens": 631,
+        "reasoning_output_tokens": 620,
+        "tokens_per_second": 49.273848171005596,
+        "time_to_first_token_seconds": 0.185165,
+        "model_load_time_seconds": null
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": true,
+        "instruction_following": true,
+        "schema_correct": true,
+        "differences": [],
+        "actual": [
+          1,
+          4
+        ],
+        "expected": [
+          1,
+          4
+        ]
+      },
+      "error": null,
+      "wall_time_seconds": 13.134
+    },
+    {
+      "id": "project_007",
+      "suite": "project",
+      "source_file": "cases_project.json",
+      "category": "gateway_operations",
+      "difficulty": "medium",
+      "quality": "balanced",
+      "prompt": "Analyze these gateway requests and return JSON only with total_requests, successful_requests, failed_requests, average_latency_ms. Round average_latency_ms to one decimal place.\n\nRequests:\n[\n  {\"status\":200,\"latency_ms\":1200},\n  {\"status\":200,\"latency_ms\":900},\n  {\"status\":502,\"latency_ms\":3000},\n  {\"status\":200,\"latency_ms\":1100},\n  {\"status\":200,\"latency_ms\":800}\n]",
+      "expected": {
+        "mode": "semantic_json",
+        "value": {
+          "total_requests": 5,
+          "successful_requests": 4,
+          "failed_requests": 1,
+          "average_latency_ms": 1400.0
+        },
+        "normalize": {
+          "total_requests": "number",
+          "successful_requests": "number",
+          "failed_requests": "number",
+          "average_latency_ms": "number"
+        }
+      },
+      "request": {
+        "prompt": "Analyze these gateway requests and return JSON only with total_requests, successful_requests, failed_requests, average_latency_ms. Round average_latency_ms to one decimal place.\n\nRequests:\n[\n  {\"status\":200,\"latency_ms\":1200},\n  {\"status\":200,\"latency_ms\":900},\n  {\"status\":502,\"latency_ms\":3000},\n  {\"status\":200,\"latency_ms\":1100},\n  {\"status\":200,\"latency_ms\":800}\n]",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "```json\n{\n  \"total_requests\": 5,\n  \"successful_requests\": 4,\n  \"failed_requests\": 1,\n  \"average_latency_ms\": 1400.0\n}\n```",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 149,
+        "output_tokens": 660,
+        "reasoning_output_tokens": 601,
+        "tokens_per_second": 48.9737291242977,
+        "time_to_first_token_seconds": 0.139139,
+        "model_load_time_seconds": null
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass_with_format_issue",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": false,
+        "instruction_following": false,
+        "schema_correct": true,
+        "differences": [],
+        "actual": {
+          "total_requests": 5,
+          "successful_requests": 4,
+          "failed_requests": 1,
+          "average_latency_ms": 1400.0
+        },
+        "expected": {
+          "total_requests": 5,
+          "successful_requests": 4,
+          "failed_requests": 1,
+          "average_latency_ms": 1400.0
+        }
+      },
+      "error": null,
+      "wall_time_seconds": 13.778
+    },
+    {
+      "id": "project_008",
+      "suite": "project",
+      "source_file": "cases_project.json",
+      "category": "gateway_operations",
+      "difficulty": "hard",
+      "quality": "balanced",
+      "prompt": "Select the appropriate quality level for each task using these rules:\n- fast: simple classification, extraction, or formatting\n- balanced: ordinary explanation, summarization, or moderate coding\n- deep: difficult multi-step reasoning, architecture analysis, or complex debugging\n\nReturn JSON only mapping task IDs to fast, balanced, or deep.\n\nTasks:\nA: Extract a professor name from a sentence.\nB: Explain recursion to a beginner.\nC: Compare three distributed database architectures and identify failure modes.\nD: Convert a list of dates into ISO format.\nE: Debug a race condition involving multiple asynchronous workers.\nF: Summarize a two-page project update.",
+      "expected": {
+        "mode": "semantic_json",
+        "value": {
+          "A": "fast",
+          "B": "balanced",
+          "C": "deep",
+          "D": "fast",
+          "E": "deep",
+          "F": "balanced"
+        },
+        "normalize": {
+          "A": "text",
+          "B": "text",
+          "C": "text",
+          "D": "text",
+          "E": "text",
+          "F": "text"
+        }
+      },
+      "request": {
+        "prompt": "Select the appropriate quality level for each task using these rules:\n- fast: simple classification, extraction, or formatting\n- balanced: ordinary explanation, summarization, or moderate coding\n- deep: difficult multi-step reasoning, architecture analysis, or complex debugging\n\nReturn JSON only mapping task IDs to fast, balanced, or deep.\n\nTasks:\nA: Extract a professor name from a sentence.\nB: Explain recursion to a beginner.\nC: Compare three distributed database architectures and identify failure modes.\nD: Convert a list of dates into ISO format.\nE: Debug a race condition involving multiple asynchronous workers.\nF: Summarize a two-page project update.",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "```json\n{\n  \"A\": \"fast\",\n  \"B\": \"balanced\",\n  \"C\": \"deep\",\n  \"D\": \"fast\",\n  \"E\": \"deep\",\n  \"F\": \"balanced\"\n}\n```",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 155,
+        "output_tokens": 261,
+        "reasoning_output_tokens": 200,
+        "tokens_per_second": 53.312150638812845,
+        "time_to_first_token_seconds": 0.137919,
+        "model_load_time_seconds": null
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass_with_format_issue",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": false,
+        "instruction_following": false,
+        "schema_correct": true,
+        "differences": [],
+        "actual": {
+          "A": "fast",
+          "B": "balanced",
+          "C": "deep",
+          "D": "fast",
+          "E": "deep",
+          "F": "balanced"
+        },
+        "expected": {
+          "A": "fast",
+          "B": "balanced",
+          "C": "deep",
+          "D": "fast",
+          "E": "deep",
+          "F": "balanced"
+        }
+      },
+      "error": null,
+      "wall_time_seconds": 5.209
+    }
+  ]
+}

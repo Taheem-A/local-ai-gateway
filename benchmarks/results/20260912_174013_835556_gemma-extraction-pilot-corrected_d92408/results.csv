@@ -1,0 +1,60 @@
+﻿id,category,difficulty,quality,model,status,semantic_correct,format_correct,instruction_following,wall_time_seconds,input_tokens,output_tokens,reasoning_output_tokens,tokens_per_second,time_to_first_token_seconds,model_load_time_seconds,response_text,error
+extract_001,structured_extraction,easy,balanced,google/gemma-4-12b-qat,pass_with_format_issue,True,False,False,8.977,100,479,401,55.38336119301785,0.089384,,"```json
+{
+  ""course"": ""MAT186"",
+  ""assignment"": ""Problem Set 2"",
+  ""due_date"": ""September 18, 2026"",
+  ""due_time"": ""11:59 PM"",
+  ""timezone"": ""Eastern Time""
+}
+```",
+extract_002,structured_extraction,easy,balanced,google/gemma-4-12b-qat,pass_with_format_issue,True,False,False,8.259,91,432,346,54.02996469248362,0.091769,,"```json
+{
+  ""customer_name"": ""Amir Rahman"",
+  ""order_number"": ""A18492"",
+  ""item_count"": 4,
+  ""subtotal"": 82.50,
+  ""tax"": 10.73,
+  ""total"": 93.23
+}
+```",
+extract_003,structured_extraction,medium,balanced,google/gemma-4-12b-qat,pass_with_format_issue,True,False,False,8.049,105,436,353,55.37403057257512,0.065211,,"```json
+{
+  ""error_code"": ""E_UPLOAD_17"",
+  ""service_name"": ""StorageProxy"",
+  ""affected_user_count"": 218,
+  ""first_occurrence_time"": ""14:03"",
+  ""resolved_time"": ""14:41""
+}
+```",
+extract_004,structured_extraction,medium,balanced,google/gemma-4-12b-qat,pass_with_format_issue,True,False,False,14.622,155,770,605,53.34261545710841,0.074394,,"```json
+[
+  {
+    ""name"": ""Programming Lecture"",
+    ""start"": ""10:00"",
+    ""end"": ""11:00"",
+    ""room"": ""MY150""
+  },
+  {
+    ""name"": ""Design Studio"",
+    ""start"": ""12:00"",
+    ""end"": ""13:00"",
+    ""room"": ""SF1101""
+  },
+  {
+    ""name"": ""Chemistry Lecture"",
+    ""start"": ""15:00"",
+    ""end"": ""16:00"",
+    ""room"": ""MS2158""
+  }
+]
+```",
+extract_005,structured_extraction,hard,balanced,google/gemma-4-12b-qat,fail,False,False,False,10.99,154,561,495,52.66105230888152,0.109117,,"```json
+{
+  ""port"": 4812,
+  ""context_length"": 16384,
+  ""ttl_seconds"": 300,
+  ""authentication"": ""enabled"",
+  ""cors"": ""disabled""
+}
+```",

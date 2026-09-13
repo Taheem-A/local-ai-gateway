@@ -1,0 +1,229 @@
+﻿id,category,difficulty,quality,model,status,semantic_correct,format_correct,instruction_following,wall_time_seconds,input_tokens,output_tokens,reasoning_output_tokens,tokens_per_second,time_to_first_token_seconds,model_load_time_seconds,response_text,error
+extract_001,structured_extraction,easy,balanced,google/gemma-4-12b-qat,pass_with_format_issue,True,False,False,15.252,100,476,398,53.906483712978726,0.162394,6.248,"```json
+{
+  ""course"": ""MAT186"",
+  ""assignment"": ""Problem Set 2"",
+  ""due_date"": ""September 18, 2026"",
+  ""due_time"": ""11:59 PM"",
+  ""timezone"": ""Eastern Time""
+}
+```",
+extract_002,structured_extraction,easy,balanced,google/gemma-4-12b-qat,pass_with_format_issue,True,False,False,8.345,91,421,335,51.63767027060722,0.10147199999999999,,"```json
+{
+  ""customer_name"": ""Amir Rahman"",
+  ""order_number"": ""A18492"",
+  ""item_count"": 4,
+  ""subtotal"": 82.50,
+  ""tax"": 10.73,
+  ""total"": 93.23
+}
+```",
+extract_003,structured_extraction,medium,balanced,google/gemma-4-12b-qat,pass_with_format_issue,True,False,False,7.672,105,431,348,57.604635806746906,0.112265,,"```json
+{
+  ""error_code"": ""E_UPLOAD_17"",
+  ""service_name"": ""StorageProxy"",
+  ""affected_user_count"": 218,
+  ""first_occurrence_time"": ""14:03"",
+  ""resolved_time"": ""14:41""
+}
+```",
+extract_004,structured_extraction,medium,balanced,google/gemma-4-12b-qat,pass_with_format_issue,True,False,False,15.183,155,770,605,51.45841099772639,0.139223,,"```json
+[
+  {
+    ""name"": ""Programming Lecture"",
+    ""start"": ""10:00"",
+    ""end"": ""11:00"",
+    ""room"": ""MY150""
+  },
+  {
+    ""name"": ""Design Studio"",
+    ""start"": ""12:00"",
+    ""end"": ""13:00"",
+    ""room"": ""SF1101""
+  },
+  {
+    ""name"": ""Chemistry Lecture"",
+    ""start"": ""15:00"",
+    ""end"": ""16:00"",
+    ""room"": ""MS2158""
+  }
+]
+```",
+extract_005,structured_extraction,hard,balanced,google/gemma-4-12b-qat,pass_with_format_issue,True,False,False,10.631,154,563,497,54.40016509772525,0.147935,,"```json
+{
+  ""port"": 4812,
+  ""context_length"": 16384,
+  ""ttl_seconds"": 300,
+  ""authentication"": ""enabled"",
+  ""cors"": ""disabled""
+}
+```",
+classify_001,classification,easy,balanced,google/gemma-4-12b-qat,pass,True,True,True,4.966,62,236,230,49.803804798755536,0.10585699999999999,,assignment,
+classify_002,classification,easy,balanced,google/gemma-4-12b-qat,pass,True,True,True,5.749,63,291,285,52.069895036069184,0.100163,,exam,
+classify_003,classification,easy,balanced,google/gemma-4-12b-qat,pass,True,True,True,4.489,62,216,209,49.84554835203662,0.096281,,announcement,
+classify_004,classification,easy,balanced,google/gemma-4-12b-qat,fail,False,True,True,4.603,50,233,226,52.449113621283495,0.10029,,announcement,
+classify_005,classification,medium,balanced,google/gemma-4-12b-qat,pass,True,True,True,4.935,57,245,239,51.249145409998405,0.10071899999999999,,assignment,
+instruction_001,instruction_following,easy,balanced,google/gemma-4-12b-qat,pass,True,True,True,1.477,35,71,57,53.283601971493276,0.096275,,"{""status"":""ok"",""count"":3}",
+instruction_002,instruction_following,easy,balanced,google/gemma-4-12b-qat,pass,True,True,True,2.261,37,113,96,53.09735352360201,0.09956999999999999,,"[""apple"", ""banana"", ""mango"", ""zebra""]",
+instruction_003,instruction_following,medium,balanced,google/gemma-4-12b-qat,pass,True,True,True,2.62,41,132,120,52.924417467804986,0.094444,,local-artificial-intelligence-gateway,
+instruction_004,instruction_following,medium,balanced,google/gemma-4-12b-qat,pass,True,True,True,3.956,56,199,189,52.161322853298124,0.10345900000000001,,"RED
+GREEN
+BLUE",
+instruction_005,instruction_following,hard,balanced,google/gemma-4-12b-qat,pass_with_format_issue,True,False,False,9.359,89,450,406,48.90079401166758,0.113665,,"```json
+{
+  ""even"": [2, 4, 6, 8],
+  ""odd"": [3, 7, 9]
+}
+```",
+reason_001,reasoning,easy,balanced,google/gemma-4-12b-qat,pass,True,True,True,9.657,51,489,481,51.650574549137055,0.093889,,0.3,
+reason_002,reasoning,medium,balanced,google/gemma-4-12b-qat,pass_with_format_issue,True,False,False,9.636,84,462,417,48.90579386197278,0.106434,,"```json
+{
+  ""Monday"": ""A"",
+  ""Tuesday"": ""B"",
+  ""Wednesday"": ""D"",
+  ""Thursday"": ""C""
+}
+```",
+reason_003,reasoning,easy,balanced,google/gemma-4-12b-qat,pass,True,True,True,6.531,44,320,313,50.47498703314988,0.092503,,11,
+reason_004,reasoning,medium,balanced,google/gemma-4-12b-qat,pass,True,True,True,7.367,91,381,370,52.941462485610025,0.106874,,O(n^2),
+reason_005,reasoning,medium,balanced,google/gemma-4-12b-qat,pass_with_format_issue,True,False,False,10.796,87,509,459,47.97511036164167,0.10729999999999999,,"```json
+{
+  ""equivalent_parallel_resistance_ohms"": 2,
+  ""total_resistance_ohms"": 6,
+  ""total_current_amps"": 2
+}
+```",
+coding_001,coding,easy,balanced,google/gemma-4-12b-qat,pass,True,True,True,9.926,59,487,447,50.17542298346162,0.102948,,"def clamp(value, minimum, maximum):
+    if value < minimum:
+        return minimum
+    if value > maximum:
+        return maximum
+    return value",
+coding_002,coding,medium,balanced,google/gemma-4-12b-qat,pass,True,True,True,21.482,61,1042,981,48.94500246135531,0.09709699999999999,,"def dedupe_preserve_order(items):
+    seen = set()
+    result = []
+    for item in items:
+        if item not in seen:
+            seen.add(item)
+            result.append(item)
+    return result",
+coding_003,coding,medium,balanced,google/gemma-4-12b-qat,pass,True,True,True,33.392,109,1599,1558,48.27401369362786,0.123684,,"def largest(numbers):
+    result = numbers[0]
+    for number in numbers:
+        if number > result:
+            result = number
+    return result",
+coding_004,coding,hard,balanced,google/gemma-4-12b-qat,pass,True,True,True,45.337,120,2113,2024,46.923500253169166,0.144112,,"def flatten_dict(data, prefix=''):
+    result = {}
+    for key, value in data.items():
+        new_key = f""{prefix}{key}""
+        if isinstance(value, dict):
+            result.update(flatten_dict(value, f""{new_key}.""))
+        else:
+            result[new_key] = value
+    return result",
+summary_001,summarization,easy,balanced,google/gemma-4-12b-qat,manual,,True,True,13.057,101,617,570,48.38769984669897,0.137804,,Version 2.4 was rolled back at 10:35 AM on Tuesday after causing slow page loads due to an inefficient database query. Engineers will redesign the query before redeploying the update.,
+summary_002,summarization,medium,balanced,google/gemma-4-12b-qat,manual,,False,False,89.216,98,4096,4093,46.024819999682606,0.111246,,,
+summary_003,summarization,medium,balanced,google/gemma-4-12b-qat,manual,,True,True,20.062,111,965,899,48.83543693835448,0.120365,,"The proposed architecture introduces a local gateway to decouple applications from provider-specific model endpoints. By centralizing routing, authentication, model selection, and fallback logic, the gateway allows applications to send provider-independent requests. This abstraction simplifies model replacement, enabling seamless provider swaps without requiring modifications to individual application codebases.",
+summary_004,summarization,hard,balanced,google/gemma-4-12b-qat,manual,,False,False,12.788,144,628,513,50.338932756820086,0.14184,,"Here is the incident summary:
+
+*   **Issue:** Recommendation service experienced elevated latency starting at 08:12 due to database connection exhaustion.
+*   **Root Cause:** A recently deployed worker was failing to release database connections after completing jobs.
+*   **Resolution:** The faulty worker was disabled at 08:26, restoring normal latency by 08:31 with no data loss.
+*   **Next Steps:** A code fix and regression testing are required before the worker can be re-enabled.",
+long_001,long_context_retrieval,medium,balanced,google/gemma-4-12b-qat,manual,,False,False,14.318,391,667,603,47.808184947901644,0.229273,,"```json
+{
+  ""first_failure_time"": ""08:48"",
+  ""root_cause"": ""The newly deployed model identifier did not exist on the inference server."",
+  ""recovery_time"": ""09:02""
+}
+```",
+long_002,long_context_retrieval,hard,balanced,google/gemma-4-12b-qat,fail,False,False,False,22.467,358,1072,957,48.6798665617133,0.226646,,"```json
+{
+  ""Lab 2"": ""2026-09-18 23:59"",
+  ""Lab 3"": ""2026-09-23 23:59"",
+  ""Project Milestone 1"": ""2026-09-27 17:00"",
+  ""Problem Set 4"": ""2026-09-21 18:00""
+}
+```",
+long_003,long_context_reasoning,hard,balanced,google/gemma-4-12b-qat,pass,True,True,True,10.992,304,522,516,49.384068813145376,0.207274,,FAIL,
+long_004,long_context_analysis,hard,balanced,google/gemma-4-12b-qat,pass_with_format_issue,True,False,False,46.945,449,2184,2098,46.97029545154979,0.261375,,"```json
+{
+  ""total_listening_ms"": 1867000,
+  ""unique_tracks"": 4,
+  ""most_played_track_by_count"": ""Almost Love"",
+  ""most_listened_track_by_ms"": ""Almost Love"",
+  ""completed_listens"": 8
+}
+```",
+project_001,itqaan_metadata,easy,balanced,google/gemma-4-12b-qat,pass_with_format_issue,True,False,False,8.489,90,415,349,50.88693218664835,0.11812399999999999,,"```json
+{
+  ""surah_number"": 2,
+  ""ayah_number"": 255,
+  ""reciter_id"": ""abdul_baset_01"",
+  ""timestamp_seconds"": 83.4
+}
+```",
+project_002,itqaan_metadata,medium,balanced,google/gemma-4-12b-qat,pass_with_format_issue,True,False,False,11.134,92,552,447,50.52229601187448,0.11055200000000001,,"```json
+[
+  {
+    ""id"": ""a1"",
+    ""minutes"": 1,
+    ""seconds"": 3
+  },
+  {
+    ""id"": ""a2"",
+    ""minutes"": 2,
+    ""seconds"": 5
+  },
+  {
+    ""id"": ""a3"",
+    ""minutes"": 59,
+    ""seconds"": 59
+  }
+]
+```",
+project_003,listening_data,medium,balanced,google/gemma-4-12b-qat,pass_with_format_issue,True,False,False,12.218,161,592,518,49.43055333447975,0.141297,,"```json
+[
+  {""track"": ""Song A"", ""completion_percent"": 90.0},
+  {""track"": ""Song B"", ""completion_percent"": 25.0},
+  {""track"": ""Song C"", ""completion_percent"": 100.0}
+]
+```",
+project_004,listening_data,hard,balanced,google/gemma-4-12b-qat,pass_with_format_issue,True,False,False,13.895,188,675,615,49.555861109185166,0.15323599999999998,,"```json
+{
+  ""total_events"": 6,
+  ""completed_events"": 4,
+  ""completion_rate_percent"": 66.7,
+  ""most_played_track"": ""Paris""
+}
+```",
+project_005,university_tooling,medium,balanced,google/gemma-4-12b-qat,fail,False,False,False,11.614,102,578,486,50.91279494126235,0.11522700000000001,,"```json
+{
+  ""course"": ""APS110"",
+  ""event_type"": ""chemistry lecture"",
+  ""date"": ""2026-09-25"",
+  ""start_time"": ""3:00 PM"",
+  ""end_time"": ""4:00 PM"",
+  ""location"": ""MS2158""
+}
+```",
+project_006,university_tooling,hard,balanced,google/gemma-4-12b-qat,pass,True,True,True,13.134,285,631,620,49.273848171005596,0.185165,,"[1, 4]",
+project_007,gateway_operations,medium,balanced,google/gemma-4-12b-qat,pass_with_format_issue,True,False,False,13.778,149,660,601,48.9737291242977,0.139139,,"```json
+{
+  ""total_requests"": 5,
+  ""successful_requests"": 4,
+  ""failed_requests"": 1,
+  ""average_latency_ms"": 1400.0
+}
+```",
+project_008,gateway_operations,hard,balanced,google/gemma-4-12b-qat,pass_with_format_issue,True,False,False,5.209,155,261,200,53.312150638812845,0.137919,,"```json
+{
+  ""A"": ""fast"",
+  ""B"": ""balanced"",
+  ""C"": ""deep"",
+  ""D"": ""fast"",
+  ""E"": ""deep"",
+  ""F"": ""balanced""
+}
+```",

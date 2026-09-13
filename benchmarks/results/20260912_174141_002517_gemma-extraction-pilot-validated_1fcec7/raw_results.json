@@ -1,0 +1,424 @@
+{
+  "metadata": {
+    "version": 2,
+    "started_at": "2026-09-12T17:41:41.002787-04:00",
+    "forced_quality": "balanced",
+    "name": "gemma-extraction-pilot-validated",
+    "case_count": 5,
+    "state": "completed",
+    "execute_code": true,
+    "max_output_tokens_override": 4096,
+    "source_sha256": {
+      "benchmarks\\cases_core.json": "076f8b97ceb4ebc3f076499c86b8fc90a61e74b82ca69fb7728ecf2014c13702",
+      "benchmarks\\cases_long_context.json": "b04713ebde937789fa9d12f9cf8fd274139ea0f84e549d480b12d56c360d7c4d",
+      "benchmarks\\cases_project.json": "49e49a80d121adb7bb2d8bd5771592f81fad3e43d6e77527c35e0867b406873a",
+      "benchmarks\\code_execution.py": "679e059ab20131cb65a28a2f1fb7d1dcd8f47339e97874b1f5d3f1ed1a89e65e",
+      "benchmarks\\grading.py": "b78ff6a13892135a0e36a94c3351b0fd62eeeb38b25d85a8f94837af283e046c",
+      "benchmarks\\reporting.py": "c936af8e272a50339db406fc643b680e434598d9cfafdc6a444ff0eb05f3742c",
+      "benchmarks\\run_benchmarks.py": "958346a65905bcb5d6c3ccf217fe2fd1861a80b83b68a315522d5d2a483f9259",
+      "benchmarks\\test_benchmarks.py": "e200c42450d70d8e3aaf067a6f74327fc2b37e81fb54d459e3588d1b058ebe67",
+      "app\\__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "app\\config.py": "79ca8443a6c2d5ac3b7795720146cb7ad5e4b328b562304fbf5bb787ca0375d5",
+      "app\\lmstudio.py": "fa17cf55c59136d77b84258d08e554abb0e9cd04882b376dee5c8173e72a30a2",
+      "app\\main.py": "eb716f71edb6afe49d902ca38149a606df08c1550f7184e8e9ba1e15dd6472c7",
+      "app\\routing.py": "d9dcf3dca08bc6151fe600a5e265bcf43de7cc0fd93150d1cdd12efc52889a61",
+      "app\\schemas.py": "6db8245e4bdf8af23643564f08ed6467eb9c030aa7aaae8f979b4c987097fe4d"
+    },
+    "finished_at": "2026-09-12T17:42:33.768717-04:00"
+  },
+  "results": [
+    {
+      "id": "extract_001",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "structured_extraction",
+      "difficulty": "easy",
+      "quality": "balanced",
+      "prompt": "Extract the course code, assignment name, due date, due time, and timezone from the following announcement. Return only JSON with keys course, assignment, due_date, due_time, timezone.\n\nAnnouncement:\nMAT186 students: Problem Set 2 is due Friday, September 18, 2026 at 11:59 PM Eastern Time. Submit through Quercus.",
+      "expected": {
+        "mode": "semantic_json",
+        "value": {
+          "course": "MAT186",
+          "assignment": "Problem Set 2",
+          "due_date": "2026-09-18",
+          "due_time": "23:59",
+          "timezone": "Eastern Time"
+        },
+        "normalize": {
+          "course": "text",
+          "assignment": "text",
+          "due_date": "date",
+          "due_time": "time",
+          "timezone": "timezone"
+        }
+      },
+      "request": {
+        "prompt": "Extract the course code, assignment name, due date, due time, and timezone from the following announcement. Return only JSON with keys course, assignment, due_date, due_time, timezone.\n\nAnnouncement:\nMAT186 students: Problem Set 2 is due Friday, September 18, 2026 at 11:59 PM Eastern Time. Submit through Quercus.",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "```json\n{\n  \"course\": \"MAT186\",\n  \"assignment\": \"Problem Set 2\",\n  \"due_date\": \"September 18, 2026\",\n  \"due_time\": \"11:59 PM\",\n  \"timezone\": \"Eastern Time\"\n}\n```",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 100,
+        "output_tokens": 487,
+        "reasoning_output_tokens": 409,
+        "tokens_per_second": 52.837349352400004,
+        "time_to_first_token_seconds": 0.133667,
+        "model_load_time_seconds": null
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass_with_format_issue",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": false,
+        "instruction_following": false,
+        "schema_correct": true,
+        "differences": [],
+        "actual": {
+          "course": "MAT186",
+          "assignment": "Problem Set 2",
+          "due_date": "September 18, 2026",
+          "due_time": "11:59 PM",
+          "timezone": "Eastern Time"
+        },
+        "expected": {
+          "course": "MAT186",
+          "assignment": "Problem Set 2",
+          "due_date": "2026-09-18",
+          "due_time": "23:59",
+          "timezone": "Eastern Time"
+        }
+      },
+      "error": null,
+      "wall_time_seconds": 9.514
+    },
+    {
+      "id": "extract_002",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "structured_extraction",
+      "difficulty": "easy",
+      "quality": "balanced",
+      "prompt": "Extract the customer name, order number, item count, subtotal, tax, and total. Return only JSON.\n\nReceipt:\nCustomer: Amir Rahman\nOrder #A18492\nItems purchased: 4\nSubtotal: $82.50\nHST: $10.73\nTotal paid: $93.23",
+      "expected": {
+        "mode": "semantic_json",
+        "value": {
+          "customer_name": "Amir Rahman",
+          "order_number": "A18492",
+          "item_count": 4,
+          "subtotal": 82.5,
+          "tax": 10.73,
+          "total": 93.23
+        },
+        "normalize": {
+          "customer_name": "text",
+          "item_count": "number",
+          "subtotal": "number",
+          "tax": "number",
+          "total": "number"
+        }
+      },
+      "request": {
+        "prompt": "Extract the customer name, order number, item count, subtotal, tax, and total. Return only JSON.\n\nReceipt:\nCustomer: Amir Rahman\nOrder #A18492\nItems purchased: 4\nSubtotal: $82.50\nHST: $10.73\nTotal paid: $93.23",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "```json\n{\n  \"customer_name\": \"Amir Rahman\",\n  \"order_number\": \"A18492\",\n  \"item_count\": 4,\n  \"subtotal\": 82.50,\n  \"tax\": 10.73,\n  \"total\": 93.23\n}\n```",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 91,
+        "output_tokens": 421,
+        "reasoning_output_tokens": 335,
+        "tokens_per_second": 52.36201300522797,
+        "time_to_first_token_seconds": 0.110169,
+        "model_load_time_seconds": null
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass_with_format_issue",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": false,
+        "instruction_following": false,
+        "schema_correct": true,
+        "differences": [],
+        "actual": {
+          "customer_name": "Amir Rahman",
+          "order_number": "A18492",
+          "item_count": 4,
+          "subtotal": 82.5,
+          "tax": 10.73,
+          "total": 93.23
+        },
+        "expected": {
+          "customer_name": "Amir Rahman",
+          "order_number": "A18492",
+          "item_count": 4,
+          "subtotal": 82.5,
+          "tax": 10.73,
+          "total": 93.23
+        }
+      },
+      "error": null,
+      "wall_time_seconds": 8.28
+    },
+    {
+      "id": "extract_003",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "structured_extraction",
+      "difficulty": "medium",
+      "quality": "balanced",
+      "prompt": "Extract only the error code, service name, affected user count, first occurrence time, and resolved time. Return JSON only.\n\nIncident report:\nAt 14:03, several users began reporting failed uploads. The StorageProxy service logged error E_UPLOAD_17. Monitoring showed 218 affected users. The issue was traced to an expired internal credential. Service was fully restored at 14:41.",
+      "expected": {
+        "mode": "semantic_json",
+        "value": {
+          "error_code": "E_UPLOAD_17",
+          "service": "StorageProxy",
+          "affected_users": 218,
+          "first_occurrence": "14:03",
+          "resolved": "14:41"
+        },
+        "normalize": {
+          "service": "text",
+          "affected_users": "number",
+          "first_occurrence": "time",
+          "resolved": "time"
+        },
+        "key_aliases": {
+          "": {
+            "service_name": "service",
+            "affected_user_count": "affected_users",
+            "first_occurrence_time": "first_occurrence",
+            "resolved_time": "resolved"
+          }
+        }
+      },
+      "request": {
+        "prompt": "Extract only the error code, service name, affected user count, first occurrence time, and resolved time. Return JSON only.\n\nIncident report:\nAt 14:03, several users began reporting failed uploads. The StorageProxy service logged error E_UPLOAD_17. Monitoring showed 218 affected users. The issue was traced to an expired internal credential. Service was fully restored at 14:41.",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "```json\n{\n  \"error_code\": \"E_UPLOAD_17\",\n  \"service_name\": \"StorageProxy\",\n  \"affected_user_count\": 218,\n  \"first_occurrence_time\": \"14:03\",\n  \"resolved_time\": \"14:41\"\n}\n```",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 105,
+        "output_tokens": 431,
+        "reasoning_output_tokens": 348,
+        "tokens_per_second": 55.21118470747766,
+        "time_to_first_token_seconds": 0.114414,
+        "model_load_time_seconds": null
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass_with_format_issue",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": false,
+        "instruction_following": false,
+        "schema_correct": false,
+        "differences": [],
+        "actual": {
+          "error_code": "E_UPLOAD_17",
+          "service_name": "StorageProxy",
+          "affected_user_count": 218,
+          "first_occurrence_time": "14:03",
+          "resolved_time": "14:41"
+        },
+        "expected": {
+          "error_code": "E_UPLOAD_17",
+          "service": "StorageProxy",
+          "affected_users": 218,
+          "first_occurrence": "14:03",
+          "resolved": "14:41"
+        }
+      },
+      "error": null,
+      "wall_time_seconds": 8.071
+    },
+    {
+      "id": "extract_004",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "structured_extraction",
+      "difficulty": "medium",
+      "quality": "balanced",
+      "prompt": "Read the schedule and return a JSON array containing only events occurring on Friday. Each object must contain name, start, end, and room.\n\nSchedule:\nMonday 09:00-10:00 Calculus Lecture, BA1170\nWednesday 13:00-14:00 Chemistry Tutorial, WB130\nFriday 10:00-11:00 Programming Lecture, MY150\nFriday 12:00-13:00 Design Studio, SF1101\nFriday 15:00-16:00 Chemistry Lecture, MS2158",
+      "expected": {
+        "mode": "semantic_json",
+        "value": [
+          {
+            "name": "Programming Lecture",
+            "start": "10:00",
+            "end": "11:00",
+            "room": "MY150"
+          },
+          {
+            "name": "Design Studio",
+            "start": "12:00",
+            "end": "13:00",
+            "room": "SF1101"
+          },
+          {
+            "name": "Chemistry Lecture",
+            "start": "15:00",
+            "end": "16:00",
+            "room": "MS2158"
+          }
+        ],
+        "normalize": {
+          "*.name": "text",
+          "*.start": "time",
+          "*.end": "time",
+          "*.room": "text"
+        }
+      },
+      "request": {
+        "prompt": "Read the schedule and return a JSON array containing only events occurring on Friday. Each object must contain name, start, end, and room.\n\nSchedule:\nMonday 09:00-10:00 Calculus Lecture, BA1170\nWednesday 13:00-14:00 Chemistry Tutorial, WB130\nFriday 10:00-11:00 Programming Lecture, MY150\nFriday 12:00-13:00 Design Studio, SF1101\nFriday 15:00-16:00 Chemistry Lecture, MS2158",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "```json\n[\n  {\n    \"name\": \"Programming Lecture\",\n    \"start\": \"10:00\",\n    \"end\": \"11:00\",\n    \"room\": \"MY150\"\n  },\n  {\n    \"name\": \"Design Studio\",\n    \"start\": \"12:00\",\n    \"end\": \"13:00\",\n    \"room\": \"SF1101\"\n  },\n  {\n    \"name\": \"Chemistry Lecture\",\n    \"start\": \"15:00\",\n    \"end\": \"16:00\",\n    \"room\": \"MS2158\"\n  }\n]\n```",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 155,
+        "output_tokens": 770,
+        "reasoning_output_tokens": 605,
+        "tokens_per_second": 51.96139045707779,
+        "time_to_first_token_seconds": 0.146853,
+        "model_load_time_seconds": null
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass_with_format_issue",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": false,
+        "instruction_following": false,
+        "schema_correct": true,
+        "differences": [],
+        "actual": [
+          {
+            "name": "Programming Lecture",
+            "start": "10:00",
+            "end": "11:00",
+            "room": "MY150"
+          },
+          {
+            "name": "Design Studio",
+            "start": "12:00",
+            "end": "13:00",
+            "room": "SF1101"
+          },
+          {
+            "name": "Chemistry Lecture",
+            "start": "15:00",
+            "end": "16:00",
+            "room": "MS2158"
+          }
+        ],
+        "expected": [
+          {
+            "name": "Programming Lecture",
+            "start": "10:00",
+            "end": "11:00",
+            "room": "MY150"
+          },
+          {
+            "name": "Design Studio",
+            "start": "12:00",
+            "end": "13:00",
+            "room": "SF1101"
+          },
+          {
+            "name": "Chemistry Lecture",
+            "start": "15:00",
+            "end": "16:00",
+            "room": "MS2158"
+          }
+        ]
+      },
+      "error": null,
+      "wall_time_seconds": 15.1
+    },
+    {
+      "id": "extract_005",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "structured_extraction",
+      "difficulty": "hard",
+      "quality": "balanced",
+      "prompt": "Extract the final configuration after all changes have been applied. Ignore superseded values. Return JSON only with keys port, context_length, ttl_seconds, authentication, cors.\n\nConfiguration history:\nInitial port was 8000.\nContext length started at 8192.\nAuthentication was disabled during testing.\nPort was later changed from 8000 to 4812.\nTTL was initially 120 seconds.\nContext length was increased to 16384.\nCORS remained disabled throughout.\nAuthentication was enabled before deployment.\nTTL was finally changed from 120 to 300 seconds.",
+      "expected": {
+        "mode": "semantic_json",
+        "value": {
+          "port": 4812,
+          "context_length": 16384,
+          "ttl_seconds": 300,
+          "authentication": true,
+          "cors": false
+        },
+        "normalize": {
+          "port": "number",
+          "context_length": "number",
+          "ttl_seconds": "number",
+          "authentication": "enabled_state",
+          "cors": "enabled_state"
+        }
+      },
+      "request": {
+        "prompt": "Extract the final configuration after all changes have been applied. Ignore superseded values. Return JSON only with keys port, context_length, ttl_seconds, authentication, cors.\n\nConfiguration history:\nInitial port was 8000.\nContext length started at 8192.\nAuthentication was disabled during testing.\nPort was later changed from 8000 to 4812.\nTTL was initially 120 seconds.\nContext length was increased to 16384.\nCORS remained disabled throughout.\nAuthentication was enabled before deployment.\nTTL was finally changed from 120 to 300 seconds.",
+        "quality": "balanced",
+        "temperature": 0.0,
+        "max_output_tokens": 4096
+      },
+      "response": {
+        "text": "```json\n{\n  \"port\": 4812,\n  \"context_length\": 16384,\n  \"ttl_seconds\": 300,\n  \"authentication\": \"enabled\",\n  \"cors\": \"disabled\"\n}\n```",
+        "model": "google/gemma-4-12b-qat",
+        "quality": "balanced",
+        "input_tokens": 154,
+        "output_tokens": 563,
+        "reasoning_output_tokens": 497,
+        "tokens_per_second": 49.018992155565705,
+        "time_to_first_token_seconds": 0.13672700000000002,
+        "model_load_time_seconds": null
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass_with_format_issue",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": false,
+        "instruction_following": false,
+        "schema_correct": false,
+        "differences": [],
+        "actual": {
+          "port": 4812,
+          "context_length": 16384,
+          "ttl_seconds": 300,
+          "authentication": "enabled",
+          "cors": "disabled"
+        },
+        "expected": {
+          "port": 4812,
+          "context_length": 16384,
+          "ttl_seconds": 300,
+          "authentication": true,
+          "cors": false
+        }
+      },
+      "error": null,
+      "wall_time_seconds": 11.644
+    }
+  ]
+}

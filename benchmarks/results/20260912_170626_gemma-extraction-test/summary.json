@@ -1,0 +1,32 @@
+{
+  "metadata": {
+    "started_at": "2026-09-12T17:06:26.160056-04:00",
+    "forced_quality": "balanced",
+    "name": "gemma-extraction-test",
+    "case_count": 5,
+    "finished_at": "2026-09-12T17:07:01.968626-04:00"
+  },
+  "summary": {
+    "total_cases": 5,
+    "auto_graded": 5,
+    "passed": 0,
+    "failed": 5,
+    "pass_rate_percent": 0.0,
+    "manual_review": 0,
+    "request_errors": 0,
+    "average_wall_time_seconds": 7.142,
+    "median_wall_time_seconds": 6.859,
+    "average_tokens_per_second": 57.62,
+    "total_input_tokens": 605,
+    "total_output_tokens": 1536,
+    "by_category": {
+      "structured_extraction": {
+        "total": 5,
+        "auto_graded": 5,
+        "passed": 0,
+        "pass_rate_percent": 0.0,
+        "manual": 0
+      }
+    }
+  }
+}

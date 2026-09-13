@@ -1,0 +1,1984 @@
+balanced 20260912_174251_733938_gemma-full-validated_538f25 {
+  "total_cases": 40,
+  "scores": {
+    "semantic_correct": {
+      "passed": 38,
+      "evaluated": 40,
+      "percent": 95.0
+    },
+    "format_correct": {
+      "passed": 20,
+      "evaluated": 40,
+      "percent": 50.0
+    },
+    "instruction_following": {
+      "passed": 21,
+      "evaluated": 40,
+      "percent": 52.5
+    }
+  },
+  "manual_review": 0,
+  "errors": 0,
+  "code_tests": {
+    "passed": 13,
+    "evaluated": 13
+  },
+  "performance": {
+    "wall_time_seconds": {
+      "observed": 40,
+      "mean": 14.37345,
+      "median": 10.7135,
+      "total": 574.938
+    },
+    "input_tokens": {
+      "observed": 40,
+      "mean": 126.025,
+      "median": 95.0,
+      "total": 5041
+    },
+    "output_tokens": {
+      "observed": 40,
+      "mean": 684.1,
+      "median": 499.0,
+      "total": 27364
+    },
+    "reasoning_output_tokens": {
+      "observed": 40,
+      "mean": 634.375,
+      "median": 453.0,
+      "total": 25375
+    },
+    "tokens_per_second": {
+      "observed": 40,
+      "mean": 50.50889253620879,
+      "median": 50.25717787014085,
+      "total": 2020.3557014483515
+    },
+    "time_to_first_token_seconds": {
+      "observed": 40,
+      "mean": 0.129633375,
+      "median": 0.11296500000000001,
+      "total": 5.185335
+    },
+    "model_load_time_seconds": {
+      "observed": 1,
+      "mean": 6.248,
+      "median": 6.248,
+      "total": 6.248
+    }
+  },
+  "by_category": {
+    "classification": {
+      "total_cases": 5,
+      "scores": {
+        "semantic_correct": {
+          "passed": 4,
+          "evaluated": 5,
+          "percent": 80.0
+        },
+        "format_correct": {
+          "passed": 5,
+          "evaluated": 5,
+          "percent": 100.0
+        },
+        "instruction_following": {
+          "passed": 5,
+          "evaluated": 5,
+          "percent": 100.0
+        }
+      },
+      "manual_review": 0,
+      "errors": 0,
+      "code_tests": {
+        "passed": 0,
+        "evaluated": 0
+      },
+      "performance": {
+        "wall_time_seconds": {
+          "observed": 5,
+          "mean": 4.9483999999999995,
+          "median": 4.935,
+          "total": 24.741999999999997
+        },
+        "input_tokens": {
+          "observed": 5,
+          "mean": 58.8,
+          "median": 62,
+          "total": 294
+        },
+        "output_tokens": {
+          "observed": 5,
+          "mean": 244.2,
+          "median": 236,
+          "total": 1221
+        },
+        "reasoning_output_tokens": {
+          "observed": 5,
+          "mean": 237.8,
+          "median": 230,
+          "total": 1189
+        },
+        "tokens_per_second": {
+          "observed": 5,
+          "mean": 51.08350144362865,
+          "median": 51.249145409998405,
+          "total": 255.41750721814324
+        },
+        "time_to_first_token_seconds": {
+          "observed": 5,
+          "mean": 0.100662,
+          "median": 0.10029,
+          "total": 0.50331
+        },
+        "model_load_time_seconds": {
+          "observed": 0,
+          "mean": null,
+          "median": null,
+          "total": null
+        }
+      }
+    },
+    "coding": {
+      "total_cases": 4,
+      "scores": {
+        "semantic_correct": {
+          "passed": 4,
+          "evaluated": 4,
+          "percent": 100.0
+        },
+        "format_correct": {
+          "passed": 4,
+          "evaluated": 4,
+          "percent": 100.0
+        },
+        "instruction_following": {
+          "passed": 4,
+          "evaluated": 4,
+          "percent": 100.0
+        }
+      },
+      "manual_review": 0,
+      "errors": 0,
+      "code_tests": {
+        "passed": 13,
+        "evaluated": 13
+      },
+      "performance": {
+        "wall_time_seconds": {
+          "observed": 4,
+          "mean": 27.53425,
+          "median": 27.437,
+          "total": 110.137
+        },
+        "input_tokens": {
+          "observed": 4,
+          "mean": 87.25,
+          "median": 85.0,
+          "total": 349
+        },
+        "output_tokens": {
+          "observed": 4,
+          "mean": 1310.25,
+          "median": 1320.5,
+          "total": 5241
+        },
+        "reasoning_output_tokens": {
+          "observed": 4,
+          "mean": 1252.5,
+          "median": 1269.5,
+          "total": 5010
+        },
+        "tokens_per_second": {
+          "observed": 4,
+          "mean": 48.57948484790349,
+          "median": 48.60950807749158,
+          "total": 194.31793939161395
+        },
+        "time_to_first_token_seconds": {
+          "observed": 4,
+          "mean": 0.11696024999999999,
+          "median": 0.113316,
+          "total": 0.46784099999999995
+        },
+        "model_load_time_seconds": {
+          "observed": 0,
+          "mean": null,
+          "median": null,
+          "total": null
+        }
+      }
+    },
+    "gateway_operations": {
+      "total_cases": 2,
+      "scores": {
+        "semantic_correct": {
+          "passed": 2,
+          "evaluated": 2,
+          "percent": 100.0
+        },
+        "format_correct": {
+          "passed": 0,
+          "evaluated": 2,
+          "percent": 0.0
+        },
+        "instruction_following": {
+          "passed": 0,
+          "evaluated": 2,
+          "percent": 0.0
+        }
+      },
+      "manual_review": 0,
+      "errors": 0,
+      "code_tests": {
+        "passed": 0,
+        "evaluated": 0
+      },
+      "performance": {
+        "wall_time_seconds": {
+          "observed": 2,
+          "mean": 9.493500000000001,
+          "median": 9.493500000000001,
+          "total": 18.987000000000002
+        },
+        "input_tokens": {
+          "observed": 2,
+          "mean": 152,
+          "median": 152.0,
+          "total": 304
+        },
+        "output_tokens": {
+          "observed": 2,
+          "mean": 460.5,
+          "median": 460.5,
+          "total": 921
+        },
+        "reasoning_output_tokens": {
+          "observed": 2,
+          "mean": 400.5,
+          "median": 400.5,
+          "total": 801
+        },
+        "tokens_per_second": {
+          "observed": 2,
+          "mean": 51.14293988155527,
+          "median": 51.14293988155527,
+          "total": 102.28587976311054
+        },
+        "time_to_first_token_seconds": {
+          "observed": 2,
+          "mean": 0.138529,
+          "median": 0.138529,
+          "total": 0.277058
+        },
+        "model_load_time_seconds": {
+          "observed": 0,
+          "mean": null,
+          "median": null,
+          "total": null
+        }
+      }
+    },
+    "instruction_following": {
+      "total_cases": 5,
+      "scores": {
+        "semantic_correct": {
+          "passed": 5,
+          "evaluated": 5,
+          "percent": 100.0
+        },
+        "format_correct": {
+          "passed": 4,
+          "evaluated": 5,
+          "percent": 80.0
+        },
+        "instruction_following": {
+          "passed": 4,
+          "evaluated": 5,
+          "percent": 80.0
+        }
+      },
+      "manual_review": 0,
+      "errors": 0,
+      "code_tests": {
+        "passed": 0,
+        "evaluated": 0
+      },
+      "performance": {
+        "wall_time_seconds": {
+          "observed": 5,
+          "mean": 3.9346,
+          "median": 2.62,
+          "total": 19.673000000000002
+        },
+        "input_tokens": {
+          "observed": 5,
+          "mean": 51.6,
+          "median": 41,
+          "total": 258
+        },
+        "output_tokens": {
+          "observed": 5,
+          "mean": 193,
+          "median": 132,
+          "total": 965
+        },
+        "reasoning_output_tokens": {
+          "observed": 5,
+          "mean": 173.6,
+          "median": 120,
+          "total": 868
+        },
+        "tokens_per_second": {
+          "observed": 5,
+          "mean": 52.073497965573196,
+          "median": 52.924417467804986,
+          "total": 260.367489827866
+        },
+        "time_to_first_token_seconds": {
+          "observed": 5,
+          "mean": 0.1014826,
+          "median": 0.09956999999999999,
+          "total": 0.507413
+        },
+        "model_load_time_seconds": {
+          "observed": 0,
+          "mean": null,
+          "median": null,
+          "total": null
+        }
+      }
+    },
+    "itqaan_metadata": {
+      "total_cases": 2,
+      "scores": {
+        "semantic_correct": {
+          "passed": 2,
+          "evaluated": 2,
+          "percent": 100.0
+        },
+        "format_correct": {
+          "passed": 0,
+          "evaluated": 2,
+          "percent": 0.0
+        },
+        "instruction_following": {
+          "passed": 0,
+          "evaluated": 2,
+          "percent": 0.0
+        }
+      },
+      "manual_review": 0,
+      "errors": 0,
+      "code_tests": {
+        "passed": 0,
+        "evaluated": 0
+      },
+      "performance": {
+        "wall_time_seconds": {
+          "observed": 2,
+          "mean": 9.8115,
+          "median": 9.8115,
+          "total": 19.623
+        },
+        "input_tokens": {
+          "observed": 2,
+          "mean": 91,
+          "median": 91.0,
+          "total": 182
+        },
+        "output_tokens": {
+          "observed": 2,
+          "mean": 483.5,
+          "median": 483.5,
+          "total": 967
+        },
+        "reasoning_output_tokens": {
+          "observed": 2,
+          "mean": 398,
+          "median": 398.0,
+          "total": 796
+        },
+        "tokens_per_second": {
+          "observed": 2,
+          "mean": 50.70461409926142,
+          "median": 50.70461409926142,
+          "total": 101.40922819852284
+        },
+        "time_to_first_token_seconds": {
+          "observed": 2,
+          "mean": 0.114338,
+          "median": 0.114338,
+          "total": 0.228676
+        },
+        "model_load_time_seconds": {
+          "observed": 0,
+          "mean": null,
+          "median": null,
+          "total": null
+        }
+      }
+    },
+    "listening_data": {
+      "total_cases": 2,
+      "scores": {
+        "semantic_correct": {
+          "passed": 2,
+          "evaluated": 2,
+          "percent": 100.0
+        },
+        "format_correct": {
+          "passed": 0,
+          "evaluated": 2,
+          "percent": 0.0
+        },
+        "instruction_following": {
+          "passed": 0,
+          "evaluated": 2,
+          "percent": 0.0
+        }
+      },
+      "manual_review": 0,
+      "errors": 0,
+      "code_tests": {
+        "passed": 0,
+        "evaluated": 0
+      },
+      "performance": {
+        "wall_time_seconds": {
+          "observed": 2,
+          "mean": 13.0565,
+          "median": 13.0565,
+          "total": 26.113
+        },
+        "input_tokens": {
+          "observed": 2,
+          "mean": 174.5,
+          "median": 174.5,
+          "total": 349
+        },
+        "output_tokens": {
+          "observed": 2,
+          "mean": 633.5,
+          "median": 633.5,
+          "total": 1267
+        },
+        "reasoning_output_tokens": {
+          "observed": 2,
+          "mean": 566.5,
+          "median": 566.5,
+          "total": 1133
+        },
+        "tokens_per_second": {
+          "observed": 2,
+          "mean": 49.493207221832456,
+          "median": 49.493207221832456,
+          "total": 98.98641444366491
+        },
+        "time_to_first_token_seconds": {
+          "observed": 2,
+          "mean": 0.1472665,
+          "median": 0.1472665,
+          "total": 0.294533
+        },
+        "model_load_time_seconds": {
+          "observed": 0,
+          "mean": null,
+          "median": null,
+          "total": null
+        }
+      }
+    },
+    "long_context_analysis": {
+      "total_cases": 1,
+      "scores": {
+        "semantic_correct": {
+          "passed": 1,
+          "evaluated": 1,
+          "percent": 100.0
+        },
+        "format_correct": {
+          "passed": 0,
+          "evaluated": 1,
+          "percent": 0.0
+        },
+        "instruction_following": {
+          "passed": 0,
+          "evaluated": 1,
+          "percent": 0.0
+        }
+      },
+      "manual_review": 0,
+      "errors": 0,
+      "code_tests": {
+        "passed": 0,
+        "evaluated": 0
+      },
+      "performance": {
+        "wall_time_seconds": {
+          "observed": 1,
+          "mean": 46.945,
+          "median": 46.945,
+          "total": 46.945
+        },
+        "input_tokens": {
+          "observed": 1,
+          "mean": 449,
+          "median": 449,
+          "total": 449
+        },
+        "output_tokens": {
+          "observed": 1,
+          "mean": 2184,
+          "median": 2184,
+          "total": 2184
+        },
+        "reasoning_output_tokens": {
+          "observed": 1,
+          "mean": 2098,
+          "median": 2098,
+          "total": 2098
+        },
+        "tokens_per_second": {
+          "observed": 1,
+          "mean": 46.97029545154979,
+          "median": 46.97029545154979,
+          "total": 46.97029545154979
+        },
+        "time_to_first_token_seconds": {
+          "observed": 1,
+          "mean": 0.261375,
+          "median": 0.261375,
+          "total": 0.261375
+        },
+        "model_load_time_seconds": {
+          "observed": 0,
+          "mean": null,
+          "median": null,
+          "total": null
+        }
+      }
+    },
+    "long_context_reasoning": {
+      "total_cases": 1,
+      "scores": {
+        "semantic_correct": {
+          "passed": 1,
+          "evaluated": 1,
+          "percent": 100.0
+        },
+        "format_correct": {
+          "passed": 1,
+          "evaluated": 1,
+          "percent": 100.0
+        },
+        "instruction_following": {
+          "passed": 1,
+          "evaluated": 1,
+          "percent": 100.0
+        }
+      },
+      "manual_review": 0,
+      "errors": 0,
+      "code_tests": {
+        "passed": 0,
+        "evaluated": 0
+      },
+      "performance": {
+        "wall_time_seconds": {
+          "observed": 1,
+          "mean": 10.992,
+          "median": 10.992,
+          "total": 10.992
+        },
+        "input_tokens": {
+          "observed": 1,
+          "mean": 304,
+          "median": 304,
+          "total": 304
+        },
+        "output_tokens": {
+          "observed": 1,
+          "mean": 522,
+          "median": 522,
+          "total": 522
+        },
+        "reasoning_output_tokens": {
+          "observed": 1,
+          "mean": 516,
+          "median": 516,
+          "total": 516
+        },
+        "tokens_per_second": {
+          "observed": 1,
+          "mean": 49.384068813145376,
+          "median": 49.384068813145376,
+          "total": 49.384068813145376
+        },
+        "time_to_first_token_seconds": {
+          "observed": 1,
+          "mean": 0.207274,
+          "median": 0.207274,
+          "total": 0.207274
+        },
+        "model_load_time_seconds": {
+          "observed": 0,
+          "mean": null,
+          "median": null,
+          "total": null
+        }
+      }
+    },
+    "long_context_retrieval": {
+      "total_cases": 2,
+      "scores": {
+        "semantic_correct": {
+          "passed": 2,
+          "evaluated": 2,
+          "percent": 100.0
+        },
+        "format_correct": {
+          "passed": 0,
+          "evaluated": 2,
+          "percent": 0.0
+        },
+        "instruction_following": {
+          "passed": 0,
+          "evaluated": 2,
+          "percent": 0.0
+        }
+      },
+      "manual_review": 0,
+      "errors": 0,
+      "code_tests": {
+        "passed": 0,
+        "evaluated": 0
+      },
+      "performance": {
+        "wall_time_seconds": {
+          "observed": 2,
+          "mean": 18.3925,
+          "median": 18.3925,
+          "total": 36.785
+        },
+        "input_tokens": {
+          "observed": 2,
+          "mean": 374.5,
+          "median": 374.5,
+          "total": 749
+        },
+        "output_tokens": {
+          "observed": 2,
+          "mean": 869.5,
+          "median": 869.5,
+          "total": 1739
+        },
+        "reasoning_output_tokens": {
+          "observed": 2,
+          "mean": 780,
+          "median": 780.0,
+          "total": 1560
+        },
+        "tokens_per_second": {
+          "observed": 2,
+          "mean": 48.24402575480747,
+          "median": 48.24402575480747,
+          "total": 96.48805150961493
+        },
+        "time_to_first_token_seconds": {
+          "observed": 2,
+          "mean": 0.22795949999999998,
+          "median": 0.22795949999999998,
+          "total": 0.45591899999999996
+        },
+        "model_load_time_seconds": {
+          "observed": 0,
+          "mean": null,
+          "median": null,
+          "total": null
+        }
+      }
+    },
+    "reasoning": {
+      "total_cases": 5,
+      "scores": {
+        "semantic_correct": {
+          "passed": 5,
+          "evaluated": 5,
+          "percent": 100.0
+        },
+        "format_correct": {
+          "passed": 3,
+          "evaluated": 5,
+          "percent": 60.0
+        },
+        "instruction_following": {
+          "passed": 3,
+          "evaluated": 5,
+          "percent": 60.0
+        }
+      },
+      "manual_review": 0,
+      "errors": 0,
+      "code_tests": {
+        "passed": 0,
+        "evaluated": 0
+      },
+      "performance": {
+        "wall_time_seconds": {
+          "observed": 5,
+          "mean": 8.7974,
+          "median": 9.636,
+          "total": 43.986999999999995
+        },
+        "input_tokens": {
+          "observed": 5,
+          "mean": 71.4,
+          "median": 84,
+          "total": 357
+        },
+        "output_tokens": {
+          "observed": 5,
+          "mean": 432.2,
+          "median": 462,
+          "total": 2161
+        },
+        "reasoning_output_tokens": {
+          "observed": 5,
+          "mean": 408,
+          "median": 417,
+          "total": 2040
+        },
+        "tokens_per_second": {
+          "observed": 5,
+          "mean": 50.38958565830228,
+          "median": 50.47498703314988,
+          "total": 251.9479282915114
+        },
+        "time_to_first_token_seconds": {
+          "observed": 5,
+          "mean": 0.1014,
+          "median": 0.106434,
+          "total": 0.507
+        },
+        "model_load_time_seconds": {
+          "observed": 0,
+          "mean": null,
+          "median": null,
+          "total": null
+        }
+      }
+    },
+    "structured_extraction": {
+      "total_cases": 5,
+      "scores": {
+        "semantic_correct": {
+          "passed": 5,
+          "evaluated": 5,
+          "percent": 100.0
+        },
+        "format_correct": {
+          "passed": 0,
+          "evaluated": 5,
+          "percent": 0.0
+        },
+        "instruction_following": {
+          "passed": 0,
+          "evaluated": 5,
+          "percent": 0.0
+        }
+      },
+      "manual_review": 0,
+      "errors": 0,
+      "code_tests": {
+        "passed": 0,
+        "evaluated": 0
+      },
+      "performance": {
+        "wall_time_seconds": {
+          "observed": 5,
+          "mean": 11.4166,
+          "median": 10.631,
+          "total": 57.083
+        },
+        "input_tokens": {
+          "observed": 5,
+          "mean": 121,
+          "median": 105,
+          "total": 605
+        },
+        "output_tokens": {
+          "observed": 5,
+          "mean": 532.2,
+          "median": 476,
+          "total": 2661
+        },
+        "reasoning_output_tokens": {
+          "observed": 5,
+          "mean": 436.6,
+          "median": 398,
+          "total": 2183
+        },
+        "tokens_per_second": {
+          "observed": 5,
+          "mean": 53.8014731771569,
+          "median": 53.906483712978726,
+          "total": 269.0073658857845
+        },
+        "time_to_first_token_seconds": {
+          "observed": 5,
+          "mean": 0.1326578,
+          "median": 0.139223,
+          "total": 0.663289
+        },
+        "model_load_time_seconds": {
+          "observed": 1,
+          "mean": 6.248,
+          "median": 6.248,
+          "total": 6.248
+        }
+      }
+    },
+    "summarization": {
+      "total_cases": 4,
+      "scores": {
+        "semantic_correct": {
+          "passed": 3,
+          "evaluated": 4,
+          "percent": 75.0
+        },
+        "format_correct": {
+          "passed": 2,
+          "evaluated": 4,
+          "percent": 50.0
+        },
+        "instruction_following": {
+          "passed": 3,
+          "evaluated": 4,
+          "percent": 75.0
+        }
+      },
+      "manual_review": 0,
+      "errors": 0,
+      "code_tests": {
+        "passed": 0,
+        "evaluated": 0
+      },
+      "performance": {
+        "wall_time_seconds": {
+          "observed": 4,
+          "mean": 33.78075,
+          "median": 16.5595,
+          "total": 135.123
+        },
+        "input_tokens": {
+          "observed": 4,
+          "mean": 113.5,
+          "median": 106.0,
+          "total": 454
+        },
+        "output_tokens": {
+          "observed": 4,
+          "mean": 1576.5,
+          "median": 796.5,
+          "total": 6306
+        },
+        "reasoning_output_tokens": {
+          "observed": 4,
+          "mean": 1518.75,
+          "median": 734.5,
+          "total": 6075
+        },
+        "tokens_per_second": {
+          "observed": 4,
+          "mean": 48.39672238538904,
+          "median": 48.61156839252673,
+          "total": 193.58688954155616
+        },
+        "time_to_first_token_seconds": {
+          "observed": 4,
+          "mean": 0.12781375,
+          "median": 0.1290845,
+          "total": 0.511255
+        },
+        "model_load_time_seconds": {
+          "observed": 0,
+          "mean": null,
+          "median": null,
+          "total": null
+        }
+      }
+    },
+    "university_tooling": {
+      "total_cases": 2,
+      "scores": {
+        "semantic_correct": {
+          "passed": 2,
+          "evaluated": 2,
+          "percent": 100.0
+        },
+        "format_correct": {
+          "passed": 1,
+          "evaluated": 2,
+          "percent": 50.0
+        },
+        "instruction_following": {
+          "passed": 1,
+          "evaluated": 2,
+          "percent": 50.0
+        }
+      },
+      "manual_review": 0,
+      "errors": 0,
+      "code_tests": {
+        "passed": 0,
+        "evaluated": 0
+      },
+      "performance": {
+        "wall_time_seconds": {
+          "observed": 2,
+          "mean": 12.374,
+          "median": 12.374,
+          "total": 24.748
+        },
+        "input_tokens": {
+          "observed": 2,
+          "mean": 193.5,
+          "median": 193.5,
+          "total": 387
+        },
+        "output_tokens": {
+          "observed": 2,
+          "mean": 604.5,
+          "median": 604.5,
+          "total": 1209
+        },
+        "reasoning_output_tokens": {
+          "observed": 2,
+          "mean": 553,
+          "median": 553.0,
+          "total": 1106
+        },
+        "tokens_per_second": {
+          "observed": 2,
+          "mean": 50.09332155613397,
+          "median": 50.09332155613397,
+          "total": 100.18664311226794
+        },
+        "time_to_first_token_seconds": {
+          "observed": 2,
+          "mean": 0.150196,
+          "median": 0.150196,
+          "total": 0.300392
+        },
+        "model_load_time_seconds": {
+          "observed": 0,
+          "mean": null,
+          "median": null,
+          "total": null
+        }
+      }
+    }
+  },
+  "reviewed_cases": 8,
+  "models": [
+    "google/gemma-4-12b-qat"
+  ],
+  "budget_hits": 1,
+  "empty_answers": 1,
+  "coding_cases": {
+    "passed": 4,
+    "total": 4
+  }
+}
+deep 20260912_175248_495461_gptoss-full-validated_228236 {
+  "total_cases": 40,
+  "scores": {
+    "semantic_correct": {
+      "passed": 39,
+      "evaluated": 40,
+      "percent": 97.5
+    },
+    "format_correct": {
+      "passed": 32,
+      "evaluated": 40,
+      "percent": 80.0
+    },
+    "instruction_following": {
+      "passed": 33,
+      "evaluated": 40,
+      "percent": 82.5
+    }
+  },
+  "manual_review": 0,
+  "errors": 0,
+  "code_tests": {
+    "passed": 13,
+    "evaluated": 13
+  },
+  "performance": {
+    "wall_time_seconds": {
+      "observed": 40,
+      "mean": 6.8951,
+      "median": 5.952999999999999,
+      "total": 275.804
+    },
+    "input_tokens": {
+      "observed": 40,
+      "mean": 161.45,
+      "median": 138.5,
+      "total": 6458
+    },
+    "output_tokens": {
+      "observed": 40,
+      "mean": 264.55,
+      "median": 241.0,
+      "total": 10582
+    },
+    "reasoning_output_tokens": {
+      "observed": 40,
+      "mean": 222.175,
+      "median": 187.5,
+      "total": 8887
+    },
+    "tokens_per_second": {
+      "observed": 40,
+      "mean": 43.68111594973376,
+      "median": 43.99787605346666,
+      "total": 1747.2446379893504
+    },
+    "time_to_first_token_seconds": {
+      "observed": 40,
+      "mean": 0.403749725,
+      "median": 0.395753,
+      "total": 16.149989
+    },
+    "model_load_time_seconds": {
+      "observed": 1,
+      "mean": 11.034,
+      "median": 11.034,
+      "total": 11.034
+    }
+  },
+  "by_category": {
+    "classification": {
+      "total_cases": 5,
+      "scores": {
+        "semantic_correct": {
+          "passed": 4,
+          "evaluated": 5,
+          "percent": 80.0
+        },
+        "format_correct": {
+          "passed": 5,
+          "evaluated": 5,
+          "percent": 100.0
+        },
+        "instruction_following": {
+          "passed": 5,
+          "evaluated": 5,
+          "percent": 100.0
+        }
+      },
+      "manual_review": 0,
+      "errors": 0,
+      "code_tests": {
+        "passed": 0,
+        "evaluated": 0
+      },
+      "performance": {
+        "wall_time_seconds": {
+          "observed": 5,
+          "mean": 2.9224,
+          "median": 1.946,
+          "total": 14.612
+        },
+        "input_tokens": {
+          "observed": 5,
+          "mean": 107.4,
+          "median": 108,
+          "total": 537
+        },
+        "output_tokens": {
+          "observed": 5,
+          "mean": 114.4,
+          "median": 71,
+          "total": 572
+        },
+        "reasoning_output_tokens": {
+          "observed": 5,
+          "mean": 103.4,
+          "median": 60,
+          "total": 517
+        },
+        "tokens_per_second": {
+          "observed": 5,
+          "mean": 45.62545641893814,
+          "median": 45.83107451608933,
+          "total": 228.1272820946907
+        },
+        "time_to_first_token_seconds": {
+          "observed": 5,
+          "mean": 0.3572402,
+          "median": 0.36088400000000004,
+          "total": 1.7862010000000001
+        },
+        "model_load_time_seconds": {
+          "observed": 0,
+          "mean": null,
+          "median": null,
+          "total": null
+        }
+      }
+    },
+    "coding": {
+      "total_cases": 4,
+      "scores": {
+        "semantic_correct": {
+          "passed": 4,
+          "evaluated": 4,
+          "percent": 100.0
+        },
+        "format_correct": {
+          "passed": 4,
+          "evaluated": 4,
+          "percent": 100.0
+        },
+        "instruction_following": {
+          "passed": 4,
+          "evaluated": 4,
+          "percent": 100.0
+        }
+      },
+      "manual_review": 0,
+      "errors": 0,
+      "code_tests": {
+        "passed": 13,
+        "evaluated": 13
+      },
+      "performance": {
+        "wall_time_seconds": {
+          "observed": 4,
+          "mean": 5.36925,
+          "median": 5.3245000000000005,
+          "total": 21.477
+        },
+        "input_tokens": {
+          "observed": 4,
+          "mean": 134.25,
+          "median": 131.5,
+          "total": 537
+        },
+        "output_tokens": {
+          "observed": 4,
+          "mean": 217,
+          "median": 221.0,
+          "total": 868
+        },
+        "reasoning_output_tokens": {
+          "observed": 4,
+          "mean": 163,
+          "median": 161.5,
+          "total": 652
+        },
+        "tokens_per_second": {
+          "observed": 4,
+          "mean": 43.79474659060029,
+          "median": 43.81687254256482,
+          "total": 175.17898636240116
+        },
+        "time_to_first_token_seconds": {
+          "observed": 4,
+          "mean": 0.391521,
+          "median": 0.38724200000000003,
+          "total": 1.566084
+        },
+        "model_load_time_seconds": {
+          "observed": 0,
+          "mean": null,
+          "median": null,
+          "total": null
+        }
+      }
+    },
+    "gateway_operations": {
+      "total_cases": 2,
+      "scores": {
+        "semantic_correct": {
+          "passed": 2,
+          "evaluated": 2,
+          "percent": 100.0
+        },
+        "format_correct": {
+          "passed": 1,
+          "evaluated": 2,
+          "percent": 50.0
+        },
+        "instruction_following": {
+          "passed": 1,
+          "evaluated": 2,
+          "percent": 50.0
+        }
+      },
+      "manual_review": 0,
+      "errors": 0,
+      "code_tests": {
+        "passed": 0,
+        "evaluated": 0
+      },
+      "performance": {
+        "wall_time_seconds": {
+          "observed": 2,
+          "mean": 6.678,
+          "median": 6.678,
+          "total": 13.356
+        },
+        "input_tokens": {
+          "observed": 2,
+          "mean": 181,
+          "median": 181.0,
+          "total": 362
+        },
+        "output_tokens": {
+          "observed": 2,
+          "mean": 260,
+          "median": 260.0,
+          "total": 520
+        },
+        "reasoning_output_tokens": {
+          "observed": 2,
+          "mean": 216,
+          "median": 216.0,
+          "total": 432
+        },
+        "tokens_per_second": {
+          "observed": 2,
+          "mean": 41.62463583305092,
+          "median": 41.62463583305092,
+          "total": 83.24927166610183
+        },
+        "time_to_first_token_seconds": {
+          "observed": 2,
+          "mean": 0.4200005,
+          "median": 0.4200005,
+          "total": 0.840001
+        },
+        "model_load_time_seconds": {
+          "observed": 0,
+          "mean": null,
+          "median": null,
+          "total": null
+        }
+      }
+    },
+    "instruction_following": {
+      "total_cases": 5,
+      "scores": {
+        "semantic_correct": {
+          "passed": 5,
+          "evaluated": 5,
+          "percent": 100.0
+        },
+        "format_correct": {
+          "passed": 5,
+          "evaluated": 5,
+          "percent": 100.0
+        },
+        "instruction_following": {
+          "passed": 5,
+          "evaluated": 5,
+          "percent": 100.0
+        }
+      },
+      "manual_review": 0,
+      "errors": 0,
+      "code_tests": {
+        "passed": 0,
+        "evaluated": 0
+      },
+      "performance": {
+        "wall_time_seconds": {
+          "observed": 5,
+          "mean": 3.5062,
+          "median": 3.157,
+          "total": 17.531
+        },
+        "input_tokens": {
+          "observed": 5,
+          "mean": 102.6,
+          "median": 92,
+          "total": 513
+        },
+        "output_tokens": {
+          "observed": 5,
+          "mean": 144,
+          "median": 133,
+          "total": 720
+        },
+        "reasoning_output_tokens": {
+          "observed": 5,
+          "mean": 123.8,
+          "median": 114,
+          "total": 619
+        },
+        "tokens_per_second": {
+          "observed": 5,
+          "mean": 45.49492108268674,
+          "median": 45.63186674034692,
+          "total": 227.4746054134337
+        },
+        "time_to_first_token_seconds": {
+          "observed": 5,
+          "mean": 0.3011746,
+          "median": 0.264339,
+          "total": 1.505873
+        },
+        "model_load_time_seconds": {
+          "observed": 0,
+          "mean": null,
+          "median": null,
+          "total": null
+        }
+      }
+    },
+    "itqaan_metadata": {
+      "total_cases": 2,
+      "scores": {
+        "semantic_correct": {
+          "passed": 2,
+          "evaluated": 2,
+          "percent": 100.0
+        },
+        "format_correct": {
+          "passed": 1,
+          "evaluated": 2,
+          "percent": 50.0
+        },
+        "instruction_following": {
+          "passed": 1,
+          "evaluated": 2,
+          "percent": 50.0
+        }
+      },
+      "manual_review": 0,
+      "errors": 0,
+      "code_tests": {
+        "passed": 0,
+        "evaluated": 0
+      },
+      "performance": {
+        "wall_time_seconds": {
+          "observed": 2,
+          "mean": 7.275499999999999,
+          "median": 7.275499999999999,
+          "total": 14.550999999999998
+        },
+        "input_tokens": {
+          "observed": 2,
+          "mean": 129,
+          "median": 129.0,
+          "total": 258
+        },
+        "output_tokens": {
+          "observed": 2,
+          "mean": 289.5,
+          "median": 289.5,
+          "total": 579
+        },
+        "reasoning_output_tokens": {
+          "observed": 2,
+          "mean": 238.5,
+          "median": 238.5,
+          "total": 477
+        },
+        "tokens_per_second": {
+          "observed": 2,
+          "mean": 42.291978826594075,
+          "median": 42.291978826594075,
+          "total": 84.58395765318815
+        },
+        "time_to_first_token_seconds": {
+          "observed": 2,
+          "mean": 0.4099855,
+          "median": 0.4099855,
+          "total": 0.819971
+        },
+        "model_load_time_seconds": {
+          "observed": 0,
+          "mean": null,
+          "median": null,
+          "total": null
+        }
+      }
+    },
+    "listening_data": {
+      "total_cases": 2,
+      "scores": {
+        "semantic_correct": {
+          "passed": 2,
+          "evaluated": 2,
+          "percent": 100.0
+        },
+        "format_correct": {
+          "passed": 1,
+          "evaluated": 2,
+          "percent": 50.0
+        },
+        "instruction_following": {
+          "passed": 1,
+          "evaluated": 2,
+          "percent": 50.0
+        }
+      },
+      "manual_review": 0,
+      "errors": 0,
+      "code_tests": {
+        "passed": 0,
+        "evaluated": 0
+      },
+      "performance": {
+        "wall_time_seconds": {
+          "observed": 2,
+          "mean": 7.3745,
+          "median": 7.3745,
+          "total": 14.749
+        },
+        "input_tokens": {
+          "observed": 2,
+          "mean": 190,
+          "median": 190.0,
+          "total": 380
+        },
+        "output_tokens": {
+          "observed": 2,
+          "mean": 292.5,
+          "median": 292.5,
+          "total": 585
+        },
+        "reasoning_output_tokens": {
+          "observed": 2,
+          "mean": 245,
+          "median": 245.0,
+          "total": 490
+        },
+        "tokens_per_second": {
+          "observed": 2,
+          "mean": 42.22278444237068,
+          "median": 42.22278444237068,
+          "total": 84.44556888474136
+        },
+        "time_to_first_token_seconds": {
+          "observed": 2,
+          "mean": 0.40749100000000005,
+          "median": 0.40749100000000005,
+          "total": 0.8149820000000001
+        },
+        "model_load_time_seconds": {
+          "observed": 0,
+          "mean": null,
+          "median": null,
+          "total": null
+        }
+      }
+    },
+    "long_context_analysis": {
+      "total_cases": 1,
+      "scores": {
+        "semantic_correct": {
+          "passed": 1,
+          "evaluated": 1,
+          "percent": 100.0
+        },
+        "format_correct": {
+          "passed": 1,
+          "evaluated": 1,
+          "percent": 100.0
+        },
+        "instruction_following": {
+          "passed": 1,
+          "evaluated": 1,
+          "percent": 100.0
+        }
+      },
+      "manual_review": 0,
+      "errors": 0,
+      "code_tests": {
+        "passed": 0,
+        "evaluated": 0
+      },
+      "performance": {
+        "wall_time_seconds": {
+          "observed": 1,
+          "mean": 31.229,
+          "median": 31.229,
+          "total": 31.229
+        },
+        "input_tokens": {
+          "observed": 1,
+          "mean": 378,
+          "median": 378,
+          "total": 378
+        },
+        "output_tokens": {
+          "observed": 1,
+          "mean": 1228,
+          "median": 1228,
+          "total": 1228
+        },
+        "reasoning_output_tokens": {
+          "observed": 1,
+          "mean": 1177,
+          "median": 1177,
+          "total": 1177
+        },
+        "tokens_per_second": {
+          "observed": 1,
+          "mean": 39.91601046794935,
+          "median": 39.91601046794935,
+          "total": 39.91601046794935
+        },
+        "time_to_first_token_seconds": {
+          "observed": 1,
+          "mean": 0.443746,
+          "median": 0.443746,
+          "total": 0.443746
+        },
+        "model_load_time_seconds": {
+          "observed": 0,
+          "mean": null,
+          "median": null,
+          "total": null
+        }
+      }
+    },
+    "long_context_reasoning": {
+      "total_cases": 1,
+      "scores": {
+        "semantic_correct": {
+          "passed": 1,
+          "evaluated": 1,
+          "percent": 100.0
+        },
+        "format_correct": {
+          "passed": 1,
+          "evaluated": 1,
+          "percent": 100.0
+        },
+        "instruction_following": {
+          "passed": 1,
+          "evaluated": 1,
+          "percent": 100.0
+        }
+      },
+      "manual_review": 0,
+      "errors": 0,
+      "code_tests": {
+        "passed": 0,
+        "evaluated": 0
+      },
+      "performance": {
+        "wall_time_seconds": {
+          "observed": 1,
+          "mean": 8.498,
+          "median": 8.498,
+          "total": 8.498
+        },
+        "input_tokens": {
+          "observed": 1,
+          "mean": 336,
+          "median": 336,
+          "total": 336
+        },
+        "output_tokens": {
+          "observed": 1,
+          "mean": 333,
+          "median": 333,
+          "total": 333
+        },
+        "reasoning_output_tokens": {
+          "observed": 1,
+          "mean": 322,
+          "median": 322,
+          "total": 322
+        },
+        "tokens_per_second": {
+          "observed": 1,
+          "mean": 41.3629387321437,
+          "median": 41.3629387321437,
+          "total": 41.3629387321437
+        },
+        "time_to_first_token_seconds": {
+          "observed": 1,
+          "mean": 0.43201100000000003,
+          "median": 0.43201100000000003,
+          "total": 0.43201100000000003
+        },
+        "model_load_time_seconds": {
+          "observed": 0,
+          "mean": null,
+          "median": null,
+          "total": null
+        }
+      }
+    },
+    "long_context_retrieval": {
+      "total_cases": 2,
+      "scores": {
+        "semantic_correct": {
+          "passed": 2,
+          "evaluated": 2,
+          "percent": 100.0
+        },
+        "format_correct": {
+          "passed": 2,
+          "evaluated": 2,
+          "percent": 100.0
+        },
+        "instruction_following": {
+          "passed": 2,
+          "evaluated": 2,
+          "percent": 100.0
+        }
+      },
+      "manual_review": 0,
+      "errors": 0,
+      "code_tests": {
+        "passed": 0,
+        "evaluated": 0
+      },
+      "performance": {
+        "wall_time_seconds": {
+          "observed": 2,
+          "mean": 12.954,
+          "median": 12.954,
+          "total": 25.908
+        },
+        "input_tokens": {
+          "observed": 2,
+          "mean": 366.5,
+          "median": 366.5,
+          "total": 733
+        },
+        "output_tokens": {
+          "observed": 2,
+          "mean": 508,
+          "median": 508.0,
+          "total": 1016
+        },
+        "reasoning_output_tokens": {
+          "observed": 2,
+          "mean": 434.5,
+          "median": 434.5,
+          "total": 869
+        },
+        "tokens_per_second": {
+          "observed": 2,
+          "mean": 40.91506289796861,
+          "median": 40.91506289796861,
+          "total": 81.83012579593722
+        },
+        "time_to_first_token_seconds": {
+          "observed": 2,
+          "mean": 0.448909,
+          "median": 0.448909,
+          "total": 0.897818
+        },
+        "model_load_time_seconds": {
+          "observed": 0,
+          "mean": null,
+          "median": null,
+          "total": null
+        }
+      }
+    },
+    "reasoning": {
+      "total_cases": 5,
+      "scores": {
+        "semantic_correct": {
+          "passed": 5,
+          "evaluated": 5,
+          "percent": 100.0
+        },
+        "format_correct": {
+          "passed": 4,
+          "evaluated": 5,
+          "percent": 80.0
+        },
+        "instruction_following": {
+          "passed": 4,
+          "evaluated": 5,
+          "percent": 80.0
+        }
+      },
+      "manual_review": 0,
+      "errors": 0,
+      "code_tests": {
+        "passed": 0,
+        "evaluated": 0
+      },
+      "performance": {
+        "wall_time_seconds": {
+          "observed": 5,
+          "mean": 5.3818,
+          "median": 3.775,
+          "total": 26.909
+        },
+        "input_tokens": {
+          "observed": 5,
+          "mean": 120.6,
+          "median": 135,
+          "total": 603
+        },
+        "output_tokens": {
+          "observed": 5,
+          "mean": 220,
+          "median": 150,
+          "total": 1100
+        },
+        "reasoning_output_tokens": {
+          "observed": 5,
+          "mean": 199.4,
+          "median": 136,
+          "total": 997
+        },
+        "tokens_per_second": {
+          "observed": 5,
+          "mean": 44.82961168500204,
+          "median": 45.02272287758654,
+          "total": 224.14805842501022
+        },
+        "time_to_first_token_seconds": {
+          "observed": 5,
+          "mean": 0.3749186,
+          "median": 0.392051,
+          "total": 1.874593
+        },
+        "model_load_time_seconds": {
+          "observed": 0,
+          "mean": null,
+          "median": null,
+          "total": null
+        }
+      }
+    },
+    "structured_extraction": {
+      "total_cases": 5,
+      "scores": {
+        "semantic_correct": {
+          "passed": 5,
+          "evaluated": 5,
+          "percent": 100.0
+        },
+        "format_correct": {
+          "passed": 2,
+          "evaluated": 5,
+          "percent": 40.0
+        },
+        "instruction_following": {
+          "passed": 3,
+          "evaluated": 5,
+          "percent": 60.0
+        }
+      },
+      "manual_review": 0,
+      "errors": 0,
+      "code_tests": {
+        "passed": 0,
+        "evaluated": 0
+      },
+      "performance": {
+        "wall_time_seconds": {
+          "observed": 5,
+          "mean": 9.307,
+          "median": 8.206,
+          "total": 46.535
+        },
+        "input_tokens": {
+          "observed": 5,
+          "mean": 154,
+          "median": 146,
+          "total": 770
+        },
+        "output_tokens": {
+          "observed": 5,
+          "mean": 291.6,
+          "median": 257,
+          "total": 1458
+        },
+        "reasoning_output_tokens": {
+          "observed": 5,
+          "mean": 225.2,
+          "median": 205,
+          "total": 1126
+        },
+        "tokens_per_second": {
+          "observed": 5,
+          "mean": 44.74360939948555,
+          "median": 44.82716414079021,
+          "total": 223.71804699742773
+        },
+        "time_to_first_token_seconds": {
+          "observed": 5,
+          "mean": 0.5561364,
+          "median": 0.39384600000000003,
+          "total": 2.780682
+        },
+        "model_load_time_seconds": {
+          "observed": 1,
+          "mean": 11.034,
+          "median": 11.034,
+          "total": 11.034
+        }
+      }
+    },
+    "summarization": {
+      "total_cases": 4,
+      "scores": {
+        "semantic_correct": {
+          "passed": 4,
+          "evaluated": 4,
+          "percent": 100.0
+        },
+        "format_correct": {
+          "passed": 4,
+          "evaluated": 4,
+          "percent": 100.0
+        },
+        "instruction_following": {
+          "passed": 4,
+          "evaluated": 4,
+          "percent": 100.0
+        }
+      },
+      "manual_review": 0,
+      "errors": 0,
+      "code_tests": {
+        "passed": 0,
+        "evaluated": 0
+      },
+      "performance": {
+        "wall_time_seconds": {
+          "observed": 4,
+          "mean": 6.9535,
+          "median": 6.8245000000000005,
+          "total": 27.814
+        },
+        "input_tokens": {
+          "observed": 4,
+          "mean": 159.75,
+          "median": 153.5,
+          "total": 639
+        },
+        "output_tokens": {
+          "observed": 4,
+          "mean": 276.25,
+          "median": 270.0,
+          "total": 1105
+        },
+        "reasoning_output_tokens": {
+          "observed": 4,
+          "mean": 196,
+          "median": 198.0,
+          "total": 784
+        },
+        "tokens_per_second": {
+          "observed": 4,
+          "mean": 42.2476320199359,
+          "median": 42.161608596123585,
+          "total": 168.9905280797436
+        },
+        "time_to_first_token_seconds": {
+          "observed": 4,
+          "mean": 0.3954255,
+          "median": 0.395255,
+          "total": 1.581702
+        },
+        "model_load_time_seconds": {
+          "observed": 0,
+          "mean": null,
+          "median": null,
+          "total": null
+        }
+      }
+    },
+    "university_tooling": {
+      "total_cases": 2,
+      "scores": {
+        "semantic_correct": {
+          "passed": 2,
+          "evaluated": 2,
+          "percent": 100.0
+        },
+        "format_correct": {
+          "passed": 1,
+          "evaluated": 2,
+          "percent": 50.0
+        },
+        "instruction_following": {
+          "passed": 1,
+          "evaluated": 2,
+          "percent": 50.0
+        }
+      },
+      "manual_review": 0,
+      "errors": 0,
+      "code_tests": {
+        "passed": 0,
+        "evaluated": 0
+      },
+      "performance": {
+        "wall_time_seconds": {
+          "observed": 2,
+          "mean": 6.317500000000001,
+          "median": 6.317500000000001,
+          "total": 12.635000000000002
+        },
+        "input_tokens": {
+          "observed": 2,
+          "mean": 206,
+          "median": 206.0,
+          "total": 412
+        },
+        "output_tokens": {
+          "observed": 2,
+          "mean": 249,
+          "median": 249.0,
+          "total": 498
+        },
+        "reasoning_output_tokens": {
+          "observed": 2,
+          "mean": 212.5,
+          "median": 212.5,
+          "total": 425
+        },
+        "tokens_per_second": {
+          "observed": 2,
+          "mean": 42.10962870829077,
+          "median": 42.10962870829077,
+          "total": 84.21925741658154
+        },
+        "time_to_first_token_seconds": {
+          "observed": 2,
+          "mean": 0.4031625,
+          "median": 0.4031625,
+          "total": 0.806325
+        },
+        "model_load_time_seconds": {
+          "observed": 0,
+          "mean": null,
+          "median": null,
+          "total": null
+        }
+      }
+    }
+  },
+  "reviewed_cases": 9,
+  "models": [
+    "openai/gpt-oss-20b"
+  ],
+  "budget_hits": 0,
+  "empty_answers": 0,
+  "coding_cases": {
+    "passed": 4,
+    "total": 4
+  }
+}

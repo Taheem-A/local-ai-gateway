@@ -1,0 +1,41 @@
+﻿id,category,model,automatic_semantic,reviewed_semantic,format,instructions,review_notes
+extract_001,structured_extraction,openai/gpt-oss-20b,True,True,False,False,
+extract_002,structured_extraction,openai/gpt-oss-20b,True,True,True,True,
+extract_003,structured_extraction,openai/gpt-oss-20b,True,True,False,True,"Bare JSON contains exactly the requested facts using the literal field names from the prompt. The existing aliases confirm semantic equivalence. No keys were prescribed in the prompt, so reviewed instruction compliance passes; canonical benchmark schema/format remains false."
+extract_004,structured_extraction,openai/gpt-oss-20b,True,True,False,False,
+extract_005,structured_extraction,openai/gpt-oss-20b,True,True,True,True,
+classify_001,classification,openai/gpt-oss-20b,True,True,True,True,
+classify_002,classification,openai/gpt-oss-20b,True,True,True,True,
+classify_003,classification,openai/gpt-oss-20b,True,True,True,True,
+classify_004,classification,openai/gpt-oss-20b,False,False,True,True,Returned announcement; fixed expected label is irrelevant. The cafeteria notice can reasonably be called an announcement because the prompt does not define academic relevance. Retain original failure and report sensitivity excluding this case.
+classify_005,classification,openai/gpt-oss-20b,True,True,True,True,
+instruction_001,instruction_following,openai/gpt-oss-20b,True,True,True,True,
+instruction_002,instruction_following,openai/gpt-oss-20b,True,True,True,True,
+instruction_003,instruction_following,openai/gpt-oss-20b,True,True,True,True,
+instruction_004,instruction_following,openai/gpt-oss-20b,True,True,True,True,
+instruction_005,instruction_following,openai/gpt-oss-20b,True,True,True,True,
+reason_001,reasoning,openai/gpt-oss-20b,True,True,True,True,
+reason_002,reasoning,openai/gpt-oss-20b,True,True,True,True,
+reason_003,reasoning,openai/gpt-oss-20b,True,True,True,True,
+reason_004,reasoning,openai/gpt-oss-20b,,True,False,False,"Returned O(n²), mathematically identical to O(n^2). Superscript 2 was verified from saved Unicode code point U+00B2. Exact permitted-label format/instructions remain failed."
+reason_005,reasoning,openai/gpt-oss-20b,True,True,True,True,
+coding_001,coding,openai/gpt-oss-20b,True,True,True,True,
+coding_002,coding,openai/gpt-oss-20b,True,True,True,True,
+coding_003,coding,openai/gpt-oss-20b,True,True,True,True,
+coding_004,coding,openai/gpt-oss-20b,True,True,True,True,
+summary_001,summarization,openai/gpt-oss-20b,,True,True,True,"All five concepts covered accurately, including full table scan, rollback time, and redesign before redeployment; 42 words."
+summary_002,summarization,openai/gpt-oss-20b,,True,True,True,"Precisely covers new Lab 3 deadline and time, all sections, and unchanged Lab 4 deadline; exactly two sentences and no invented extension."
+summary_003,summarization,openai/gpt-oss-20b,,True,True,True,"Covers current provider coupling, gateway abstraction, provider-independent requests, routing/model selection, and provider changes without app edits. No material unsupported claims; within 70 words."
+summary_004,summarization,openai/gpt-oss-20b,,True,True,True,All six required concepts covered in four bullets. The 08:26-08:31 interval summarizes worker disablement and recovery correctly; no data loss and fix/tests before re-enabling are explicit.
+long_001,long_context_retrieval,openai/gpt-oss-20b,,True,True,True,Free-text root cause accurately states that the deployed identifier did not exist and describes observed errors. Both requested times are correct; bare JSON satisfies format and instructions.
+long_002,long_context_retrieval,openai/gpt-oss-20b,True,True,True,True,
+long_003,long_context_reasoning,openai/gpt-oss-20b,True,True,True,True,
+long_004,long_context_analysis,openai/gpt-oss-20b,True,True,True,True,
+project_001,itqaan_metadata,openai/gpt-oss-20b,True,True,True,True,
+project_002,itqaan_metadata,openai/gpt-oss-20b,True,True,False,False,
+project_003,listening_data,openai/gpt-oss-20b,True,True,False,False,
+project_004,listening_data,openai/gpt-oss-20b,True,True,True,True,
+project_005,university_tooling,openai/gpt-oss-20b,False,True,True,True,"Chemistry lecture accurately specializes the event type lecture and the prompt defines no restricted vocabulary. All other values, ISO date and 24-hour times are correct. Bare JSON meets canonical format and instructions."
+project_006,university_tooling,openai/gpt-oss-20b,True,True,False,False,
+project_007,gateway_operations,openai/gpt-oss-20b,True,True,False,False,
+project_008,gateway_operations,openai/gpt-oss-20b,True,True,True,True,

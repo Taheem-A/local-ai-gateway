@@ -1,0 +1,315 @@
+[
+  {
+    "id": "extract_001",
+    "prompt": "Extract the course code, assignment name, due date, due time, and timezone from the following announcement. Return only JSON with keys course, assignment, due_date, due_time, timezone.\n\nAnnouncement:\nMAT186 students: Problem Set 2 is due Friday, September 18, 2026 at 11:59 PM Eastern Time. Submit through Quercus.",
+    "expected": {
+      "mode": "semantic_json",
+      "value": {
+        "course": "MAT186",
+        "assignment": "Problem Set 2",
+        "due_date": "2026-09-18",
+        "due_time": "23:59",
+        "timezone": "Eastern Time"
+      },
+      "normalize": {
+        "course": "text",
+        "assignment": "text",
+        "due_date": "date",
+        "due_time": "time",
+        "timezone": "timezone"
+      }
+    },
+    "response_text": "```json\n{\n  \"course\": \"MAT186\",\n  \"assignment\": \"Problem Set 2\",\n  \"due_date\": \"September 18, 2026\",\n  \"due_time\": \"11:59 PM\",\n  \"timezone\": \"Eastern Time\"\n}\n```",
+    "grade": {
+      "version": 2,
+      "status": "pass_with_format_issue",
+      "passed": true,
+      "semantic_correct": true,
+      "format_correct": false,
+      "instruction_following": false,
+      "schema_correct": true,
+      "differences": [],
+      "actual": {
+        "course": "MAT186",
+        "assignment": "Problem Set 2",
+        "due_date": "September 18, 2026",
+        "due_time": "11:59 PM",
+        "timezone": "Eastern Time"
+      },
+      "expected": {
+        "course": "MAT186",
+        "assignment": "Problem Set 2",
+        "due_date": "2026-09-18",
+        "due_time": "23:59",
+        "timezone": "Eastern Time"
+      }
+    },
+    "review": {
+      "semantic_correct": true,
+      "notes": "Semantic PASS; format/instructions FAIL due to Markdown fence. Full answer inspected and compared to source.",
+      "reviewer": "Codex in-task review; no grading API",
+      "format_correct": false,
+      "instruction_following": false
+    }
+  },
+  {
+    "id": "extract_002",
+    "prompt": "Extract the customer name, order number, item count, subtotal, tax, and total. Return only JSON.\n\nReceipt:\nCustomer: Amir Rahman\nOrder #A18492\nItems purchased: 4\nSubtotal: $82.50\nHST: $10.73\nTotal paid: $93.23",
+    "expected": {
+      "mode": "semantic_json",
+      "value": {
+        "customer_name": "Amir Rahman",
+        "order_number": "A18492",
+        "item_count": 4,
+        "subtotal": 82.5,
+        "tax": 10.73,
+        "total": 93.23
+      },
+      "normalize": {
+        "customer_name": "text",
+        "item_count": "number",
+        "subtotal": "number",
+        "tax": "number",
+        "total": "number"
+      }
+    },
+    "response_text": "```json\n{\n  \"customer_name\": \"Amir Rahman\",\n  \"order_number\": \"A18492\",\n  \"item_count\": 4,\n  \"subtotal\": 82.50,\n  \"tax\": 10.73,\n  \"total\": 93.23\n}\n```",
+    "grade": {
+      "version": 2,
+      "status": "pass_with_format_issue",
+      "passed": true,
+      "semantic_correct": true,
+      "format_correct": false,
+      "instruction_following": false,
+      "schema_correct": true,
+      "differences": [],
+      "actual": {
+        "customer_name": "Amir Rahman",
+        "order_number": "A18492",
+        "item_count": 4,
+        "subtotal": 82.5,
+        "tax": 10.73,
+        "total": 93.23
+      },
+      "expected": {
+        "customer_name": "Amir Rahman",
+        "order_number": "A18492",
+        "item_count": 4,
+        "subtotal": 82.5,
+        "tax": 10.73,
+        "total": 93.23
+      }
+    },
+    "review": {
+      "semantic_correct": true,
+      "notes": "Semantic PASS; format/instructions FAIL due to Markdown fence. Full answer inspected and compared to source.",
+      "reviewer": "Codex in-task review; no grading API",
+      "format_correct": false,
+      "instruction_following": false
+    }
+  },
+  {
+    "id": "extract_003",
+    "prompt": "Extract only the error code, service name, affected user count, first occurrence time, and resolved time. Return JSON only.\n\nIncident report:\nAt 14:03, several users began reporting failed uploads. The StorageProxy service logged error E_UPLOAD_17. Monitoring showed 218 affected users. The issue was traced to an expired internal credential. Service was fully restored at 14:41.",
+    "expected": {
+      "mode": "semantic_json",
+      "value": {
+        "error_code": "E_UPLOAD_17",
+        "service": "StorageProxy",
+        "affected_users": 218,
+        "first_occurrence": "14:03",
+        "resolved": "14:41"
+      },
+      "normalize": {
+        "service": "text",
+        "affected_users": "number",
+        "first_occurrence": "time",
+        "resolved": "time"
+      },
+      "key_aliases": {
+        "": {
+          "service_name": "service",
+          "affected_user_count": "affected_users",
+          "first_occurrence_time": "first_occurrence",
+          "resolved_time": "resolved"
+        }
+      }
+    },
+    "response_text": "```json\n{\n  \"error_code\": \"E_UPLOAD_17\",\n  \"service_name\": \"StorageProxy\",\n  \"affected_user_count\": 218,\n  \"first_occurrence_time\": \"14:03\",\n  \"resolved_time\": \"14:41\"\n}\n```",
+    "grade": {
+      "version": 2,
+      "status": "pass_with_format_issue",
+      "passed": true,
+      "semantic_correct": true,
+      "format_correct": false,
+      "instruction_following": false,
+      "schema_correct": false,
+      "differences": [],
+      "actual": {
+        "error_code": "E_UPLOAD_17",
+        "service_name": "StorageProxy",
+        "affected_user_count": 218,
+        "first_occurrence_time": "14:03",
+        "resolved_time": "14:41"
+      },
+      "expected": {
+        "error_code": "E_UPLOAD_17",
+        "service": "StorageProxy",
+        "affected_users": 218,
+        "first_occurrence": "14:03",
+        "resolved": "14:41"
+      }
+    },
+    "review": {
+      "semantic_correct": true,
+      "notes": "Semantic PASS; format/instructions FAIL due to Markdown fence. Full answer inspected and compared to source.",
+      "reviewer": "Codex in-task review; no grading API",
+      "format_correct": false,
+      "instruction_following": false
+    }
+  },
+  {
+    "id": "extract_004",
+    "prompt": "Read the schedule and return a JSON array containing only events occurring on Friday. Each object must contain name, start, end, and room.\n\nSchedule:\nMonday 09:00-10:00 Calculus Lecture, BA1170\nWednesday 13:00-14:00 Chemistry Tutorial, WB130\nFriday 10:00-11:00 Programming Lecture, MY150\nFriday 12:00-13:00 Design Studio, SF1101\nFriday 15:00-16:00 Chemistry Lecture, MS2158",
+    "expected": {
+      "mode": "semantic_json",
+      "value": [
+        {
+          "name": "Programming Lecture",
+          "start": "10:00",
+          "end": "11:00",
+          "room": "MY150"
+        },
+        {
+          "name": "Design Studio",
+          "start": "12:00",
+          "end": "13:00",
+          "room": "SF1101"
+        },
+        {
+          "name": "Chemistry Lecture",
+          "start": "15:00",
+          "end": "16:00",
+          "room": "MS2158"
+        }
+      ],
+      "normalize": {
+        "*.name": "text",
+        "*.start": "time",
+        "*.end": "time",
+        "*.room": "text"
+      }
+    },
+    "response_text": "```json\n[\n  {\n    \"name\": \"Programming Lecture\",\n    \"start\": \"10:00\",\n    \"end\": \"11:00\",\n    \"room\": \"MY150\"\n  },\n  {\n    \"name\": \"Design Studio\",\n    \"start\": \"12:00\",\n    \"end\": \"13:00\",\n    \"room\": \"SF1101\"\n  },\n  {\n    \"name\": \"Chemistry Lecture\",\n    \"start\": \"15:00\",\n    \"end\": \"16:00\",\n    \"room\": \"MS2158\"\n  }\n]\n```",
+    "grade": {
+      "version": 2,
+      "status": "pass_with_format_issue",
+      "passed": true,
+      "semantic_correct": true,
+      "format_correct": false,
+      "instruction_following": false,
+      "schema_correct": true,
+      "differences": [],
+      "actual": [
+        {
+          "name": "Programming Lecture",
+          "start": "10:00",
+          "end": "11:00",
+          "room": "MY150"
+        },
+        {
+          "name": "Design Studio",
+          "start": "12:00",
+          "end": "13:00",
+          "room": "SF1101"
+        },
+        {
+          "name": "Chemistry Lecture",
+          "start": "15:00",
+          "end": "16:00",
+          "room": "MS2158"
+        }
+      ],
+      "expected": [
+        {
+          "name": "Programming Lecture",
+          "start": "10:00",
+          "end": "11:00",
+          "room": "MY150"
+        },
+        {
+          "name": "Design Studio",
+          "start": "12:00",
+          "end": "13:00",
+          "room": "SF1101"
+        },
+        {
+          "name": "Chemistry Lecture",
+          "start": "15:00",
+          "end": "16:00",
+          "room": "MS2158"
+        }
+      ]
+    },
+    "review": {
+      "semantic_correct": true,
+      "notes": "Semantic PASS; format/instructions FAIL due to Markdown fence. Full answer inspected and compared to source.",
+      "reviewer": "Codex in-task review; no grading API",
+      "format_correct": false,
+      "instruction_following": false
+    }
+  },
+  {
+    "id": "extract_005",
+    "prompt": "Extract the final configuration after all changes have been applied. Ignore superseded values. Return JSON only with keys port, context_length, ttl_seconds, authentication, cors.\n\nConfiguration history:\nInitial port was 8000.\nContext length started at 8192.\nAuthentication was disabled during testing.\nPort was later changed from 8000 to 4812.\nTTL was initially 120 seconds.\nContext length was increased to 16384.\nCORS remained disabled throughout.\nAuthentication was enabled before deployment.\nTTL was finally changed from 120 to 300 seconds.",
+    "expected": {
+      "mode": "semantic_json",
+      "value": {
+        "port": 4812,
+        "context_length": 16384,
+        "ttl_seconds": 300,
+        "authentication": true,
+        "cors": false
+      },
+      "normalize": {
+        "port": "number",
+        "context_length": "number",
+        "ttl_seconds": "number",
+        "authentication": "enabled_state",
+        "cors": "enabled_state"
+      }
+    },
+    "response_text": "```json\n{\n  \"port\": 4812,\n  \"context_length\": 16384,\n  \"ttl_seconds\": 300,\n  \"authentication\": \"enabled\",\n  \"cors\": \"disabled\"\n}\n```",
+    "grade": {
+      "version": 2,
+      "status": "pass_with_format_issue",
+      "passed": true,
+      "semantic_correct": true,
+      "format_correct": false,
+      "instruction_following": false,
+      "schema_correct": false,
+      "differences": [],
+      "actual": {
+        "port": 4812,
+        "context_length": 16384,
+        "ttl_seconds": 300,
+        "authentication": "enabled",
+        "cors": "disabled"
+      },
+      "expected": {
+        "port": 4812,
+        "context_length": 16384,
+        "ttl_seconds": 300,
+        "authentication": true,
+        "cors": false
+      }
+    },
+    "review": {
+      "semantic_correct": true,
+      "notes": "Semantic PASS; format/instructions FAIL due to Markdown fence. Full answer inspected and compared to source.",
+      "reviewer": "Codex in-task review; no grading API",
+      "format_correct": false,
+      "instruction_following": false
+    }
+  }
+]

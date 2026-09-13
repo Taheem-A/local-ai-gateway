@@ -1,0 +1,160 @@
+{
+  "suite": "project",
+  "version": 1,
+  "description": "Benchmark cases modeled after realistic personal software projects.",
+  "defaults": {
+    "temperature": 0.0,
+    "quality": "balanced"
+  },
+  "cases": [
+    {
+      "id": "project_001",
+      "category": "itqaan_metadata",
+      "difficulty": "easy",
+      "max_output_tokens": 256,
+      "prompt": "Normalize the following Quran software metadata. Return JSON only with keys surah_number, ayah_number, reciter_id, timestamp_seconds.\n\nInput:\nsurah = '002'\nayah = '255'\nreciter = 'abdul_baset_01'\ntimestamp = '83.4s'",
+      "expected": {
+        "mode": "exact_json",
+        "value": {
+          "surah_number": 2,
+          "ayah_number": 255,
+          "reciter_id": "abdul_baset_01",
+          "timestamp_seconds": 83.4
+        }
+      }
+    },
+    {
+      "id": "project_002",
+      "category": "itqaan_metadata",
+      "difficulty": "medium",
+      "max_output_tokens": 384,
+      "prompt": "A Quran application stores playback positions as seconds. Convert the following entries into minutes and seconds. Return JSON only. Preserve the id field.\n\nEntries:\n[\n  {\"id\":\"a1\",\"seconds\":63},\n  {\"id\":\"a2\",\"seconds\":125},\n  {\"id\":\"a3\",\"seconds\":3599}\n]",
+      "expected": {
+        "mode": "exact_json",
+        "value": [
+          {
+            "id": "a1",
+            "minutes": 1,
+            "seconds": 3
+          },
+          {
+            "id": "a2",
+            "minutes": 2,
+            "seconds": 5
+          },
+          {
+            "id": "a3",
+            "minutes": 59,
+            "seconds": 59
+          }
+        ]
+      }
+    },
+    {
+      "id": "project_003",
+      "category": "listening_data",
+      "difficulty": "medium",
+      "max_output_tokens": 384,
+      "prompt": "For each listening event, calculate completion_percent as ms_played divided by track_duration_ms multiplied by 100. Round to one decimal place. Return JSON only with track and completion_percent.\n\nEvents:\n[\n  {\"track\":\"Song A\",\"ms_played\":180000,\"track_duration_ms\":200000},\n  {\"track\":\"Song B\",\"ms_played\":60000,\"track_duration_ms\":240000},\n  {\"track\":\"Song C\",\"ms_played\":205000,\"track_duration_ms\":205000}\n]",
+      "expected": {
+        "mode": "exact_json",
+        "value": [
+          {
+            "track": "Song A",
+            "completion_percent": 90.0
+          },
+          {
+            "track": "Song B",
+            "completion_percent": 25.0
+          },
+          {
+            "track": "Song C",
+            "completion_percent": 100.0
+          }
+        ]
+      }
+    },
+    {
+      "id": "project_004",
+      "category": "listening_data",
+      "difficulty": "hard",
+      "max_output_tokens": 512,
+      "prompt": "Analyze the listening events below. A completed listen is any event with completion_percent greater than or equal to 80. Return JSON only with total_events, completed_events, completion_rate_percent, and most_played_track. completion_rate_percent must be rounded to one decimal place. If tracks are tied for most plays, choose the alphabetically earlier track.\n\nEvents:\n[\n  {\"track\":\"Paris\",\"completion_percent\":98},\n  {\"track\":\"Almost Love\",\"completion_percent\":91},\n  {\"track\":\"Paris\",\"completion_percent\":84},\n  {\"track\":\"Bad Time\",\"completion_percent\":42},\n  {\"track\":\"Almost Love\",\"completion_percent\":79},\n  {\"track\":\"Paris\",\"completion_percent\":100}\n]",
+      "expected": {
+        "mode": "exact_json",
+        "value": {
+          "total_events": 6,
+          "completed_events": 4,
+          "completion_rate_percent": 66.7,
+          "most_played_track": "Paris"
+        }
+      }
+    },
+    {
+      "id": "project_005",
+      "category": "university_tooling",
+      "difficulty": "medium",
+      "max_output_tokens": 384,
+      "prompt": "Parse the following university message into structured data. Return JSON only with course, event_type, date, start_time, end_time, location. Assume the date is in 2026.\n\nMessage:\nAPS110 students: Friday's chemistry lecture will take place on September 25 from 3:00 PM to 4:00 PM in MS2158.",
+      "expected": {
+        "mode": "exact_json",
+        "value": {
+          "course": "APS110",
+          "event_type": "lecture",
+          "date": "2026-09-25",
+          "start_time": "15:00",
+          "end_time": "16:00",
+          "location": "MS2158"
+        }
+      }
+    },
+    {
+      "id": "project_006",
+      "category": "university_tooling",
+      "difficulty": "hard",
+      "max_output_tokens": 512,
+      "prompt": "Determine which tasks are overdue as of 2026-09-12T16:00:00-04:00. A task is overdue only if its due timestamp is earlier than the current timestamp and completed is false. Return only a JSON array of overdue task IDs in ascending order.\n\nTasks:\n[\n  {\"id\":1,\"due\":\"2026-09-12T14:00:00-04:00\",\"completed\":false},\n  {\"id\":2,\"due\":\"2026-09-12T18:00:00-04:00\",\"completed\":false},\n  {\"id\":3,\"due\":\"2026-09-11T23:59:00-04:00\",\"completed\":true},\n  {\"id\":4,\"due\":\"2026-09-10T09:00:00-04:00\",\"completed\":false},\n  {\"id\":5,\"due\":\"2026-09-13T10:00:00-04:00\",\"completed\":false}\n]",
+      "expected": {
+        "mode": "exact_json",
+        "value": [
+          1,
+          4
+        ]
+      }
+    },
+    {
+      "id": "project_007",
+      "category": "gateway_operations",
+      "difficulty": "medium",
+      "max_output_tokens": 384,
+      "prompt": "Analyze these gateway requests and return JSON only with total_requests, successful_requests, failed_requests, average_latency_ms. Round average_latency_ms to one decimal place.\n\nRequests:\n[\n  {\"status\":200,\"latency_ms\":1200},\n  {\"status\":200,\"latency_ms\":900},\n  {\"status\":502,\"latency_ms\":3000},\n  {\"status\":200,\"latency_ms\":1100},\n  {\"status\":200,\"latency_ms\":800}\n]",
+      "expected": {
+        "mode": "exact_json",
+        "value": {
+          "total_requests": 5,
+          "successful_requests": 4,
+          "failed_requests": 1,
+          "average_latency_ms": 1400.0
+        }
+      }
+    },
+    {
+      "id": "project_008",
+      "category": "gateway_operations",
+      "difficulty": "hard",
+      "max_output_tokens": 384,
+      "prompt": "Select the appropriate quality level for each task using these rules:\n- fast: simple classification, extraction, or formatting\n- balanced: ordinary explanation, summarization, or moderate coding\n- deep: difficult multi-step reasoning, architecture analysis, or complex debugging\n\nReturn JSON only mapping task IDs to fast, balanced, or deep.\n\nTasks:\nA: Extract a professor name from a sentence.\nB: Explain recursion to a beginner.\nC: Compare three distributed database architectures and identify failure modes.\nD: Convert a list of dates into ISO format.\nE: Debug a race condition involving multiple asynchronous workers.\nF: Summarize a two-page project update.",
+      "expected": {
+        "mode": "exact_json",
+        "value": {
+          "A": "fast",
+          "B": "balanced",
+          "C": "deep",
+          "D": "fast",
+          "E": "deep",
+          "F": "balanced"
+        }
+      }
+    }
+  ]
+}

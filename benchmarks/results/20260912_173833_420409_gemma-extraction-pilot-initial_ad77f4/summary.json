@@ -1,0 +1,142 @@
+{
+  "metadata": {
+    "version": 2,
+    "started_at": "2026-09-12T17:38:33.420810-04:00",
+    "forced_quality": "balanced",
+    "name": "gemma-extraction-pilot-initial",
+    "case_count": 5,
+    "state": "completed",
+    "execute_code": true,
+    "finished_at": "2026-09-12T17:39:10.744062-04:00"
+  },
+  "summary": {
+    "total_cases": 5,
+    "scores": {
+      "semantic_correct": {
+        "passed": 0,
+        "evaluated": 0,
+        "percent": null
+      },
+      "format_correct": {
+        "passed": 0,
+        "evaluated": 5,
+        "percent": 0.0
+      },
+      "instruction_following": {
+        "passed": 0,
+        "evaluated": 5,
+        "percent": 0.0
+      }
+    },
+    "manual_review": 5,
+    "errors": 0,
+    "code_tests": {
+      "passed": 0,
+      "evaluated": 0
+    },
+    "performance": {
+      "wall_time_seconds": {
+        "observed": 5,
+        "mean": 7.4276,
+        "median": 7.0,
+        "total": 37.138
+      },
+      "input_tokens": {
+        "observed": 5,
+        "mean": 121,
+        "median": 105,
+        "total": 605
+      },
+      "output_tokens": {
+        "observed": 5,
+        "mean": 307.2,
+        "median": 256,
+        "total": 1536
+      },
+      "tokens_per_second": {
+        "observed": 5,
+        "mean": 56.178307404487015,
+        "median": 56.27407443105883,
+        "total": 280.89153702243505
+      },
+      "time_to_first_token_seconds": {
+        "observed": 5,
+        "mean": 0.13523179999999999,
+        "median": 0.12581399999999998,
+        "total": 0.676159
+      },
+      "model_load_time_seconds": {
+        "observed": 1,
+        "mean": 8.812,
+        "median": 8.812,
+        "total": 8.812
+      }
+    },
+    "by_category": {
+      "structured_extraction": {
+        "total_cases": 5,
+        "scores": {
+          "semantic_correct": {
+            "passed": 0,
+            "evaluated": 0,
+            "percent": null
+          },
+          "format_correct": {
+            "passed": 0,
+            "evaluated": 5,
+            "percent": 0.0
+          },
+          "instruction_following": {
+            "passed": 0,
+            "evaluated": 5,
+            "percent": 0.0
+          }
+        },
+        "manual_review": 5,
+        "errors": 0,
+        "code_tests": {
+          "passed": 0,
+          "evaluated": 0
+        },
+        "performance": {
+          "wall_time_seconds": {
+            "observed": 5,
+            "mean": 7.4276,
+            "median": 7.0,
+            "total": 37.138
+          },
+          "input_tokens": {
+            "observed": 5,
+            "mean": 121,
+            "median": 105,
+            "total": 605
+          },
+          "output_tokens": {
+            "observed": 5,
+            "mean": 307.2,
+            "median": 256,
+            "total": 1536
+          },
+          "tokens_per_second": {
+            "observed": 5,
+            "mean": 56.178307404487015,
+            "median": 56.27407443105883,
+            "total": 280.89153702243505
+          },
+          "time_to_first_token_seconds": {
+            "observed": 5,
+            "mean": 0.13523179999999999,
+            "median": 0.12581399999999998,
+            "total": 0.676159
+          },
+          "model_load_time_seconds": {
+            "observed": 1,
+            "mean": 8.812,
+            "median": 8.812,
+            "total": 8.812
+          }
+        }
+      }
+    }
+  }
+}

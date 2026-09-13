@@ -1,0 +1,126 @@
+{
+  "recorded_at": "2026-09-12T17:40:53.294255-04:00",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "python": "3.14.7",
+  "gateway_url": "http://127.0.0.1:4812",
+  "lm_base_url": "http://127.0.0.1:1234",
+  "balanced": "google/gemma-4-12b-qat",
+  "deep": "openai/gpt-oss-20b",
+  "context_length": 16384,
+  "models": {
+    "models": [
+      {
+        "type": "llm",
+        "publisher": "openai",
+        "key": "openai/gpt-oss-20b",
+        "display_name": "GPT-OSS 20B",
+        "architecture": "gpt-oss",
+        "quantization": {
+          "name": "MXFP4",
+          "bits_per_weight": 4
+        },
+        "size_bytes": 12109664217,
+        "params_string": "20B",
+        "loaded_instances": [],
+        "max_context_length": 131072,
+        "format": "gguf",
+        "capabilities": {
+          "vision": false,
+          "trained_for_tool_use": true,
+          "reasoning": {
+            "allowed_options": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "default": "low"
+          }
+        },
+        "description": null,
+        "variants": [
+          "openai/gpt-oss-20b@mxfp4"
+        ],
+        "selected_variant": "openai/gpt-oss-20b@mxfp4"
+      },
+      {
+        "type": "llm",
+        "publisher": "google",
+        "key": "google/gemma-4-12b-qat",
+        "display_name": "Gemma 4 12B QAT",
+        "architecture": "gemma4",
+        "quantization": {
+          "name": "Q4_0",
+          "bits_per_weight": 4
+        },
+        "size_bytes": 7151067268,
+        "params_string": "12B",
+        "loaded_instances": [
+          {
+            "id": "google/gemma-4-12b-qat",
+            "config": {
+              "context_length": 16384,
+              "eval_batch_size": 2048,
+              "physical_batch_size": 512,
+              "parallel": 4,
+              "flash_attention": true,
+              "context_checkpoints": 32,
+              "reasoning_budget_message": "",
+              "speculative_draft_mtp": false,
+              "speculative_draft_simple": false,
+              "speculative_draft_model": "",
+              "speculative_draft_max_tokens": 3,
+              "speculative_draft_min_tokens": 0,
+              "speculative_draft_min_continue_probability": 0,
+              "offload_kv_cache_to_gpu": true
+            },
+            "remaining_ttl_seconds": 300
+          }
+        ],
+        "max_context_length": 262144,
+        "format": "gguf",
+        "capabilities": {
+          "vision": true,
+          "trained_for_tool_use": true,
+          "reasoning": {
+            "allowed_options": [
+              "off",
+              "on"
+            ],
+            "default": "on"
+          }
+        },
+        "description": null,
+        "variants": [
+          "google/gemma-4-12b-qat@q4_0"
+        ],
+        "selected_variant": "google/gemma-4-12b-qat@q4_0"
+      },
+      {
+        "type": "embedding",
+        "publisher": "nomic-ai",
+        "key": "text-embedding-nomic-embed-text-v1.5",
+        "display_name": "Nomic Embed Text v1.5",
+        "quantization": {
+          "name": "Q4_K_M",
+          "bits_per_weight": 4
+        },
+        "size_bytes": 84106624,
+        "params_string": null,
+        "loaded_instances": [],
+        "max_context_length": 2048,
+        "format": "gguf"
+      }
+    ]
+  },
+  "suite_hashes": {
+    "benchmarks\\cases_core.json": "076f8b97ceb4ebc3f076499c86b8fc90a61e74b82ca69fb7728ecf2014c13702",
+    "benchmarks\\cases_long_context.json": "b04713ebde937789fa9d12f9cf8fd274139ea0f84e549d480b12d56c360d7c4d",
+    "benchmarks\\cases_project.json": "49e49a80d121adb7bb2d8bd5771592f81fad3e43d6e77527c35e0867b406873a"
+  },
+  "hardware": {
+    "gpu": "NVIDIA GeForce RTX 5070 Ti Laptop GPU",
+    "vram_mib": 12227,
+    "driver": "616.92",
+    "physical_ram_bytes": 33752997888
+  }
+}

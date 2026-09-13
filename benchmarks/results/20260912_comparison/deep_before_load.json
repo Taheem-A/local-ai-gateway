@@ -1,0 +1,84 @@
+{
+  "models": [
+    {
+      "type": "llm",
+      "publisher": "openai",
+      "key": "openai/gpt-oss-20b",
+      "display_name": "GPT-OSS 20B",
+      "architecture": "gpt-oss",
+      "quantization": {
+        "name": "MXFP4",
+        "bits_per_weight": 4
+      },
+      "size_bytes": 12109664217,
+      "params_string": "20B",
+      "loaded_instances": [],
+      "max_context_length": 131072,
+      "format": "gguf",
+      "capabilities": {
+        "vision": false,
+        "trained_for_tool_use": true,
+        "reasoning": {
+          "allowed_options": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "default": "low"
+        }
+      },
+      "description": null,
+      "variants": [
+        "openai/gpt-oss-20b@mxfp4"
+      ],
+      "selected_variant": "openai/gpt-oss-20b@mxfp4"
+    },
+    {
+      "type": "llm",
+      "publisher": "google",
+      "key": "google/gemma-4-12b-qat",
+      "display_name": "Gemma 4 12B QAT",
+      "architecture": "gemma4",
+      "quantization": {
+        "name": "Q4_0",
+        "bits_per_weight": 4
+      },
+      "size_bytes": 7151067268,
+      "params_string": "12B",
+      "loaded_instances": [],
+      "max_context_length": 262144,
+      "format": "gguf",
+      "capabilities": {
+        "vision": true,
+        "trained_for_tool_use": true,
+        "reasoning": {
+          "allowed_options": [
+            "off",
+            "on"
+          ],
+          "default": "on"
+        }
+      },
+      "description": null,
+      "variants": [
+        "google/gemma-4-12b-qat@q4_0"
+      ],
+      "selected_variant": "google/gemma-4-12b-qat@q4_0"
+    },
+    {
+      "type": "embedding",
+      "publisher": "nomic-ai",
+      "key": "text-embedding-nomic-embed-text-v1.5",
+      "display_name": "Nomic Embed Text v1.5",
+      "quantization": {
+        "name": "Q4_K_M",
+        "bits_per_weight": 4
+      },
+      "size_bytes": 84106624,
+      "params_string": null,
+      "loaded_instances": [],
+      "max_context_length": 2048,
+      "format": "gguf"
+    }
+  ]
+}

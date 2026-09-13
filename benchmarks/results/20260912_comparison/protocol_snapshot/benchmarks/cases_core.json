@@ -1,0 +1,599 @@
+{
+  "suite": "core",
+  "version": 2,
+  "description": "General-purpose benchmark suite for the Local AI Gateway.",
+  "defaults": {
+    "temperature": 0.0,
+    "quality": "balanced"
+  },
+  "cases": [
+    {
+      "id": "extract_001",
+      "category": "structured_extraction",
+      "difficulty": "easy",
+      "max_output_tokens": 256,
+      "prompt": "Extract the course code, assignment name, due date, due time, and timezone from the following announcement. Return only JSON with keys course, assignment, due_date, due_time, timezone.\n\nAnnouncement:\nMAT186 students: Problem Set 2 is due Friday, September 18, 2026 at 11:59 PM Eastern Time. Submit through Quercus.",
+      "expected": {
+        "mode": "semantic_json",
+        "value": {
+          "course": "MAT186",
+          "assignment": "Problem Set 2",
+          "due_date": "2026-09-18",
+          "due_time": "23:59",
+          "timezone": "Eastern Time"
+        },
+        "normalize": {
+          "course": "text",
+          "assignment": "text",
+          "due_date": "date",
+          "due_time": "time",
+          "timezone": "timezone"
+        }
+      }
+    },
+    {
+      "id": "extract_002",
+      "category": "structured_extraction",
+      "difficulty": "easy",
+      "max_output_tokens": 256,
+      "prompt": "Extract the customer name, order number, item count, subtotal, tax, and total. Return only JSON.\n\nReceipt:\nCustomer: Amir Rahman\nOrder #A18492\nItems purchased: 4\nSubtotal: $82.50\nHST: $10.73\nTotal paid: $93.23",
+      "expected": {
+        "mode": "semantic_json",
+        "value": {
+          "customer_name": "Amir Rahman",
+          "order_number": "A18492",
+          "item_count": 4,
+          "subtotal": 82.5,
+          "tax": 10.73,
+          "total": 93.23
+        },
+        "normalize": {
+          "customer_name": "text",
+          "item_count": "number",
+          "subtotal": "number",
+          "tax": "number",
+          "total": "number"
+        }
+      }
+    },
+    {
+      "id": "extract_003",
+      "category": "structured_extraction",
+      "difficulty": "medium",
+      "max_output_tokens": 256,
+      "prompt": "Extract only the error code, service name, affected user count, first occurrence time, and resolved time. Return JSON only.\n\nIncident report:\nAt 14:03, several users began reporting failed uploads. The StorageProxy service logged error E_UPLOAD_17. Monitoring showed 218 affected users. The issue was traced to an expired internal credential. Service was fully restored at 14:41.",
+      "expected": {
+        "mode": "semantic_json",
+        "value": {
+          "error_code": "E_UPLOAD_17",
+          "service": "StorageProxy",
+          "affected_users": 218,
+          "first_occurrence": "14:03",
+          "resolved": "14:41"
+        },
+        "normalize": {
+          "service": "text",
+          "affected_users": "number",
+          "first_occurrence": "time",
+          "resolved": "time"
+        },
+        "key_aliases": {
+          "": {
+            "service_name": "service",
+            "affected_user_count": "affected_users",
+            "first_occurrence_time": "first_occurrence",
+            "resolved_time": "resolved"
+          }
+        }
+      }
+    },
+    {
+      "id": "extract_004",
+      "category": "structured_extraction",
+      "difficulty": "medium",
+      "max_output_tokens": 384,
+      "prompt": "Read the schedule and return a JSON array containing only events occurring on Friday. Each object must contain name, start, end, and room.\n\nSchedule:\nMonday 09:00-10:00 Calculus Lecture, BA1170\nWednesday 13:00-14:00 Chemistry Tutorial, WB130\nFriday 10:00-11:00 Programming Lecture, MY150\nFriday 12:00-13:00 Design Studio, SF1101\nFriday 15:00-16:00 Chemistry Lecture, MS2158",
+      "expected": {
+        "mode": "semantic_json",
+        "value": [
+          {
+            "name": "Programming Lecture",
+            "start": "10:00",
+            "end": "11:00",
+            "room": "MY150"
+          },
+          {
+            "name": "Design Studio",
+            "start": "12:00",
+            "end": "13:00",
+            "room": "SF1101"
+          },
+          {
+            "name": "Chemistry Lecture",
+            "start": "15:00",
+            "end": "16:00",
+            "room": "MS2158"
+          }
+        ],
+        "normalize": {
+          "*.name": "text",
+          "*.start": "time",
+          "*.end": "time",
+          "*.room": "text"
+        }
+      }
+    },
+    {
+      "id": "extract_005",
+      "category": "structured_extraction",
+      "difficulty": "hard",
+      "max_output_tokens": 384,
+      "prompt": "Extract the final configuration after all changes have been applied. Ignore superseded values. Return JSON only with keys port, context_length, ttl_seconds, authentication, cors.\n\nConfiguration history:\nInitial port was 8000.\nContext length started at 8192.\nAuthentication was disabled during testing.\nPort was later changed from 8000 to 4812.\nTTL was initially 120 seconds.\nContext length was increased to 16384.\nCORS remained disabled throughout.\nAuthentication was enabled before deployment.\nTTL was finally changed from 120 to 300 seconds.",
+      "expected": {
+        "mode": "semantic_json",
+        "value": {
+          "port": 4812,
+          "context_length": 16384,
+          "ttl_seconds": 300,
+          "authentication": true,
+          "cors": false
+        },
+        "normalize": {
+          "port": "number",
+          "context_length": "number",
+          "ttl_seconds": "number",
+          "authentication": "enabled_state",
+          "cors": "enabled_state"
+        }
+      }
+    },
+    {
+      "id": "classify_001",
+      "category": "classification",
+      "difficulty": "easy",
+      "max_output_tokens": 32,
+      "prompt": "Classify the message as exactly one of: assignment, exam, announcement, irrelevant. Return only the label.\n\nMessage: Homework 4 has been posted and must be submitted by Sunday at 11:59 PM.",
+      "expected": {
+        "mode": "label",
+        "value": "assignment",
+        "labels": [
+          "assignment",
+          "exam",
+          "announcement",
+          "irrelevant"
+        ]
+      }
+    },
+    {
+      "id": "classify_002",
+      "category": "classification",
+      "difficulty": "easy",
+      "max_output_tokens": 32,
+      "prompt": "Classify the message as exactly one of: assignment, exam, announcement, irrelevant. Return only the label.\n\nMessage: The midterm will take place next Wednesday from 6:00 PM to 8:00 PM.",
+      "expected": {
+        "mode": "label",
+        "value": "exam",
+        "labels": [
+          "assignment",
+          "exam",
+          "announcement",
+          "irrelevant"
+        ]
+      }
+    },
+    {
+      "id": "classify_003",
+      "category": "classification",
+      "difficulty": "easy",
+      "max_output_tokens": 32,
+      "prompt": "Classify the message as exactly one of: assignment, exam, announcement, irrelevant. Return only the label.\n\nMessage: Friday's lecture has been moved from room BA1130 to BA1170.",
+      "expected": {
+        "mode": "label",
+        "value": "announcement",
+        "labels": [
+          "assignment",
+          "exam",
+          "announcement",
+          "irrelevant"
+        ]
+      }
+    },
+    {
+      "id": "classify_004",
+      "category": "classification",
+      "difficulty": "easy",
+      "max_output_tokens": 32,
+      "prompt": "Classify the message as exactly one of: assignment, exam, announcement, irrelevant. Return only the label.\n\nMessage: The engineering cafeteria will be serving tacos today.",
+      "expected": {
+        "mode": "label",
+        "value": "irrelevant",
+        "labels": [
+          "assignment",
+          "exam",
+          "announcement",
+          "irrelevant"
+        ]
+      }
+    },
+    {
+      "id": "classify_005",
+      "category": "classification",
+      "difficulty": "medium",
+      "max_output_tokens": 32,
+      "prompt": "Classify the message as exactly one of: assignment, exam, announcement, irrelevant. Return only the label.\n\nMessage: Reminder: Project Milestone 1 is still due tomorrow despite the campus closure announcement.",
+      "expected": {
+        "mode": "label",
+        "value": "assignment",
+        "labels": [
+          "assignment",
+          "exam",
+          "announcement",
+          "irrelevant"
+        ]
+      }
+    },
+    {
+      "id": "instruction_001",
+      "category": "instruction_following",
+      "difficulty": "easy",
+      "max_output_tokens": 64,
+      "prompt": "Return exactly the following JSON object and nothing else: {\"status\":\"ok\",\"count\":3}",
+      "expected": {
+        "mode": "exact_json",
+        "value": {
+          "status": "ok",
+          "count": 3
+        }
+      }
+    },
+    {
+      "id": "instruction_002",
+      "category": "instruction_following",
+      "difficulty": "easy",
+      "max_output_tokens": 64,
+      "prompt": "Sort these words alphabetically and return them as a JSON array only: zebra, apple, mango, banana.",
+      "expected": {
+        "mode": "exact_json",
+        "value": [
+          "apple",
+          "banana",
+          "mango",
+          "zebra"
+        ]
+      }
+    },
+    {
+      "id": "instruction_003",
+      "category": "instruction_following",
+      "difficulty": "medium",
+      "max_output_tokens": 64,
+      "prompt": "Convert the following phrase to lowercase, replace spaces with hyphens, and output nothing except the result:\n\nLocal Artificial Intelligence Gateway",
+      "expected": {
+        "mode": "exact_text",
+        "value": "local-artificial-intelligence-gateway"
+      }
+    },
+    {
+      "id": "instruction_004",
+      "category": "instruction_following",
+      "difficulty": "medium",
+      "max_output_tokens": 64,
+      "prompt": "Return exactly three lines. Line 1 must be RED. Line 2 must be GREEN. Line 3 must be BLUE. Do not add numbering, punctuation, Markdown, or any other text.",
+      "expected": {
+        "mode": "exact_text",
+        "value": "RED\nGREEN\nBLUE"
+      }
+    },
+    {
+      "id": "instruction_005",
+      "category": "instruction_following",
+      "difficulty": "hard",
+      "max_output_tokens": 128,
+      "prompt": "Read the values below. Return only a JSON object with exactly two keys in this order: even and odd. Each value must be an array containing the corresponding numbers in ascending order. Do not include duplicates.\n\nValues: 9, 4, 2, 9, 7, 8, 4, 3, 6, 2",
+      "expected": {
+        "mode": "exact_json",
+        "value": {
+          "even": [
+            2,
+            4,
+            6,
+            8
+          ],
+          "odd": [
+            3,
+            7,
+            9
+          ]
+        },
+        "key_order": [
+          "even",
+          "odd"
+        ]
+      }
+    },
+    {
+      "id": "reason_001",
+      "category": "reasoning",
+      "difficulty": "easy",
+      "max_output_tokens": 128,
+      "prompt": "A bag contains 3 red balls and 2 blue balls. Two balls are drawn without replacement. What is the probability that both are red? Return only a decimal number.",
+      "expected": {
+        "mode": "numeric",
+        "value": 0.3,
+        "tolerance": 0.0001
+      }
+    },
+    {
+      "id": "reason_002",
+      "category": "reasoning",
+      "difficulty": "medium",
+      "max_output_tokens": 256,
+      "prompt": "Four tasks A, B, C, and D must be scheduled Monday through Thursday, one task per day. C must occur on Thursday. B must occur immediately after A. D cannot occur on Thursday. D must occur after B. Determine the schedule. Return only a JSON object mapping Monday, Tuesday, Wednesday, Thursday to task letters.",
+      "expected": {
+        "mode": "semantic_json",
+        "value": {
+          "Monday": "A",
+          "Tuesday": "B",
+          "Wednesday": "D",
+          "Thursday": "C"
+        },
+        "normalize": {
+          "Monday": "text",
+          "Tuesday": "text",
+          "Wednesday": "text",
+          "Thursday": "text"
+        }
+      }
+    },
+    {
+      "id": "reason_003",
+      "category": "reasoning",
+      "difficulty": "easy",
+      "max_output_tokens": 64,
+      "prompt": "Solve for x: 3(x - 2) + 4 = 2x + 9. Return only the number.",
+      "expected": {
+        "mode": "numeric",
+        "value": 11,
+        "tolerance": 0.0001
+      }
+    },
+    {
+      "id": "reason_004",
+      "category": "reasoning",
+      "difficulty": "medium",
+      "max_output_tokens": 128,
+      "prompt": "Consider this pseudocode:\n\nfor i = 1 to n:\n    for j = 1 to i:\n        doConstantTimeWork()\n\nWhat is the asymptotic time complexity? Return only one of: O(1), O(log n), O(n), O(n log n), O(n^2), O(n^3).",
+      "expected": {
+        "mode": "label",
+        "value": "O(n^2)",
+        "labels": [
+          "O(1)",
+          "O(log n)",
+          "O(n)",
+          "O(n log n)",
+          "O(n^2)",
+          "O(n^3)"
+        ]
+      }
+    },
+    {
+      "id": "reason_005",
+      "category": "reasoning",
+      "difficulty": "medium",
+      "max_output_tokens": 256,
+      "prompt": "A 6-ohm resistor and a 3-ohm resistor are connected in parallel. That parallel combination is connected in series with a 4-ohm resistor. The circuit is connected to a 12-volt source. Return JSON only with equivalent_parallel_resistance_ohms, total_resistance_ohms, and total_current_amps.",
+      "expected": {
+        "mode": "semantic_json",
+        "value": {
+          "equivalent_parallel_resistance_ohms": 2,
+          "total_resistance_ohms": 6,
+          "total_current_amps": 2
+        },
+        "normalize": {
+          "equivalent_parallel_resistance_ohms": "number",
+          "total_resistance_ohms": "number",
+          "total_current_amps": "number"
+        }
+      }
+    },
+    {
+      "id": "coding_001",
+      "category": "coding",
+      "difficulty": "easy",
+      "max_output_tokens": 512,
+      "prompt": "Write a Python function named clamp(value, minimum, maximum). It must return minimum when value is below minimum, maximum when value is above maximum, and value otherwise. Return only Python code with no Markdown fences.",
+      "expected": {
+        "mode": "code_tests",
+        "language": "python",
+        "tests": [
+          {
+            "expression": "clamp(5, 0, 10)",
+            "expected": 5
+          },
+          {
+            "expression": "clamp(-3, 0, 10)",
+            "expected": 0
+          },
+          {
+            "expression": "clamp(22, 0, 10)",
+            "expected": 10
+          },
+          {
+            "expression": "clamp(4.5, 2.0, 4.0)",
+            "expected": 4.0
+          }
+        ]
+      }
+    },
+    {
+      "id": "coding_002",
+      "category": "coding",
+      "difficulty": "medium",
+      "max_output_tokens": 768,
+      "prompt": "Write a Python function named dedupe_preserve_order(items) that removes duplicate values while preserving the order in which each value first appeared. Assume all values are hashable. Return only Python code with no Markdown fences.",
+      "expected": {
+        "mode": "code_tests",
+        "language": "python",
+        "tests": [
+          {
+            "expression": "dedupe_preserve_order([1, 2, 1, 3, 2, 4])",
+            "expected": [
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          {
+            "expression": "dedupe_preserve_order(['a', 'b', 'a', 'c'])",
+            "expected": [
+              "a",
+              "b",
+              "c"
+            ]
+          },
+          {
+            "expression": "dedupe_preserve_order([])",
+            "expected": []
+          }
+        ]
+      }
+    },
+    {
+      "id": "coding_003",
+      "category": "coding",
+      "difficulty": "medium",
+      "max_output_tokens": 768,
+      "prompt": "The following Python function is intended to return the largest number in a non-empty list, but it is incorrect:\n\ndef largest(numbers):\n    result = 0\n    for number in numbers:\n        if number > result:\n            result = number\n    return result\n\nFix the function so that it works for any non-empty list of integers, including lists containing only negative numbers. Return only the corrected Python function with no Markdown fences.",
+      "expected": {
+        "mode": "code_tests",
+        "language": "python",
+        "tests": [
+          {
+            "expression": "largest([3, 1, 8, 2])",
+            "expected": 8
+          },
+          {
+            "expression": "largest([-8, -2, -14, -3])",
+            "expected": -2
+          },
+          {
+            "expression": "largest([7])",
+            "expected": 7
+          }
+        ]
+      }
+    },
+    {
+      "id": "coding_004",
+      "category": "coding",
+      "difficulty": "hard",
+      "max_output_tokens": 1024,
+      "prompt": "Write a Python function named flatten_dict(data, prefix='') that converts a nested dictionary into a flat dictionary using dots between nested keys. You only need to support nested dictionaries; lists should remain unchanged. Return only Python code with no Markdown fences.\n\nExample:\n{'user': {'name': 'Ali', 'settings': {'theme': 'dark'}}, 'active': True}\nbecomes\n{'user.name': 'Ali', 'user.settings.theme': 'dark', 'active': True}",
+      "expected": {
+        "mode": "code_tests",
+        "language": "python",
+        "tests": [
+          {
+            "expression": "flatten_dict({'a': {'b': 1}, 'c': 2})",
+            "expected": {
+              "a.b": 1,
+              "c": 2
+            }
+          },
+          {
+            "expression": "flatten_dict({'user': {'name': 'Ali', 'settings': {'theme': 'dark'}}, 'active': True})",
+            "expected": {
+              "user.name": "Ali",
+              "user.settings.theme": "dark",
+              "active": true
+            }
+          },
+          {
+            "expression": "flatten_dict({'items': [1, 2, 3]})",
+            "expected": {
+              "items": [
+                1,
+                2,
+                3
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "summary_001",
+      "category": "summarization",
+      "difficulty": "easy",
+      "max_output_tokens": 256,
+      "prompt": "Summarize the following in no more than 50 words:\n\nThe development team deployed version 2.4 on Tuesday morning. Shortly after deployment, users began experiencing slower page loads. Engineers discovered that a new database query was performing a full table scan. The deployment was rolled back at 10:35 AM, restoring normal performance. The query will be redesigned before version 2.4 is deployed again.",
+      "expected": {
+        "mode": "summary_rubric",
+        "max_words": 50,
+        "must_include_concepts": [
+          "version 2.4",
+          "slow performance after deployment",
+          "database query or full table scan",
+          "rollback",
+          "query will be redesigned"
+        ]
+      }
+    },
+    {
+      "id": "summary_002",
+      "category": "summarization",
+      "difficulty": "medium",
+      "max_output_tokens": 256,
+      "prompt": "Summarize the following in exactly two sentences. Do not add information that is not present in the text.\n\nStudents may submit Lab 3 until 11:59 PM on October 2 without penalty. The original deadline was September 30. The extension applies to all sections and does not require students to contact their instructor. Lab 4 has not been extended and remains due October 7.",
+      "expected": {
+        "mode": "summary_rubric",
+        "sentence_count": 2,
+        "must_include_concepts": [
+          "Lab 3 extended to October 2 at 11:59 PM",
+          "extension applies to all sections",
+          "Lab 4 remains due October 7"
+        ],
+        "must_not_claim": [
+          "Lab 4 was extended"
+        ]
+      }
+    },
+    {
+      "id": "summary_003",
+      "category": "summarization",
+      "difficulty": "medium",
+      "max_output_tokens": 320,
+      "prompt": "Write a concise technical summary in no more than 70 words.\n\nThe application currently sends every AI request directly to a specific model endpoint. This makes model replacement difficult because each application contains provider-specific code. The proposed architecture introduces a local gateway between applications and model providers. Applications send provider-independent requests to the gateway, while the gateway handles routing, authentication, model selection, and future fallback behavior. This allows model providers to change without requiring modifications to every application.",
+      "expected": {
+        "mode": "summary_rubric",
+        "max_words": 70,
+        "must_include_concepts": [
+          "gateway abstraction",
+          "applications become provider-independent",
+          "gateway handles routing or model selection",
+          "providers can change without modifying every application"
+        ]
+      }
+    },
+    {
+      "id": "summary_004",
+      "category": "summarization",
+      "difficulty": "hard",
+      "max_output_tokens": 384,
+      "prompt": "Summarize the incident below for a technical project lead. Use no more than four bullet points.\n\nAt 08:12, monitoring detected elevated latency on the recommendation service. CPU usage remained normal, but database connection counts were close to their maximum. At 08:19, engineers discovered that a recently deployed worker was failing to release connections after completed jobs. The worker deployment was disabled at 08:26. Connection counts began falling immediately and latency returned to normal by 08:31. No data loss occurred. A code fix and regression test are required before the worker is re-enabled.",
+      "expected": {
+        "mode": "summary_rubric",
+        "max_bullets": 4,
+        "must_include_concepts": [
+          "latency detected at 08:12",
+          "connection leak in newly deployed worker",
+          "worker disabled at 08:26",
+          "service recovered by 08:31",
+          "no data loss",
+          "fix and regression test required"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,471 @@
+[
+  {
+    "id": "extract_003",
+    "prompt": "Extract only the error code, service name, affected user count, first occurrence time, and resolved time. Return JSON only.\n\nIncident report:\nAt 14:03, several users began reporting failed uploads. The StorageProxy service logged error E_UPLOAD_17. Monitoring showed 218 affected users. The issue was traced to an expired internal credential. Service was fully restored at 14:41.",
+    "expected": {
+      "mode": "semantic_json",
+      "value": {
+        "error_code": "E_UPLOAD_17",
+        "service": "StorageProxy",
+        "affected_users": 218,
+        "first_occurrence": "14:03",
+        "resolved": "14:41"
+      },
+      "normalize": {
+        "service": "text",
+        "affected_users": "number",
+        "first_occurrence": "time",
+        "resolved": "time"
+      },
+      "key_aliases": {
+        "": {
+          "service_name": "service",
+          "affected_user_count": "affected_users",
+          "first_occurrence_time": "first_occurrence",
+          "resolved_time": "resolved"
+        }
+      }
+    },
+    "response_text": "{\"error_code\":\"E_UPLOAD_17\",\"service_name\":\"StorageProxy\",\"affected_user_count\":218,\"first_occurrence_time\":\"14:03\",\"resolved_time\":\"14:41\"}",
+    "grade": {
+      "version": 2,
+      "status": "pass_with_format_issue",
+      "passed": true,
+      "semantic_correct": true,
+      "format_correct": false,
+      "instruction_following": false,
+      "schema_correct": false,
+      "differences": [],
+      "actual": {
+        "error_code": "E_UPLOAD_17",
+        "service_name": "StorageProxy",
+        "affected_user_count": 218,
+        "first_occurrence_time": "14:03",
+        "resolved_time": "14:41"
+      },
+      "expected": {
+        "error_code": "E_UPLOAD_17",
+        "service": "StorageProxy",
+        "affected_users": 218,
+        "first_occurrence": "14:03",
+        "resolved": "14:41"
+      }
+    },
+    "review": {
+      "semantic_correct": true,
+      "instruction_following": true,
+      "notes": "Bare JSON contains exactly the requested facts using the literal field names from the prompt. The existing aliases confirm semantic equivalence. No keys were prescribed in the prompt, so reviewed instruction compliance passes; canonical benchmark schema/format remains false.",
+      "reviewer": "Codex in-task rubric review; no external grading API"
+    }
+  },
+  {
+    "id": "classify_004",
+    "prompt": "Classify the message as exactly one of: assignment, exam, announcement, irrelevant. Return only the label.\n\nMessage: The engineering cafeteria will be serving tacos today.",
+    "expected": {
+      "mode": "label",
+      "value": "irrelevant",
+      "labels": [
+        "assignment",
+        "exam",
+        "announcement",
+        "irrelevant"
+      ]
+    },
+    "response_text": "announcement",
+    "grade": {
+      "version": 2,
+      "status": "fail",
+      "passed": false,
+      "semantic_correct": false,
+      "format_correct": true,
+      "instruction_following": true,
+      "actual": "announcement",
+      "reason": "Unambiguous label"
+    },
+    "review": {
+      "semantic_correct": false,
+      "notes": "Returned announcement; fixed expected label is irrelevant. The cafeteria notice can reasonably be called an announcement because the prompt does not define academic relevance. Retain original failure and report sensitivity excluding this case.",
+      "reviewer": "Codex in-task rubric review; no external grading API"
+    }
+  },
+  {
+    "id": "reason_004",
+    "prompt": "Consider this pseudocode:\n\nfor i = 1 to n:\n    for j = 1 to i:\n        doConstantTimeWork()\n\nWhat is the asymptotic time complexity? Return only one of: O(1), O(log n), O(n), O(n log n), O(n^2), O(n^3).",
+    "expected": {
+      "mode": "label",
+      "value": "O(n^2)",
+      "labels": [
+        "O(1)",
+        "O(log n)",
+        "O(n)",
+        "O(n log n)",
+        "O(n^2)",
+        "O(n^3)"
+      ]
+    },
+    "response_text": "O(n²)",
+    "grade": {
+      "version": 2,
+      "status": "manual",
+      "passed": null,
+      "semantic_correct": null,
+      "format_correct": false,
+      "instruction_following": false,
+      "actual": null,
+      "reason": "Ambiguous prose requires review"
+    },
+    "review": {
+      "semantic_correct": true,
+      "notes": "Returned O(n²), mathematically identical to O(n^2). Superscript 2 was verified from saved Unicode code point U+00B2. Exact permitted-label format/instructions remain failed.",
+      "reviewer": "Codex in-task rubric review; no external grading API"
+    }
+  },
+  {
+    "id": "summary_001",
+    "prompt": "Summarize the following in no more than 50 words:\n\nThe development team deployed version 2.4 on Tuesday morning. Shortly after deployment, users began experiencing slower page loads. Engineers discovered that a new database query was performing a full table scan. The deployment was rolled back at 10:35 AM, restoring normal performance. The query will be redesigned before version 2.4 is deployed again.",
+    "expected": {
+      "mode": "summary_rubric",
+      "max_words": 50,
+      "must_include_concepts": [
+        "version 2.4",
+        "slow performance after deployment",
+        "database query or full table scan",
+        "rollback",
+        "query will be redesigned"
+      ]
+    },
+    "response_text": "Version 2.4 was released Tuesday morning; users reported slow page loads caused by a new query that performed a full table scan. Engineers rolled back at 10:35 AM, restoring performance. The query will be redesigned before redeploying version 2.4.",
+    "grade": {
+      "version": 2,
+      "status": "manual",
+      "passed": null,
+      "semantic_correct": null,
+      "format_correct": true,
+      "instruction_following": true,
+      "mechanical_checks": {
+        "nonempty": true,
+        "word_limit": true
+      },
+      "counts": {
+        "words": 42
+      },
+      "rubric": {
+        "mode": "summary_rubric",
+        "max_words": 50,
+        "must_include_concepts": [
+          "version 2.4",
+          "slow performance after deployment",
+          "database query or full table scan",
+          "rollback",
+          "query will be redesigned"
+        ]
+      },
+      "reason": "Manual semantic review: accuracy, coverage, unsupported claims. Sentence counting is heuristic."
+    },
+    "review": {
+      "semantic_correct": true,
+      "concept_scores": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "coverage_score": 5,
+      "coverage_max": 5,
+      "unsupported_claims": [],
+      "notes": "All five concepts covered accurately, including full table scan, rollback time, and redesign before redeployment; 42 words.",
+      "reviewer": "Codex in-task rubric review; no external grading API"
+    }
+  },
+  {
+    "id": "summary_002",
+    "prompt": "Summarize the following in exactly two sentences. Do not add information that is not present in the text.\n\nStudents may submit Lab 3 until 11:59 PM on October 2 without penalty. The original deadline was September 30. The extension applies to all sections and does not require students to contact their instructor. Lab 4 has not been extended and remains due October 7.",
+    "expected": {
+      "mode": "summary_rubric",
+      "sentence_count": 2,
+      "must_include_concepts": [
+        "Lab 3 extended to October 2 at 11:59 PM",
+        "extension applies to all sections",
+        "Lab 4 remains due October 7"
+      ],
+      "must_not_claim": [
+        "Lab 4 was extended"
+      ]
+    },
+    "response_text": "Students can submit Lab 3 until 11:59 PM on October 2 without penalty; the original deadline was September 30 and the extension applies to all sections with no need to contact instructors. Lab 4 has not been extended and remains due on October 7.",
+    "grade": {
+      "version": 2,
+      "status": "manual",
+      "passed": null,
+      "semantic_correct": null,
+      "format_correct": true,
+      "instruction_following": true,
+      "mechanical_checks": {
+        "nonempty": true,
+        "sentence_count": true
+      },
+      "counts": {
+        "sentences": 2
+      },
+      "rubric": {
+        "mode": "summary_rubric",
+        "sentence_count": 2,
+        "must_include_concepts": [
+          "Lab 3 extended to October 2 at 11:59 PM",
+          "extension applies to all sections",
+          "Lab 4 remains due October 7"
+        ],
+        "must_not_claim": [
+          "Lab 4 was extended"
+        ]
+      },
+      "reason": "Manual semantic review: accuracy, coverage, unsupported claims. Sentence counting is heuristic."
+    },
+    "review": {
+      "semantic_correct": true,
+      "concept_scores": [
+        1,
+        1,
+        1
+      ],
+      "coverage_score": 3,
+      "coverage_max": 3,
+      "unsupported_claims": [],
+      "notes": "Precisely covers new Lab 3 deadline and time, all sections, and unchanged Lab 4 deadline; exactly two sentences and no invented extension.",
+      "reviewer": "Codex in-task rubric review; no external grading API"
+    }
+  },
+  {
+    "id": "summary_003",
+    "prompt": "Write a concise technical summary in no more than 70 words.\n\nThe application currently sends every AI request directly to a specific model endpoint. This makes model replacement difficult because each application contains provider-specific code. The proposed architecture introduces a local gateway between applications and model providers. Applications send provider-independent requests to the gateway, while the gateway handles routing, authentication, model selection, and future fallback behavior. This allows model providers to change without requiring modifications to every application.",
+    "expected": {
+      "mode": "summary_rubric",
+      "max_words": 70,
+      "must_include_concepts": [
+        "gateway abstraction",
+        "applications become provider-independent",
+        "gateway handles routing or model selection",
+        "providers can change without modifying every application"
+      ]
+    },
+    "response_text": "The current architecture sends AI requests directly to specific model endpoints, embedding provider‑specific code in each app. A new local gateway decouples apps from providers: apps issue provider‑agnostic requests; the gateway handles routing, authentication, model selection, and fallback logic. This allows seamless provider changes without modifying individual applications.",
+    "grade": {
+      "version": 2,
+      "status": "manual",
+      "passed": null,
+      "semantic_correct": null,
+      "format_correct": true,
+      "instruction_following": true,
+      "mechanical_checks": {
+        "nonempty": true,
+        "word_limit": true
+      },
+      "counts": {
+        "words": 50
+      },
+      "rubric": {
+        "mode": "summary_rubric",
+        "max_words": 70,
+        "must_include_concepts": [
+          "gateway abstraction",
+          "applications become provider-independent",
+          "gateway handles routing or model selection",
+          "providers can change without modifying every application"
+        ]
+      },
+      "reason": "Manual semantic review: accuracy, coverage, unsupported claims. Sentence counting is heuristic."
+    },
+    "review": {
+      "semantic_correct": true,
+      "concept_scores": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "coverage_score": 4,
+      "coverage_max": 4,
+      "unsupported_claims": [],
+      "notes": "Covers current provider coupling, gateway abstraction, provider-independent requests, routing/model selection, and provider changes without app edits. No material unsupported claims; within 70 words.",
+      "reviewer": "Codex in-task rubric review; no external grading API"
+    }
+  },
+  {
+    "id": "summary_004",
+    "prompt": "Summarize the incident below for a technical project lead. Use no more than four bullet points.\n\nAt 08:12, monitoring detected elevated latency on the recommendation service. CPU usage remained normal, but database connection counts were close to their maximum. At 08:19, engineers discovered that a recently deployed worker was failing to release connections after completed jobs. The worker deployment was disabled at 08:26. Connection counts began falling immediately and latency returned to normal by 08:31. No data loss occurred. A code fix and regression test are required before the worker is re-enabled.",
+    "expected": {
+      "mode": "summary_rubric",
+      "max_bullets": 4,
+      "must_include_concepts": [
+        "latency detected at 08:12",
+        "connection leak in newly deployed worker",
+        "worker disabled at 08:26",
+        "service recovered by 08:31",
+        "no data loss",
+        "fix and regression test required"
+      ]
+    },
+    "response_text": "- **08:12** – Recommendation service latency spiked while CPU was normal; DB connections were near their maximum threshold.  \n- **08:19** – Root cause identified: a newly‑deployed worker failed to close database connections after job completion.  \n- **08:26–08:31** – Worker disabled, connection counts fell immediately and latency returned to baseline with no data loss.  \n- **Next steps** – Apply a code fix, add regression tests, then safely re‑enable the worker.",
+    "grade": {
+      "version": 2,
+      "status": "manual",
+      "passed": null,
+      "semantic_correct": null,
+      "format_correct": true,
+      "instruction_following": true,
+      "mechanical_checks": {
+        "nonempty": true,
+        "bullet_limit": true,
+        "bullet_format": true
+      },
+      "counts": {
+        "bullets": 4
+      },
+      "rubric": {
+        "mode": "summary_rubric",
+        "max_bullets": 4,
+        "must_include_concepts": [
+          "latency detected at 08:12",
+          "connection leak in newly deployed worker",
+          "worker disabled at 08:26",
+          "service recovered by 08:31",
+          "no data loss",
+          "fix and regression test required"
+        ]
+      },
+      "reason": "Manual semantic review: accuracy, coverage, unsupported claims. Sentence counting is heuristic."
+    },
+    "review": {
+      "semantic_correct": true,
+      "concept_scores": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "coverage_score": 6,
+      "coverage_max": 6,
+      "unsupported_claims": [],
+      "notes": "All six required concepts covered in four bullets. The 08:26-08:31 interval summarizes worker disablement and recovery correctly; no data loss and fix/tests before re-enabling are explicit.",
+      "reviewer": "Codex in-task rubric review; no external grading API"
+    }
+  },
+  {
+    "id": "long_001",
+    "prompt": "Read the project log and answer the question at the end. Return JSON only with first_failure_time, root_cause, recovery_time.\n\nPROJECT LOG\n\n08:00 - API server started normally.\n08:04 - Health check returned 200.\n08:07 - Model registry loaded 4 entries.\n08:11 - First inference request completed in 1.8 seconds.\n08:14 - Cache cleanup completed.\n08:18 - Health check returned 200.\n08:23 - User authentication succeeded.\n08:27 - Inference request completed normally.\n08:32 - Memory usage reached 61 percent.\n08:36 - Health check returned 200.\n08:41 - Background metrics export completed.\n08:45 - New model configuration deployed.\n08:48 - First request after deployment returned HTTP 502.\n08:49 - Second request returned HTTP 502.\n08:50 - Gateway logged MODEL_LOAD_FAILED.\n08:52 - Engineers began investigation.\n08:55 - Configuration comparison showed that the newly deployed model identifier did not exist on the inference server.\n08:59 - Previous configuration restored.\n09:01 - Model loaded successfully.\n09:02 - First successful inference request completed.\n09:06 - Health check returned 200.\n09:12 - Memory usage returned to normal.\n09:20 - Incident closed.\n\nQuestion: When did the first failure occur, what caused the incident, and when was normal inference first restored?",
+    "expected": {
+      "mode": "semantic_json",
+      "value": {
+        "first_failure_time": "08:48",
+        "root_cause": "invalid model identifier",
+        "recovery_time": "09:02"
+      },
+      "normalize": {
+        "first_failure_time": "time",
+        "root_cause": "text",
+        "recovery_time": "time"
+      },
+      "review_paths": [
+        "root_cause"
+      ]
+    },
+    "response_text": "{\"first_failure_time\":\"08:48\",\"root_cause\":\"Newly deployed model identifier did not exist on the inference server, causing MODEL_LOAD_FAILED and HTTP 502 responses.\",\"recovery_time\":\"09:02\"}",
+    "grade": {
+      "version": 2,
+      "status": "manual",
+      "passed": null,
+      "semantic_correct": null,
+      "format_correct": true,
+      "instruction_following": true,
+      "schema_correct": true,
+      "differences": [
+        {
+          "path": "root_cause",
+          "actual": "Newly deployed model identifier did not exist on the inference server, causing MODEL_LOAD_FAILED and HTTP 502 responses.",
+          "expected": "invalid model identifier",
+          "reason": "Value differs"
+        }
+      ],
+      "actual": {
+        "first_failure_time": "08:48",
+        "root_cause": "Newly deployed model identifier did not exist on the inference server, causing MODEL_LOAD_FAILED and HTTP 502 responses.",
+        "recovery_time": "09:02"
+      },
+      "expected": {
+        "first_failure_time": "08:48",
+        "root_cause": "invalid model identifier",
+        "recovery_time": "09:02"
+      }
+    },
+    "review": {
+      "semantic_correct": true,
+      "notes": "Free-text root cause accurately states that the deployed identifier did not exist and describes observed errors. Both requested times are correct; bare JSON satisfies format and instructions.",
+      "reviewer": "Codex in-task rubric review; no external grading API"
+    }
+  },
+  {
+    "id": "project_005",
+    "prompt": "Parse the following university message into structured data. Return JSON only with course, event_type, date, start_time, end_time, location. Assume the date is in 2026.\n\nMessage:\nAPS110 students: Friday's chemistry lecture will take place on September 25 from 3:00 PM to 4:00 PM in MS2158.",
+    "expected": {
+      "mode": "semantic_json",
+      "value": {
+        "course": "APS110",
+        "event_type": "lecture",
+        "date": "2026-09-25",
+        "start_time": "15:00",
+        "end_time": "16:00",
+        "location": "MS2158"
+      },
+      "normalize": {
+        "course": "text",
+        "event_type": "text",
+        "date": "date",
+        "start_time": "time",
+        "end_time": "time",
+        "location": "text"
+      }
+    },
+    "response_text": "{\"course\":\"APS110\",\"event_type\":\"chemistry lecture\",\"date\":\"2026-09-25\",\"start_time\":\"15:00\",\"end_time\":\"16:00\",\"location\":\"MS2158\"}",
+    "grade": {
+      "version": 2,
+      "status": "fail",
+      "passed": false,
+      "semantic_correct": false,
+      "format_correct": true,
+      "instruction_following": true,
+      "schema_correct": true,
+      "differences": [
+        {
+          "path": "event_type",
+          "actual": "chemistry lecture",
+          "expected": "lecture",
+          "reason": "Value differs"
+        }
+      ],
+      "actual": {
+        "course": "APS110",
+        "event_type": "chemistry lecture",
+        "date": "2026-09-25",
+        "start_time": "15:00",
+        "end_time": "16:00",
+        "location": "MS2158"
+      },
+      "expected": {
+        "course": "APS110",
+        "event_type": "lecture",
+        "date": "2026-09-25",
+        "start_time": "15:00",
+        "end_time": "16:00",
+        "location": "MS2158"
+      }
+    },
+    "review": {
+      "semantic_correct": true,
+      "notes": "Chemistry lecture accurately specializes the event type lecture and the prompt defines no restricted vocabulary. All other values, ISO date and 24-hour times are correct. Bare JSON meets canonical format and instructions.",
+      "reviewer": "Codex in-task rubric review; no external grading API"
+    }
+  }
+]

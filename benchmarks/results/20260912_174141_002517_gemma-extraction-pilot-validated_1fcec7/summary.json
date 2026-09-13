@@ -1,0 +1,171 @@
+{
+  "metadata": {
+    "version": 2,
+    "started_at": "2026-09-12T17:41:41.002787-04:00",
+    "forced_quality": "balanced",
+    "name": "gemma-extraction-pilot-validated",
+    "case_count": 5,
+    "state": "completed",
+    "execute_code": true,
+    "max_output_tokens_override": 4096,
+    "source_sha256": {
+      "benchmarks\\cases_core.json": "076f8b97ceb4ebc3f076499c86b8fc90a61e74b82ca69fb7728ecf2014c13702",
+      "benchmarks\\cases_long_context.json": "b04713ebde937789fa9d12f9cf8fd274139ea0f84e549d480b12d56c360d7c4d",
+      "benchmarks\\cases_project.json": "49e49a80d121adb7bb2d8bd5771592f81fad3e43d6e77527c35e0867b406873a",
+      "benchmarks\\code_execution.py": "679e059ab20131cb65a28a2f1fb7d1dcd8f47339e97874b1f5d3f1ed1a89e65e",
+      "benchmarks\\grading.py": "b78ff6a13892135a0e36a94c3351b0fd62eeeb38b25d85a8f94837af283e046c",
+      "benchmarks\\reporting.py": "c936af8e272a50339db406fc643b680e434598d9cfafdc6a444ff0eb05f3742c",
+      "benchmarks\\run_benchmarks.py": "958346a65905bcb5d6c3ccf217fe2fd1861a80b83b68a315522d5d2a483f9259",
+      "benchmarks\\test_benchmarks.py": "e200c42450d70d8e3aaf067a6f74327fc2b37e81fb54d459e3588d1b058ebe67",
+      "app\\__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "app\\config.py": "79ca8443a6c2d5ac3b7795720146cb7ad5e4b328b562304fbf5bb787ca0375d5",
+      "app\\lmstudio.py": "fa17cf55c59136d77b84258d08e554abb0e9cd04882b376dee5c8173e72a30a2",
+      "app\\main.py": "eb716f71edb6afe49d902ca38149a606df08c1550f7184e8e9ba1e15dd6472c7",
+      "app\\routing.py": "d9dcf3dca08bc6151fe600a5e265bcf43de7cc0fd93150d1cdd12efc52889a61",
+      "app\\schemas.py": "6db8245e4bdf8af23643564f08ed6467eb9c030aa7aaae8f979b4c987097fe4d"
+    },
+    "finished_at": "2026-09-12T17:42:33.768717-04:00"
+  },
+  "summary": {
+    "total_cases": 5,
+    "scores": {
+      "semantic_correct": {
+        "passed": 5,
+        "evaluated": 5,
+        "percent": 100.0
+      },
+      "format_correct": {
+        "passed": 0,
+        "evaluated": 5,
+        "percent": 0.0
+      },
+      "instruction_following": {
+        "passed": 0,
+        "evaluated": 5,
+        "percent": 0.0
+      }
+    },
+    "manual_review": 0,
+    "errors": 0,
+    "code_tests": {
+      "passed": 0,
+      "evaluated": 0
+    },
+    "performance": {
+      "wall_time_seconds": {
+        "observed": 5,
+        "mean": 10.521799999999999,
+        "median": 9.514,
+        "total": 52.608999999999995
+      },
+      "input_tokens": {
+        "observed": 5,
+        "mean": 121,
+        "median": 105,
+        "total": 605
+      },
+      "output_tokens": {
+        "observed": 5,
+        "mean": 534.4,
+        "median": 487,
+        "total": 2672
+      },
+      "reasoning_output_tokens": {
+        "observed": 5,
+        "mean": 438.8,
+        "median": 409,
+        "total": 2194
+      },
+      "tokens_per_second": {
+        "observed": 5,
+        "mean": 52.27818593554983,
+        "median": 52.36201300522797,
+        "total": 261.3909296777491
+      },
+      "time_to_first_token_seconds": {
+        "observed": 5,
+        "mean": 0.128366,
+        "median": 0.133667,
+        "total": 0.64183
+      },
+      "model_load_time_seconds": {
+        "observed": 0,
+        "mean": null,
+        "median": null,
+        "total": null
+      }
+    },
+    "by_category": {
+      "structured_extraction": {
+        "total_cases": 5,
+        "scores": {
+          "semantic_correct": {
+            "passed": 5,
+            "evaluated": 5,
+            "percent": 100.0
+          },
+          "format_correct": {
+            "passed": 0,
+            "evaluated": 5,
+            "percent": 0.0
+          },
+          "instruction_following": {
+            "passed": 0,
+            "evaluated": 5,
+            "percent": 0.0
+          }
+        },
+        "manual_review": 0,
+        "errors": 0,
+        "code_tests": {
+          "passed": 0,
+          "evaluated": 0
+        },
+        "performance": {
+          "wall_time_seconds": {
+            "observed": 5,
+            "mean": 10.521799999999999,
+            "median": 9.514,
+            "total": 52.608999999999995
+          },
+          "input_tokens": {
+            "observed": 5,
+            "mean": 121,
+            "median": 105,
+            "total": 605
+          },
+          "output_tokens": {
+            "observed": 5,
+            "mean": 534.4,
+            "median": 487,
+            "total": 2672
+          },
+          "reasoning_output_tokens": {
+            "observed": 5,
+            "mean": 438.8,
+            "median": 409,
+            "total": 2194
+          },
+          "tokens_per_second": {
+            "observed": 5,
+            "mean": 52.27818593554983,
+            "median": 52.36201300522797,
+            "total": 261.3909296777491
+          },
+          "time_to_first_token_seconds": {
+            "observed": 5,
+            "mean": 0.128366,
+            "median": 0.133667,
+            "total": 0.64183
+          },
+          "model_load_time_seconds": {
+            "observed": 0,
+            "mean": null,
+            "median": null,
+            "total": null
+          }
+        }
+      }
+    }
+  }
+}

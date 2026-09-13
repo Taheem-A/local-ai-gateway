@@ -1,0 +1,200 @@
+[
+  {
+    "id": "extract_001",
+    "prompt": "Extract the course code, assignment name, due date, due time, and timezone from the following announcement. Return only JSON with keys course, assignment, due_date, due_time, timezone.\n\nAnnouncement:\nMAT186 students: Problem Set 2 is due Friday, September 18, 2026 at 11:59 PM Eastern Time. Submit through Quercus.",
+    "expected": {
+      "mode": "semantic_json",
+      "value": {
+        "course": "MAT186",
+        "assignment": "Problem Set 2",
+        "due_date": "2026-09-18",
+        "due_time": "23:59",
+        "timezone": "Eastern Time"
+      },
+      "normalize": {
+        "course": "text",
+        "assignment": "text",
+        "due_date": "date",
+        "due_time": "time",
+        "timezone": "timezone"
+      }
+    },
+    "response_text": "*   Input: An announcement text (\"MAT186 students: Problem Set 2 is due Friday, September 18, 2026 at 11:59 PM Eastern Time. Submit through Quercus.\")\n    *   Task: Extract specific fields (course code, assignment name, due date, due time, timezone).\n    *   Output Format: JSON only.\n    *   Keys: `course`, `assignment`, `due_date`, `due_time`, `timezone`.\n\n    *   Course code: \"MAT186\"\n    *   Assignment name: \"Problem Set 2\"\n    *   Due date: \"Friday, September 18, 2026\" (or just \"September 18, 2026\")\n    *   Due time: \"11:59 PM\"\n    *   Timezone: \"Eastern Time\"\n\n    *   `course`: \"MAT186\"\n    *   `assignment`: \"Problem Set 2\"\n    *   `due_date`: \"September 18, 2026\" (Standardizing to date format is usually better, but",
+    "grade": {
+      "version": 2,
+      "status": "manual",
+      "passed": null,
+      "semantic_correct": null,
+      "format_correct": false,
+      "instruction_following": false,
+      "reason": "No complete JSON answer; semantic review required"
+    },
+    "review": {
+      "semantic_correct": null,
+      "notes": "",
+      "reviewer": ""
+    }
+  },
+  {
+    "id": "extract_002",
+    "prompt": "Extract the customer name, order number, item count, subtotal, tax, and total. Return only JSON.\n\nReceipt:\nCustomer: Amir Rahman\nOrder #A18492\nItems purchased: 4\nSubtotal: $82.50\nHST: $10.73\nTotal paid: $93.23",
+    "expected": {
+      "mode": "semantic_json",
+      "value": {
+        "customer_name": "Amir Rahman",
+        "order_number": "A18492",
+        "item_count": 4,
+        "subtotal": 82.5,
+        "tax": 10.73,
+        "total": 93.23
+      },
+      "normalize": {
+        "customer_name": "text",
+        "item_count": "number",
+        "subtotal": "number",
+        "tax": "number",
+        "total": "number"
+      }
+    },
+    "response_text": "*   Input: A receipt text containing customer name, order number, item count, subtotal, tax (HST), and total.\n    *   Task: Extract specific fields (customer name, order number, item count, subtotal, tax, total).\n    *   Constraint: Return *only* JSON.\n\n    *   Customer: Amir Rahman\n    *   Order #: A18492\n    *   Items purchased: 4\n    *   Subtotal: $82.50\n    *   HST: $10.73\n    *   Total paid: $93.23\n\n    *   customer_name: \"Amir Rahman\"\n    *   order_number: \"A18492\"\n    *   item_count: 4 (integer)\n    *   subtotal: 82.50 (float/number)\n    *   tax: 10.73 (float/number)\n    *   total: 93.23 (float/number)\n\n    ```json\n    {\n      \"customer_name\": \"Amir Rahman\",\n      \"order_number\": \"",
+    "grade": {
+      "version": 2,
+      "status": "manual",
+      "passed": null,
+      "semantic_correct": null,
+      "format_correct": false,
+      "instruction_following": false,
+      "reason": "Incomplete or invalid JSON answer"
+    },
+    "review": {
+      "semantic_correct": null,
+      "notes": "",
+      "reviewer": ""
+    }
+  },
+  {
+    "id": "extract_003",
+    "prompt": "Extract only the error code, service name, affected user count, first occurrence time, and resolved time. Return JSON only.\n\nIncident report:\nAt 14:03, several users began reporting failed uploads. The StorageProxy service logged error E_UPLOAD_17. Monitoring showed 218 affected users. The issue was traced to an expired internal credential. Service was fully restored at 14:41.",
+    "expected": {
+      "mode": "semantic_json",
+      "value": {
+        "error_code": "E_UPLOAD_17",
+        "service": "StorageProxy",
+        "affected_users": 218,
+        "first_occurrence": "14:03",
+        "resolved": "14:41"
+      },
+      "normalize": {
+        "service": "text",
+        "affected_users": "number",
+        "first_occurrence": "time",
+        "resolved": "time"
+      },
+      "key_aliases": {
+        "": {
+          "service_name": "service",
+          "affected_user_count": "affected_users",
+          "first_occurrence_time": "first_occurrence",
+          "resolved_time": "resolved"
+        }
+      }
+    },
+    "response_text": "*   Input: An incident report text.\n    *   Task: Extract specific fields (error code, service name, affected user count, first occurrence time, resolved time).\n    *   Constraint: Return JSON only.\n\n    *   \"At 14:03, several users began reporting failed uploads.\" -> First occurrence time: 14:03.\n    *   \"The StorageProxy service logged error E_UPLOAD_17.\" -> Service name: StorageProxy, Error code: E_UPLOAD_17.\n    *   \"Monitoring showed 218 affected users.\" -> Affected user count: 218.\n    *   \"Service was fully restored at 14:41.\" -> Resolved time: 14:41.\n\n    *   error_code: \"E_UPLOAD_17\"\n    *   service_name: \"StorageProxy\"\n    *   affected_user_count: 218 (or \"218\")\n    *   first_occurrence_time: \"14:03\"\n    *   resolved_time: \"14:41\"\n\n    ```json\n    {",
+    "grade": {
+      "version": 2,
+      "status": "manual",
+      "passed": null,
+      "semantic_correct": null,
+      "format_correct": false,
+      "instruction_following": false,
+      "reason": "Incomplete or invalid JSON answer"
+    },
+    "review": {
+      "semantic_correct": null,
+      "notes": "",
+      "reviewer": ""
+    }
+  },
+  {
+    "id": "extract_004",
+    "prompt": "Read the schedule and return a JSON array containing only events occurring on Friday. Each object must contain name, start, end, and room.\n\nSchedule:\nMonday 09:00-10:00 Calculus Lecture, BA1170\nWednesday 13:00-14:00 Chemistry Tutorial, WB130\nFriday 10:00-11:00 Programming Lecture, MY150\nFriday 12:00-13:00 Design Studio, SF1101\nFriday 15:00-16:00 Chemistry Lecture, MS2158",
+    "expected": {
+      "mode": "semantic_json",
+      "value": [
+        {
+          "name": "Programming Lecture",
+          "start": "10:00",
+          "end": "11:00",
+          "room": "MY150"
+        },
+        {
+          "name": "Design Studio",
+          "start": "12:00",
+          "end": "13:00",
+          "room": "SF1101"
+        },
+        {
+          "name": "Chemistry Lecture",
+          "start": "15:00",
+          "end": "16:00",
+          "room": "MS2158"
+        }
+      ],
+      "normalize": {
+        "*.name": "text",
+        "*.start": "time",
+        "*.end": "time",
+        "*.room": "text"
+      }
+    },
+    "response_text": "*   Input: A text-based schedule of events with days, times, names, and rooms.\n    *   Task: Extract events occurring on *Friday* only.\n    *   Output Format: A JSON array of objects.\n    *   Object Fields: `name`, `start`, `end`, `room`.\n\n    *   Monday 09:00-10:00 Calculus Lecture, BA1170\n    *   Wednesday 13:00-14:00 Chemistry Tutorial, WB130\n    *   Friday 10:00-11:00 Programming Lecture, MY150\n    *   Friday 12:00-13:00 Design Studio, SF1101\n    *   Friday 15:00-16:00 Chemistry Lecture, MS2158\n\n    *   Event 1: Friday 10:00-11:00 Programming Lecture, MY150\n        *   Name: Programming Lecture\n        *   Start: 10:00\n        *   End: 11:00\n        *   Room: MY150\n    *   Event 2: Friday 12:00-13:00 Design Studio, SF1101\n        *   Name: Design Studio\n        *   Start: 12:00\n        *   End: 13:00\n        *   Room: SF1101\n    *   Event 3: Friday 15:00-16:00 Chemistry Lecture, MS2158\n        *   Name: Chemistry Lecture\n        *   Start: 15:0",
+    "grade": {
+      "version": 2,
+      "status": "manual",
+      "passed": null,
+      "semantic_correct": null,
+      "format_correct": false,
+      "instruction_following": false,
+      "reason": "No complete JSON answer; semantic review required"
+    },
+    "review": {
+      "semantic_correct": null,
+      "notes": "",
+      "reviewer": ""
+    }
+  },
+  {
+    "id": "extract_005",
+    "prompt": "Extract the final configuration after all changes have been applied. Ignore superseded values. Return JSON only with keys port, context_length, ttl_seconds, authentication, cors.\n\nConfiguration history:\nInitial port was 8000.\nContext length started at 8192.\nAuthentication was disabled during testing.\nPort was later changed from 8000 to 4812.\nTTL was initially 120 seconds.\nContext length was increased to 16384.\nCORS remained disabled throughout.\nAuthentication was enabled before deployment.\nTTL was finally changed from 120 to 300 seconds.",
+    "expected": {
+      "mode": "semantic_json",
+      "value": {
+        "port": 4812,
+        "context_length": 16384,
+        "ttl_seconds": 300,
+        "authentication": true,
+        "cors": false
+      },
+      "normalize": {
+        "port": "number",
+        "context_length": "number",
+        "ttl_seconds": "number"
+      }
+    },
+    "response_text": "*   Input: A history of configuration changes.\n    *   Task: Extract the final configuration values.\n    *   Constraint 1: Ignore superseded values.\n    *   Constraint 2: Return JSON only.\n    *   Constraint 3: Keys must be `port`, `context_length`, `ttl_seconds`, `authentication`, `cors`.\n\n    *   *Initial port was 8000.* -> `port`: 8000\n    *   *Context length started at 8192.* -> `context_length`: 8192\n    *   *Authentication was disabled during testing.* -> `authentication`: \"disabled\" (or false, but usually \"disabled\" or \"enabled\" based on text)\n    *   *Port was later changed from 8000 to 4812.* -> `port`: 4812 (supersedes 8000)\n    *   *TTL was initially 120 seconds.* -> `ttl_seconds`: 120\n    *   *Context length was increased to 16384.* -> `context_length`: 16384 (supersedes 8192)\n    *   *CORS remained disabled throughout.* -> `cors`: \"disabled\"\n    *   *Authentication was enabled before deployment.* -> `authentication`: \"enabled\" (supersedes \"disabled\")\n    *   *TTL was finally changed from 120 to 300 seconds.* -> `ttl_seconds`: 300 (supersedes 120)\n\n    *   `port`: 4812\n    *   `context_length`: 16384\n    *   `ttl_seconds`: 3",
+    "grade": {
+      "version": 2,
+      "status": "manual",
+      "passed": null,
+      "semantic_correct": null,
+      "format_correct": false,
+      "instruction_following": false,
+      "reason": "No complete JSON answer; semantic review required"
+    },
+    "review": {
+      "semantic_correct": null,
+      "notes": "",
+      "reviewer": ""
+    }
+  }
+]

@@ -1,0 +1,152 @@
+{
+  "balanced": {
+    "classify_004": {
+      "semantic_correct": false,
+      "notes": "Returned announcement; fixed expected label is irrelevant. The cafeteria notice can reasonably be called an announcement because the prompt does not define academic relevance. Retain original failure and report sensitivity excluding this case."
+    },
+    "summary_001": {
+      "semantic_correct": true,
+      "concept_scores": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "coverage_score": 5,
+      "coverage_max": 5,
+      "unsupported_claims": [],
+      "notes": "All five required concepts covered: v2.4, slowdown, database query, rollback, and redesign before redeployment. Accurate and within 50 words."
+    },
+    "summary_002": {
+      "semantic_correct": false,
+      "concept_scores": [
+        0,
+        0,
+        0
+      ],
+      "coverage_score": 0,
+      "coverage_max": 3,
+      "unsupported_claims": [],
+      "notes": "No final answer: all 4096 generated tokens were consumed before a message was delivered. Covers zero rubric concepts and fails the two-sentence requirement. This is a generation-budget failure, not a request error."
+    },
+    "summary_003": {
+      "semantic_correct": true,
+      "concept_scores": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "coverage_score": 4,
+      "coverage_max": 4,
+      "unsupported_claims": [],
+      "notes": "Covers all four concepts: local gateway abstraction, provider-independent requests, routing/model selection, and replacement without app changes. No material unsupported claim; 47 words."
+    },
+    "summary_004": {
+      "semantic_correct": true,
+      "concept_scores": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "coverage_score": 6,
+      "coverage_max": 6,
+      "unsupported_claims": [],
+      "notes": "All six incident facts and actions are covered accurately. Four bullets plus an introductory line fail the existing canonical bullet-only format check. The prompt only limits the number of bullets and does not forbid an introduction; reviewed instruction following therefore passes.",
+      "instruction_following": true
+    },
+    "long_001": {
+      "semantic_correct": true,
+      "notes": "Root cause explicitly states that the deployed model identifier did not exist, equivalent to invalid model identifier. First failure 08:48 and restored inference 09:02 are correct. Markdown fence remains a format/instruction failure."
+    },
+    "long_002": {
+      "semantic_correct": true,
+      "notes": "All four final deadlines and 24-hour times are correct, but each is represented as one date-time string rather than the benchmark nested date/time object. The prompt does not specify that nesting. Reviewed semantic pass; canonical schema and Markdown-fence instruction failures retained. No expected value changed."
+    },
+    "project_005": {
+      "semantic_correct": true,
+      "notes": "Chemistry lecture is a precise description of the stated lecture; prompt supplies no restricted event_type vocabulary. Date, course, room and equivalent 12-hour times are correct. Retain canonical date/time format and Markdown-fence failures."
+    }
+  },
+  "deep": {
+    "classify_004": {
+      "semantic_correct": false,
+      "notes": "Returned announcement; fixed expected label is irrelevant. The cafeteria notice can reasonably be called an announcement because the prompt does not define academic relevance. Retain original failure and report sensitivity excluding this case."
+    },
+    "extract_003": {
+      "semantic_correct": true,
+      "instruction_following": true,
+      "notes": "Bare JSON contains exactly the requested facts using the literal field names from the prompt. The existing aliases confirm semantic equivalence. No keys were prescribed in the prompt, so reviewed instruction compliance passes; canonical benchmark schema/format remains false."
+    },
+    "reason_004": {
+      "semantic_correct": true,
+      "notes": "Returned O(n\u00b2), mathematically identical to O(n^2). Superscript 2 was verified from saved Unicode code point U+00B2. Exact permitted-label format/instructions remain failed."
+    },
+    "summary_001": {
+      "semantic_correct": true,
+      "concept_scores": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "coverage_score": 5,
+      "coverage_max": 5,
+      "unsupported_claims": [],
+      "notes": "All five concepts covered accurately, including full table scan, rollback time, and redesign before redeployment; 42 words."
+    },
+    "summary_002": {
+      "semantic_correct": true,
+      "concept_scores": [
+        1,
+        1,
+        1
+      ],
+      "coverage_score": 3,
+      "coverage_max": 3,
+      "unsupported_claims": [],
+      "notes": "Precisely covers new Lab 3 deadline and time, all sections, and unchanged Lab 4 deadline; exactly two sentences and no invented extension."
+    },
+    "summary_003": {
+      "semantic_correct": true,
+      "concept_scores": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "coverage_score": 4,
+      "coverage_max": 4,
+      "unsupported_claims": [],
+      "notes": "Covers current provider coupling, gateway abstraction, provider-independent requests, routing/model selection, and provider changes without app edits. No material unsupported claims; within 70 words."
+    },
+    "summary_004": {
+      "semantic_correct": true,
+      "concept_scores": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "coverage_score": 6,
+      "coverage_max": 6,
+      "unsupported_claims": [],
+      "notes": "All six required concepts covered in four bullets. The 08:26-08:31 interval summarizes worker disablement and recovery correctly; no data loss and fix/tests before re-enabling are explicit."
+    },
+    "long_001": {
+      "semantic_correct": true,
+      "notes": "Free-text root cause accurately states that the deployed identifier did not exist and describes observed errors. Both requested times are correct; bare JSON satisfies format and instructions."
+    },
+    "project_005": {
+      "semantic_correct": true,
+      "notes": "Chemistry lecture accurately specializes the event type lecture and the prompt defines no restricted vocabulary. All other values, ISO date and 24-hour times are correct. Bare JSON meets canonical format and instructions."
+    }
+  }
+}

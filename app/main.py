@@ -91,7 +91,7 @@ async def status_endpoint(x_local_ai_key: str | None = Header(default=None)):
     authenticate(x_local_ai_key)
     try:
         models = await list_models()
-    except LMStudioError as exc:
+    except LMStudioError:
         return StatusResponse(
             lmstudio="unavailable",
             loaded_models=[],
@@ -247,7 +247,7 @@ async def extract_endpoint(
             model=result.model,
             reasoning_level=profile.reasoning,
             input_tokens=result.input_tokens,
-            reasoning_tokens=None,
+            reasoning_tokens=result.reasoning_output_tokens,
             output_tokens=result.output_tokens,
             model_load_seconds=None,
             first_token_seconds=None,
@@ -284,9 +284,11 @@ async def classify_endpoint(
         "required": ["label"],
         "additionalProperties": False,
     }
+    allowed_labels = ", ".join(request.labels)
     prompt = (
         "Classify the following text into exactly one allowed label. "
-        "Return only the schema-constrained result.\n\n"
+        "Use the label spelling exactly as provided. Return only the schema-constrained result.\n\n"
+        f"Allowed labels: {allowed_labels}\n\n"
         f"Text:\n{request.text}"
     )
     started = time.perf_counter()
@@ -299,9 +301,30 @@ async def classify_endpoint(
             system=request.system,
             reasoning=profile.reasoning,
             temperature=0.0,
-            max_output_tokens=128,
+            max_output_tokens=request.max_output_tokens,
             max_attempts=request.max_attempts,
         )
+    except GatewayError as exc:
+        record_metric(
+            RequestMetric(
+                request_id=request_id,
+                project=x_project_id,
+                endpoint="/v1/classify",
+                quality=profile.name,
+                model=profile.model,
+                reasoning_level=profile.reasoning,
+                input_tokens=None,
+                reasoning_tokens=None,
+                output_tokens=None,
+                model_load_seconds=None,
+                first_token_seconds=None,
+                total_latency_seconds=time.perf_counter() - started,
+                attempts=request.max_attempts,
+                success=False,
+                error_code=exc.code,
+            )
+        )
+        raise
     except LMStudioError as exc:
         raise LMStudioUnavailableError(str(exc)) from exc
 
@@ -314,7 +337,7 @@ async def classify_endpoint(
             model=result.model,
             reasoning_level=profile.reasoning,
             input_tokens=result.input_tokens,
-            reasoning_tokens=None,
+            reasoning_tokens=result.reasoning_output_tokens,
             output_tokens=result.output_tokens,
             model_load_seconds=None,
             first_token_seconds=None,

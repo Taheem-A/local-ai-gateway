@@ -58,6 +58,10 @@ class ClassifyRequest(BaseModel):
     system: str | None = None
     quality: Quality = "default"
     reasoning: ReasoningEffort | None = None
+    # 128 tokens was too small for a reasoning model: GPT-OSS could consume the
+    # budget in reasoning and leave message.content empty. 512 remains a small
+    # ceiling for a one-label answer while leaving enough room for hidden reasoning.
+    max_output_tokens: int = Field(default=512, ge=128, le=4096)
     max_attempts: int = Field(default=2, ge=1, le=3)
 
     @field_validator("labels")

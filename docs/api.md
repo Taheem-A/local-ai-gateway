@@ -66,20 +66,29 @@ Request:
 
 ```json
 {
-  "prompt": "MAT186 Problem Set 2 is due September 18, 2026.",
+  "prompt": "MAT186 Problem Set 2 is due September 18, 2026 at 11:59 PM.",
   "quality": "default",
   "schema": {
     "type": "object",
     "properties": {
       "course": {"type": "string", "x-normalize": "upper"},
-      "due_date": {"type": "string", "format": "date"}
+      "due_date": {"type": "string", "format": "date"},
+      "due_time": {"type": "string", "format": "time"}
     },
-    "required": ["course", "due_date"],
+    "required": ["course", "due_date", "due_time"],
     "additionalProperties": false
   },
   "max_attempts": 2
 }
 ```
+
+### Canonical local times
+
+The gateway's extraction API uses `format: "time"` as a convenience for a **local 24-hour `HH:MM` clock value**. This is intentionally narrower than standard JSON Schema's RFC 3339 `time` format, which can contain seconds and a timezone suffix.
+
+Before the schema is sent to LM Studio, the gateway makes a model-facing copy and translates a string field with `format: "time"` to an exact `HH:MM` regular-expression constraint. For example, a source value of `11:59 PM` must be returned as `23:59`; the model should not convert it to UTC or append `:00Z`.
+
+The original caller schema remains authoritative for gateway-side normalization and validation. Private gateway annotations such as `x-normalize` are stripped from the model-facing copy.
 
 Response:
 
@@ -87,7 +96,8 @@ Response:
 {
   "data": {
     "course": "MAT186",
-    "due_date": "2026-09-18"
+    "due_date": "2026-09-18",
+    "due_time": "23:59"
   },
   "model": "openai/gpt-oss-20b",
   "profile": "default",
@@ -106,11 +116,16 @@ Request:
 {
   "text": "Homework 4 is due Sunday.",
   "labels": ["assignment", "exam", "announcement", "irrelevant"],
-  "quality": "default"
+  "quality": "default",
+  "max_output_tokens": 512
 }
 ```
 
 The gateway internally constructs a JSON schema whose label property is an enum, so the model cannot legally return a label outside the supplied set.
+
+`max_output_tokens` defaults to `512` for classification. The previous `128`-token hard cap was unsafe for reasoning models such as GPT-OSS: hidden reasoning can consume the generation budget before the model emits the tiny final JSON object. Values below `128` are rejected for this endpoint.
+
+Structured-generation failures now preserve LM Studio's `finish_reason` plus token diagnostics when available. A length-limited empty response is reported explicitly instead of looking like a generic JSON parse failure.
 
 ## Errors
 

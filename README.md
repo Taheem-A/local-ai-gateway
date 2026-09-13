@@ -13,12 +13,13 @@ Local AI Gateway :4812
         v
 LM Studio :1234
         |
-        +-- fast profile     -> Gemma 4 12B (legacy candidate; not yet re-benchmarked as a fast tier)
-        +-- default profile  -> GPT-OSS 20B / medium reasoning
-        +-- deep profile     -> GPT-OSS 20B / medium reasoning until reasoning-level benchmark is complete
+        +-- fast profile      -> Gemma 4 12B (candidate; not yet proven as the final fast tier)
+        +-- balanced profile  -> Gemma 4 12B (historical benchmark mapping; kept reproducible)
+        +-- default profile   -> GPT-OSS 20B / medium reasoning
+        +-- deep profile      -> GPT-OSS 20B / medium reasoning until reasoning-level benchmark is complete
 ```
 
-`balanced` is accepted as a backwards-compatible alias for `default` so the existing benchmark tooling keeps working.
+New applications should use `default`. `balanced` is intentionally preserved as the original Gemma benchmark profile rather than silently changing what an old benchmark command means.
 
 ## 1. Install dependencies
 
@@ -31,7 +32,7 @@ python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-If you already have `.venv`, only run:
+If you already have `.venv`:
 
 ```powershell
 .\.venv\Scripts\Activate.ps1
@@ -40,7 +41,7 @@ pip install -r requirements.txt
 
 ## 2. Configure `.env`
 
-Copy `.env.example` to `.env` and fill in your real LM Studio token and gateway key.
+Copy `.env.example` to `.env` and insert your real LM Studio token and gateway key:
 
 ```powershell
 Copy-Item .env.example .env
@@ -50,13 +51,13 @@ Never commit `.env`.
 
 ## 3. Start LM Studio
 
-The server must remain localhost-only:
+Keep it local-only:
 
 ```powershell
 lms server start --port 1234
 ```
 
-The expected LM Studio address is:
+Expected address:
 
 ```text
 http://127.0.0.1:1234
@@ -119,8 +120,6 @@ Invoke-RestMethod `
 
 `/v1/extract` uses LM Studio JSON-schema constrained generation and then validates the returned object again inside the gateway. If validation fails, the gateway can retry with the exact validation errors.
 
-Example:
-
 ```powershell
 $body = @{
     prompt = "MAT186 Problem Set 2 is due September 18, 2026 at 11:59 PM."
@@ -167,7 +166,7 @@ Invoke-RestMethod `
 pip install -e .\clients\python
 ```
 
-Then:
+Basic usage:
 
 ```python
 from taheem_ai import AI
@@ -204,15 +203,17 @@ Requests are recorded in `data/gateway.db`; prompt and response content are not 
 python scripts\gateway_stats.py --days 30
 ```
 
-## Model reasoning experiments
+## 11. GPT-OSS reasoning benchmark
 
-Every generation endpoint accepts an optional reasoning override:
+The benchmark runner now accepts an explicit reasoning override. This lets you compare the same GPT-OSS model at low, medium, and high reasoning without changing routing code:
 
-```json
-{"quality":"default","reasoning":"low"}
+```powershell
+python benchmarks\run_benchmarks.py --quality default --reasoning low --max-output-tokens 4096 --name gptoss-low
+python benchmarks\run_benchmarks.py --quality default --reasoning medium --max-output-tokens 4096 --name gptoss-medium
+python benchmarks\run_benchmarks.py --quality default --reasoning high --max-output-tokens 4096 --name gptoss-high
 ```
 
-Allowed values are `low`, `medium`, and `high`. This is specifically intended for the next GPT-OSS reasoning benchmark. Production defaults remain at the already benchmarked `medium` level until that comparison is complete.
+Do not change the production defaults until those three runs are compared.
 
 ## Security rules
 

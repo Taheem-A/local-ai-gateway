@@ -1,10 +1,29 @@
 from __future__ import annotations
 
 import json
+from datetime import datetime
 from typing import Any
 
 from jsonschema import Draft202012Validator, FormatChecker
 from jsonschema.exceptions import SchemaError
+
+FORMAT_CHECKER = FormatChecker()
+
+
+@FORMAT_CHECKER.checks("date", raises=ValueError)
+def _is_date(value: object) -> bool:
+    if not isinstance(value, str):
+        return True
+    datetime.strptime(value, "%Y-%m-%d")
+    return True
+
+
+@FORMAT_CHECKER.checks("time", raises=ValueError)
+def _is_time(value: object) -> bool:
+    if not isinstance(value, str):
+        return True
+    datetime.strptime(value, "%H:%M")
+    return True
 
 
 def check_schema(schema: dict[str, Any]) -> None:
@@ -31,7 +50,7 @@ def parse_json(text: str) -> Any:
 
 
 def validation_errors(instance: Any, schema: dict[str, Any]) -> list[str]:
-    validator = Draft202012Validator(schema, format_checker=FormatChecker())
+    validator = Draft202012Validator(schema, format_checker=FORMAT_CHECKER)
     errors = sorted(validator.iter_errors(instance), key=lambda error: list(error.path))
 
     result: list[str] = []

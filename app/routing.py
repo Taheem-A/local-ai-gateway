@@ -18,13 +18,15 @@ def choose_profile(
     quality: Quality,
     reasoning_override: ReasoningEffort | None = None,
 ) -> ModelProfile:
-    # `balanced` is kept for backwards compatibility with the benchmark runner.
-    normalized = "default" if quality == "balanced" else quality
-
-    if normalized == "fast":
+    if quality == "fast":
         model = settings.model_fast
         reasoning = settings.reasoning_fast
-    elif normalized == "deep":
+    elif quality == "balanced":
+        # Historical Gemma benchmark mapping. Keep this stable until a deliberate
+        # benchmark-version migration retires it.
+        model = settings.model_balanced
+        reasoning = settings.reasoning_balanced
+    elif quality == "deep":
         model = settings.model_deep
         reasoning = settings.reasoning_deep
     else:
@@ -38,7 +40,7 @@ def choose_profile(
         raise ValueError(f"Unsupported reasoning effort: {reasoning}")
 
     return ModelProfile(
-        name=normalized,
+        name=quality,
         model=model,
         reasoning=reasoning,  # type: ignore[arg-type]
     )
@@ -55,5 +57,5 @@ def public_profiles() -> dict[str, dict[str, str | None]]:
             "model": choose_profile(quality).model,
             "reasoning": choose_profile(quality).reasoning,
         }
-        for quality in ("fast", "default", "deep")
+        for quality in ("fast", "balanced", "default", "deep")
     }

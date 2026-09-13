@@ -29,12 +29,12 @@ Local model on GPU
 
 ## Profiles
 
-- `fast`: backwards-compatible lightweight candidate profile. It currently points to Gemma 4 12B and must not be treated as a proven fast winner until the dedicated fast-tier benchmark is run.
+- `fast`: current lightweight-candidate mapping to Gemma 4 12B. It is not yet the proven final fast-tier winner.
+- `balanced`: historical Gemma benchmark profile. This is intentionally preserved so old benchmark commands remain reproducible.
 - `default`: GPT-OSS 20B with medium reasoning, based on the completed benchmark.
-- `deep`: currently the same GPT-OSS 20B / medium configuration. The profile exists now so applications can remain stable while low/medium/high reasoning is benchmarked later.
-- `balanced`: API compatibility alias for `default`.
+- `deep`: currently the same GPT-OSS 20B / medium configuration. It exists now so application code will not need to change after low/medium/high reasoning is benchmarked.
 
-Applications should request a profile, never a model name.
+New application code should normally request `default`. Applications should request profiles, never raw model IDs.
 
 ## Structured output
 
@@ -57,4 +57,4 @@ Both services bind only to loopback. Remote access, if ever added, must use a pr
 
 ## Future layers
 
-Later milestones can add embeddings/RAG, vision, tools, bounded agents, caching, queueing, private remote access, and explicit paid fallback without changing application-facing model names.
+Later milestones can add embeddings/RAG, vision, tools, bounded agents, caching, queueing, private remote access, and explicit paid fallback without changing the basic application contract.

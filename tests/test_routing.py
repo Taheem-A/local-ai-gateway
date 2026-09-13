@@ -1,12 +1,17 @@
+from app.config import settings
 from app.routing import choose_profile, public_profiles
 
 
-def test_balanced_is_backwards_compatible_alias_for_default():
+def test_balanced_preserves_historical_gemma_mapping():
     balanced = choose_profile("balanced")
+    assert balanced.model == settings.model_balanced
+    assert balanced.name == "balanced"
+
+
+def test_default_is_separate_from_balanced():
     default = choose_profile("default")
-    assert balanced.model == default.model
-    assert balanced.reasoning == default.reasoning
-    assert balanced.name == "default"
+    assert default.model == settings.model_default
+    assert default.name == "default"
 
 
 def test_reasoning_override_is_explicit():
@@ -14,6 +19,6 @@ def test_reasoning_override_is_explicit():
     assert profile.reasoning == "low"
 
 
-def test_public_profiles_hide_balanced_alias():
+def test_public_profiles_are_explicit():
     profiles = public_profiles()
-    assert set(profiles) == {"fast", "default", "deep"}
+    assert set(profiles) == {"fast", "balanced", "default", "deep"}

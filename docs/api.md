@@ -20,6 +20,15 @@ X-Project-ID: itqaan
 
 so operational metrics can be grouped by project.
 
+## Profiles
+
+- `fast`: current Gemma fast candidate.
+- `balanced`: historical Gemma benchmark profile; preserved for reproducibility.
+- `default`: GPT-OSS 20B / medium reasoning; recommended for new application code.
+- `deep`: GPT-OSS 20B / medium reasoning until the reasoning-level benchmark is finished.
+
+All generation endpoints also accept an optional explicit `reasoning` override: `low`, `medium`, or `high`.
+
 ## `GET /health`
 
 Unauthenticated lightweight process health check. Does not invoke a model.
@@ -50,18 +59,6 @@ Request:
   "max_output_tokens": 2048
 }
 ```
-
-`quality` accepts:
-
-```text
-fast
-balanced
-(default alias compatibility)
-default
-deep
-```
-
-`reasoning` is optional and accepts `low`, `medium`, or `high`. When omitted, the selected profile's configured reasoning effort is used.
 
 ## `POST /v1/extract`
 

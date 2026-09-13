@@ -110,7 +110,7 @@ def summary(days: int = 30) -> dict[str, Any]:
                 SUM(COALESCE(output_tokens, 0)) AS output_tokens,
                 SUM(COALESCE(reasoning_tokens, 0)) AS reasoning_tokens
             FROM requests
-            WHERE timestamp >= datetime('now', ?)
+            WHERE julianday(timestamp) >= julianday('now', ?)
             """,
             (modifier,),
         ).fetchone()
@@ -119,7 +119,7 @@ def summary(days: int = 30) -> dict[str, Any]:
             """
             SELECT quality, COUNT(*) AS count
             FROM requests
-            WHERE timestamp >= datetime('now', ?)
+            WHERE julianday(timestamp) >= julianday('now', ?)
             GROUP BY quality
             ORDER BY count DESC
             """,

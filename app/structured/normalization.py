@@ -1,3 +1,5 @@
+"""Conservative schema-directed normalization for structured model output."""
+
 from __future__ import annotations
 
 from datetime import datetime
@@ -10,21 +12,13 @@ _DATE_FORMATS = (
     "%B %d %Y",
     "%b %d %Y",
 )
-
-_TIME_FORMATS = (
-    "%H:%M",
-    "%I:%M %p",
-    "%I:%M%p",
-)
-
-_ZERO_SECOND_TIME_FORMATS = (
-    "%H:%M:%S",
-    "%I:%M:%S %p",
-    "%I:%M:%S%p",
-)
+_TIME_FORMATS = ("%H:%M", "%I:%M %p", "%I:%M%p")
+_ZERO_SECOND_TIME_FORMATS = ("%H:%M:%S", "%I:%M:%S %p", "%I:%M:%S%p")
 
 
 def _normalize_date(value: str) -> str:
+    """Canonicalize supported unambiguous English dates to ISO YYYY-MM-DD."""
+
     stripped = value.strip()
     for fmt in _DATE_FORMATS:
         try:
@@ -37,15 +31,12 @@ def _normalize_date(value: str) -> str:
 def _normalize_time(value: str) -> str:
     """Canonicalize equivalent local clock representations to HH:MM.
 
-    We intentionally accept a seconds component only when it is exactly ``00``
-    and there is no timezone suffix/offset. Dropping ``:00`` is a representation
-    change, not a factual change. Values such as ``18:59:00Z`` remain untouched so
-    the validator can reject an accidental timezone conversion rather than hiding
-    it.
+    A seconds component is removed only when it is exactly ``00`` and no timezone
+    suffix/offset is present. This preserves information and prevents normalization
+    from hiding an incorrect timezone conversion.
     """
 
     stripped = value.strip().upper()
-
     for fmt in _TIME_FORMATS:
         try:
             return datetime.strptime(stripped, fmt).strftime("%H:%M")
@@ -64,12 +55,7 @@ def _normalize_time(value: str) -> str:
 
 
 def normalize_instance(value: Any, schema: dict[str, Any]) -> Any:
-    """Apply conservative, schema-directed normalization.
-
-    This intentionally never changes a value to a different factual value. It only
-    canonicalizes equivalent representations, such as 11:59 PM -> 23:59 or
-    23:59:00 -> 23:59. Timezone-qualified values are not rewritten.
-    """
+    """Canonicalize equivalent representations without repairing factual errors."""
 
     schema_type = schema.get("type")
 

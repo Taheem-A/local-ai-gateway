@@ -1,12 +1,12 @@
+"""Prepare caller JSON Schemas and prompt hints for LM Studio constrained output."""
+
 from __future__ import annotations
 
 from copy import deepcopy
 from typing import Any
 
-
-# Avoid regex shorthand classes such as \d here. LM Studio's GGUF structured
-# output is backed by llama.cpp's JSON-Schema-to-grammar conversion, and explicit
-# character ranges are more reliably supported by that conversion path.
+# Avoid shorthand classes such as \d in model-facing patterns. Explicit character
+# ranges are more reliable in llama.cpp's JSON-Schema-to-grammar conversion path.
 LOCAL_TIME_PATTERN = r"^([01][0-9]|2[0-3]):[0-5][0-9]$"
 LOCAL_TIME_DESCRIPTION = (
     "Time in 24-hour HH:MM format. Preserve the local clock time stated in the "
@@ -15,36 +15,19 @@ LOCAL_TIME_DESCRIPTION = (
 
 
 def prepare_generation_schema(schema: dict[str, Any]) -> dict[str, Any]:
-    """Return the schema LM Studio should see during constrained generation.
+    """Return the model-facing schema without mutating the caller's contract.
 
-    The public gateway accepts ``format: \"time\"`` as a convenience for a local
-    HH:MM clock value. Standard JSON Schema defines ``time`` as RFC 3339 full-time,
-    which permits values such as ``18:59:00Z``. That is not what our extraction API
-    means when it asks for an assignment due time.
-
-    To keep the external API convenient while avoiding a conflict between LM
-    Studio's structured-output engine and the gateway validator, we translate
-    string/time fields to an explicit HH:MM pattern before sending the schema to
-    the model. The original caller schema is still used for gateway-side
-    normalization and validation.
-
-    Private ``x-*`` gateway annotations are stripped from the schema sent to the
-    model because they are not part of JSON Schema and are only meaningful to the
-    gateway.
+    The gateway's public ``format: \"time\"`` means a local HH:MM clock value,
+    while standard JSON Schema allows RFC 3339 full-time values with seconds and
+    timezone suffixes. Model-facing time fields are therefore converted to an
+    explicit pattern. Private ``x-*`` annotations are also stripped.
     """
 
-    prepared = deepcopy(schema)
-    return _prepare_node(prepared)
+    return _prepare_node(deepcopy(schema))
 
 
 def generation_prompt_hints(schema: dict[str, Any]) -> list[str]:
-    """Describe representation rules that constrained decoding alone cannot teach.
-
-    Grammar-based structured output constrains token shapes, but the model does not
-    necessarily receive JSON Schema descriptions as natural-language instructions.
-    These hints make gateway-specific canonical representations explicit in the
-    prompt as well as in the model-facing schema.
-    """
+    """Return natural-language canonicalization rules implied by the schema."""
 
     hints: list[str] = []
     _collect_hints(schema, path="", hints=hints)
@@ -52,6 +35,8 @@ def generation_prompt_hints(schema: dict[str, Any]) -> list[str]:
 
 
 def add_generation_hints(prompt: str, schema: dict[str, Any]) -> str:
+    """Append schema-derived representation requirements to a model prompt."""
+
     hints = generation_prompt_hints(schema)
     if not hints:
         return prompt
@@ -66,9 +51,10 @@ def add_generation_hints(prompt: str, schema: dict[str, Any]) -> str:
 
 
 def _prepare_node(value: Any) -> Any:
+    """Recursively transform one JSON-Schema node for constrained generation."""
+
     if isinstance(value, list):
         return [_prepare_node(item) for item in value]
-
     if not isinstance(value, dict):
         return value
 
@@ -79,27 +65,26 @@ def _prepare_node(value: Any) -> Any:
         result[key] = _prepare_node(item)
 
     if result.get("type") == "string" and result.get("format") == "time":
-        # RFC 3339 `time` and our canonical local HH:MM representation are
-        # different contracts. The constrained decoder must see the exact
-        # representation our API wants.
         result.pop("format", None)
         result.setdefault("pattern", LOCAL_TIME_PATTERN)
 
         description = str(result.get("description") or "").strip()
-        if description:
-            result["description"] = f"{description} {LOCAL_TIME_DESCRIPTION}"
-        else:
-            result["description"] = LOCAL_TIME_DESCRIPTION
+        result["description"] = (
+            f"{description} {LOCAL_TIME_DESCRIPTION}"
+            if description
+            else LOCAL_TIME_DESCRIPTION
+        )
 
     return result
 
 
 def _collect_hints(value: Any, *, path: str, hints: list[str]) -> None:
+    """Collect human-readable representation rules from nested schema nodes."""
+
     if not isinstance(value, dict):
         return
 
     schema_type = value.get("type")
-
     if schema_type == "object":
         properties = value.get("properties", {})
         if isinstance(properties, dict):

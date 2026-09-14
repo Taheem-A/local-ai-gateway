@@ -1,0 +1,107 @@
+{
+  "version": 1,
+  "documents": [
+    {
+      "id": "structures-turnbuckle",
+      "source": "structures.md",
+      "text": "A turnbuckle is an adjustable connector used to change the tension or effective length of a cable or tie without rotating the members being connected."
+    },
+    {
+      "id": "calculus-inverse",
+      "source": "calculus.md",
+      "text": "A function is invertible on a domain when it is one-to-one there. Restricting a parabola to one side of its vertex can make its inverse a function."
+    },
+    {
+      "id": "networks-dns",
+      "source": "networks.md",
+      "text": "DNS translates human-readable domain names into IP addresses. Recursive resolvers query authoritative infrastructure and cache answers for later requests."
+    },
+    {
+      "id": "python-context",
+      "source": "python.md",
+      "text": "Python context managers implement setup and cleanup around a block, commonly through __enter__ and __exit__ or the contextlib helpers."
+    },
+    {
+      "id": "space-jupiter",
+      "source": "astronomy.md",
+      "text": "Jupiter is the largest planet in the Solar System and is a gas giant. Its Great Red Spot is a long-lived storm."
+    },
+    {
+      "id": "biology-mitochondria",
+      "source": "biology.md",
+      "text": "Mitochondria generate much of a eukaryotic cell's ATP through cellular respiration and oxidative phosphorylation."
+    },
+    {
+      "id": "bangla-capital",
+      "source": "bangla.md",
+      "text": "ঢাকা বাংলাদেশের রাজধানী এবং দেশের বৃহত্তম শহরগুলোর একটি।"
+    },
+    {
+      "id": "arabic-qibla",
+      "source": "arabic.md",
+      "text": "الكعبة في المسجد الحرام بمكة هي قبلة المسلمين في الصلاة."
+    },
+    {
+      "id": "database-index",
+      "source": "databases.md",
+      "text": "A database index is an auxiliary data structure that speeds up lookups at the cost of additional storage and write maintenance."
+    },
+    {
+      "id": "git-branch",
+      "source": "git.md",
+      "text": "A Git branch is a movable reference to a commit. Feature branches let changes develop independently before they are merged into a stable branch."
+    }
+  ],
+  "queries": [
+    {
+      "id": "q-turnbuckle",
+      "query": "What component lets me adjust tension in a cable without rotating the cable ends?",
+      "expected_document_id": "structures-turnbuckle"
+    },
+    {
+      "id": "q-inverse",
+      "query": "Why might I restrict half of a parabola before taking its inverse?",
+      "expected_document_id": "calculus-inverse"
+    },
+    {
+      "id": "q-dns",
+      "query": "What system resolves a domain name to an IP address?",
+      "expected_document_id": "networks-dns"
+    },
+    {
+      "id": "q-context",
+      "query": "What Python feature wraps setup and cleanup around a block of code?",
+      "expected_document_id": "python-context"
+    },
+    {
+      "id": "q-jupiter",
+      "query": "Which planet is the biggest in our Solar System?",
+      "expected_document_id": "space-jupiter"
+    },
+    {
+      "id": "q-mitochondria",
+      "query": "Which organelle produces much of a eukaryotic cell's ATP?",
+      "expected_document_id": "biology-mitochondria"
+    },
+    {
+      "id": "q-bangla",
+      "query": "বাংলাদেশের রাজধানী কোন শহর?",
+      "expected_document_id": "bangla-capital"
+    },
+    {
+      "id": "q-arabic",
+      "query": "ما هي قبلة المسلمين في الصلاة؟",
+      "expected_document_id": "arabic-qibla"
+    },
+    {
+      "id": "q-db-index",
+      "query": "What database structure makes reads faster but adds write and storage overhead?",
+      "expected_document_id": "database-index"
+    },
+    {
+      "id": "q-git",
+      "query": "What Git concept lets me develop work separately before merging it into the stable line?",
+      "expected_document_id": "git-branch"
+    }
+  ]
+}

@@ -18,12 +18,12 @@ Embeddings are a separate capability from generation profiles.
 Preferred configuration:
 
 ```dotenv
-EMBEDDING_MODEL=text-embedding-bge-m3-embeddings
+EMBEDDING_MODEL=text-embedding-bge-m3
 EMBEDDING_QUERY_PREFIX=
 EMBEDDING_DOCUMENT_PREFIX=
 ```
 
-BGE-M3 is preferred for the first RAG milestone because the gateway is expected to index multilingual as well as English personal material. The raw LM Studio model key is an environment setting because locally downloaded revisions may expose a different key.
+BGE-M3 is preferred for the first RAG milestone because the gateway is expected to index multilingual as well as English personal material. The raw LM Studio model key is an environment setting because locally downloaded revisions may expose a different key; verify it with `lms ls --embedding`.
 
 Applications call `/v1/embeddings` or the RAG endpoints and never need to know that key. If the embedding model or dimension changes, existing RAG collections are considered incompatible and must be reindexed rather than mixing vector spaces.
 

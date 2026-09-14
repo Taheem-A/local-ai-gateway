@@ -1,67 +1,128 @@
-# Benchmark v2
+# Benchmarks
 
-Run from the local-ai-gateway directory, using the existing Python environment:
+The benchmark system measures raw model capability separately from the production gateway safeguards. Live benchmark cases intentionally call `/v1/generate` rather than `/v1/extract` or `/v1/classify`; otherwise JSON-schema constraints and repair retries would hide the model's natural formatting and instruction-following behavior.
 
-```powershell
-python benchmarks\run_benchmarks.py --quality balanced --category structured_extraction --name gemma-extraction-test
-```
+## Versioning policy
 
-Omit `--category` to run all 40 cases. Requests run sequentially. The runner uses the existing `.env`, `X-Local-AI-Key` authentication, `/health`, and `/v1/generate` request/response contract. No gateway changes or additional dependencies are required.
+A committed benchmark run is evidence and is treated as immutable.
 
-## Scores
+When a prompt, expected answer, grading rule, or runner behavior changes in a way that affects comparability:
 
-- `semantic_correct`: whether the answer matches the expected information under the case's explicit normalization rules. `null` means manual review is required, including incomplete JSON or ambiguous prose.
-- `format_correct`: bare output, expected JSON keys/types, and canonical date/time representation where configured through normalization. This is the benchmark's canonical representation, even when a prompt does not explicitly demand ISO dates or 24-hour times.
-- `instruction_following`: mechanically checked output instructions. For example, an alternative date representation can pass instructions when ISO was not requested, while `long_002` explicitly requires ISO dates and 24-hour times. Key order is enforced for `instruction_005` only. Summary scores cover mechanical constraints; semantic instructions such as avoiding invented facts remain part of manual review.
+1. bump the benchmark version,
+2. update the current benchmark policy and tests,
+3. leave old result directories unchanged,
+4. document why the version changed.
 
-Statuses are `pass`, `pass_with_format_issue`, `fail`, `manual`, or `error`. Compatibility field `passed` now represents semantic correctness, not strict overall compliance. Each dimension has its own denominator; unknown scores and request errors are excluded. Inspect error and manual counts alongside percentages.
+The original v2 base case files remain in `cases_core.json`, `cases_project.json`, and `cases_long_context.json`. The current benchmark is **v3**, implemented as explicit overrides in `current_suite.json`. This keeps the exact v2 prompts available for reproducing historical reasoning runs while allowing future runs to use clarified tasks.
 
-Normalization is configured by field path in `expected.normalize`; `*` addresses array elements. Arrays retain order and cardinality. Keys are exact except for case-specific aliases in `expected.key_aliases`. Extra/missing fields are not silently ignored. Number strings may match numeric values but fail numeric schema requirements; booleans are never treated as numbers. Text normalization collapses whitespace, ignores case, and permits `Problem Set #2` versus `Problem Set 2`; it does not equate arbitrary synonyms. Identifier fields are kept exact. Dates require a year and an unambiguous ISO or named-month format. ET/Eastern Time are equivalent, but EST and EDT remain distinct.
+Historical experiments are summarized under `history/`.
 
-Labels accept exact labels or simple affirmative wrappers such as `The correct classification is assignment.` A wrong valid label passes format and fails semantics. Negation, alternative answers, and other ambiguous prose require review. Numeric answers accept bare decimal/scientific numbers or simple answer wrappers; tolerance applies only to semantics. Multiple candidate numbers are not searched for an expected-value match.
+## Current v3 fixes
 
-Complete JSON embedded in prose or a Markdown fence can be graded semantically while failing format. Truncated JSON, duplicate keys, non-finite values, or multiple candidate documents are sent to review. The grader never fills missing content from the expected answer.
+Benchmark v3 addresses issues discovered during the September 2026 GPT-OSS reasoning comparison:
 
-## Code and subjective cases
+- classification explicitly asks for the referenced **course-item type**, not the grammatical form of the message;
+- `irrelevant` is defined relative to course instruction, assessment, scheduling, or administration;
+- university `event_type` uses a declared generic ontology, so `lecture` is no longer compared against an underspecified free-text field;
+- routing-policy cases use the production names `fast`, `default`, and `deep`;
+- label grading recognizes mathematically equivalent superscript exponents such as `O(n²)` and `O(n^2)` while still scoring strict formatting separately.
 
-The four existing curated Python cases retain all 13 execution tests. Code runs in a temporary directory using a separate `python -I` process and a five-second timeout. Gateway credentials are removed from the child environment. This is process isolation, not a security sandbox; use `--skip-code-tests` to disable execution. Do not use this runner to execute arbitrary untrusted benchmark suites.
+The suite continues to report three independent dimensions:
 
-Summary semantics always require manual review. Word limits, sentence counts, and bullet constraints are checked automatically; sentence splitting is heuristic. `manual_review.json` includes the prompt, response, rubric, mechanical results, and blank reviewer fields. Review accuracy, required concepts, and unsupported claims. Editing this file records your review but does not automatically change summary scores; retain the reviewed copy separately before any rerun or regrade.
+- `semantic_correct`: whether the answer conveys the expected information under explicit normalization rules;
+- `format_correct`: whether output is in the benchmark's canonical machine representation;
+- `instruction_following`: whether mechanically checkable output instructions were followed.
 
-## Saved runs and recovery
+`null` semantic results require manual review rather than being guessed as pass/fail.
 
-Every run gets a unique directory under `benchmarks/results`. After every case, the runner atomically replaces each of:
+## Run the current benchmark
 
-- `raw_results.json`: original response and metrics, prompt, request without credentials, grading policy, per-case results.
-- `summary.json`: separate dimension scores, per-category scores, code tests, timings, and tokens.
-- `results.csv`: spreadsheet-friendly rows with all three scores.
-- `manual_review.json`: self-contained review queue.
-- `report.md`: readable score and case tables.
-
-Ctrl+C saves an interrupted state and any current interrupted case. Each file replacement is atomic; a hard process/OS crash between replacements can leave derived reports one case behind. `raw_results.json` is written first and is the recovery source. There is no automatic resume or parallel execution.
-
-Original v1 files are preserved under `benchmarks/backups/v1`. Historical result folders are not rewritten. All 40 prompts and expected answers/tests are preserved; the four requested ambiguity fixes were already present and were verified during migration.
-
-Regrade history without making model requests:
+From the repository root:
 
 ```powershell
-python benchmarks\run_benchmarks.py --regrade benchmarks\results\20260912_170626_gemma-extraction-test\raw_results.json --name gemma-extraction-v2-review
+python benchmarks\run_benchmarks.py `
+    --quality default `
+    --reasoning low `
+    --max-output-tokens 4096 `
+    --name gptoss-low-v3
 ```
 
-Regrading writes a new run, retains original grades and source metadata, and uses current case policies. Older v1 results did not store prompts, so the review displays the current matching case prompt. Regrading cannot make an earlier ambiguous prompt unambiguous or recover truncated output. Code cases execute again unless `--skip-code-tests` is supplied.
+Useful options:
 
-Validation:
+- `--category structured_extraction` runs one category only;
+- `--reasoning low|medium|high` overrides the selected profile's configured reasoning level;
+- `--max-output-tokens` applies the same total generation ceiling to every selected case;
+- `--skip-code-tests` prevents generated Python from executing;
+- `--regrade <raw_results.json>` regrades stored responses without invoking a model.
+
+Requests run sequentially so GPU contention does not distort timing comparisons.
+
+## Saved artifacts
+
+Every run receives a unique directory under `benchmarks/results/` containing:
+
+- `raw_results.json` — source responses, request settings without credentials, grading details, and performance metrics;
+- `summary.json` — aggregate and per-category scores;
+- `results.csv` — spreadsheet-friendly case rows;
+- `manual_review.json` — the semantic-review queue;
+- `report.md` — a readable case/score summary.
+
+Files are replaced atomically after each case. An interrupted process therefore preserves completed work. `raw_results.json` is the primary recovery artifact.
+
+Runs also record SHA-256 hashes of the benchmark policy, base cases, runner/grader modules, and gateway Python source used at execution time.
+
+## Manual review
+
+Summary semantics and explicitly marked free-text fields remain manual. Mechanical constraints such as word limits, sentence counts, bullet counts, JSON structure, and canonical date/time formatting are still checked deterministically.
+
+A review should evaluate:
+
+- factual accuracy,
+- coverage of required concepts,
+- unsupported claims,
+- whether a differently worded answer is genuinely equivalent.
+
+Do not rewrite expected answers after seeing a model response merely to improve a score.
+
+## Curated code execution
+
+The four fixed Python coding cases execute in a temporary directory with a separate `python -I` process, a five-second timeout, and a reduced child environment. This provides process isolation, **not** a security sandbox. Never use the helper to execute arbitrary external prompts or untrusted benchmark suites.
+
+## Regrade without model requests
 
 ```powershell
-python -m unittest discover -s benchmarks -p test_benchmarks.py -v
+python benchmarks\run_benchmarks.py `
+    --regrade benchmarks\results\<run>\raw_results.json `
+    --name regrade-v3
 ```
 
-The tests use a mock gateway, verify checkpointing and interruption, and run curated code examples. They do not consume model inference.
+Regrading creates a new result directory and never mutates the source run. The metadata records whether the historical prompts match the current suite. A regrade cannot make a rewritten v3 prompt directly comparable to the old v2 prompt that generated a stored answer.
 
-## End-to-end execution audit (2026-09-12)
+## Compare completed runs
 
-The initial live pilot exhausted the original 256/384 token budgets during reasoning. The gateway provider also concatenated reasoning output with final messages. Its message-type filter was restored; an additive reasoning_output_tokens response metric now preserves reasoning usage separately. Model routing, reasoning settings, authentication, and bind addresses are unchanged.
+```powershell
+python benchmarks\compare_runs.py `
+    benchmarks\results\<run-a>\summary.json `
+    benchmarks\results\<run-b>\summary.json
+```
 
-Use `--max-output-tokens 4096` for the audited comparison protocol. This is a total generation budget including reasoning, applied equally to both models without changing prompts or expected answers. Omitting it preserves legacy case budgets and CLI behavior. Runs record SHA-256 hashes of benchmark and gateway source files.
+The comparison helper reads summary artifacts only. It never invokes a model or changes saved results.
 
-Two grading corrections were made before full runs: extract_005 explicitly normalizes boolean or enabled/disabled states only for authentication and cors (schema types remain strict); long_001 sends unmatched free-text root causes to review rather than claiming a paraphrase is necessarily wrong. No expected values or prompts changed. Review policy and full comparison are under `results/20260912_comparison`.
+## Frozen GPT-OSS reasoning experiment
+
+See [`history/2026-09-13-gptoss-reasoning/README.md`](history/2026-09-13-gptoss-reasoning/README.md) for the low/medium/high experiment that selected:
+
+- `default` -> GPT-OSS 20B / low reasoning;
+- `deep` -> GPT-OSS 20B / high reasoning.
+
+The three original result directories remain unchanged.
+
+## Validate the benchmark code
+
+The benchmark regressions are included in the normal project test suite:
+
+```powershell
+pytest -q
+```
+
+They use a mock gateway and do not consume local-model inference.

@@ -1,0 +1,53 @@
+{
+  "version": 3,
+  "description": "Current benchmark policy layered over the frozen v2 case definitions.",
+  "defaults": {
+    "temperature": 0.0,
+    "quality": "default"
+  },
+  "overrides": {
+    "classify_001": {
+      "prompt": "Classify the referenced course item, not the grammatical form of the message. Use exactly one label: assignment, exam, announcement, irrelevant. Definitions: assignment = a graded task or submission; exam = a test, quiz, midterm, or final; announcement = a course scheduling or administrative notice that is not primarily an assessment item; irrelevant = unrelated to course instruction, assessment, scheduling, or administration. Return only the label.\n\nCourse item: Homework 4. Due Sunday at 11:59 PM."
+    },
+    "classify_002": {
+      "prompt": "Classify the referenced course item, not the grammatical form of the message. Use exactly one label: assignment, exam, announcement, irrelevant. Definitions: assignment = a graded task or submission; exam = a test, quiz, midterm, or final; announcement = a course scheduling or administrative notice that is not primarily an assessment item; irrelevant = unrelated to course instruction, assessment, scheduling, or administration. Return only the label.\n\nCourse item: The midterm will take place next Wednesday from 6:00 PM to 8:00 PM."
+    },
+    "classify_003": {
+      "prompt": "Classify the referenced course item, not the grammatical form of the message. Use exactly one label: assignment, exam, announcement, irrelevant. Definitions: assignment = a graded task or submission; exam = a test, quiz, midterm, or final; announcement = a course scheduling or administrative notice that is not primarily an assessment item; irrelevant = unrelated to course instruction, assessment, scheduling, or administration. Return only the label.\n\nCourse item: Friday's lecture has been moved from room BA1130 to BA1170."
+    },
+    "classify_004": {
+      "prompt": "Classify the referenced course item, not the grammatical form of the message. Use exactly one label: assignment, exam, announcement, irrelevant. Definitions: assignment = a graded task or submission; exam = a test, quiz, midterm, or final; announcement = a course scheduling or administrative notice that is not primarily an assessment item; irrelevant = unrelated to course instruction, assessment, scheduling, or administration. Return only the label.\n\nCourse item: The engineering cafeteria will be serving tacos today."
+    },
+    "classify_005": {
+      "prompt": "Classify the referenced course item, not the grammatical form of the message. Use exactly one label: assignment, exam, announcement, irrelevant. Definitions: assignment = a graded task or submission; exam = a test, quiz, midterm, or final; announcement = a course scheduling or administrative notice that is not primarily an assessment item; irrelevant = unrelated to course instruction, assessment, scheduling, or administration. Return only the label.\n\nCourse item: Project Milestone 1 is still due tomorrow despite the campus closure."
+    },
+    "project_005": {
+      "prompt": "Parse the following university message into structured data. Return JSON only with course, event_type, date, start_time, end_time, location. Assume the date is in 2026. event_type must be exactly one generic value from: lecture, tutorial, lab, exam, assignment, other. Do not include the subject name in event_type.\n\nMessage:\nAPS110 students: Friday's chemistry lecture will take place on September 25 from 3:00 PM to 4:00 PM in MS2158."
+    },
+    "project_008": {
+      "prompt": "Select the appropriate quality level for each task using these rules:\n- fast: simple classification, extraction, or formatting\n- default: ordinary explanation, summarization, or moderate coding\n- deep: difficult multi-step reasoning, architecture analysis, or complex debugging\n\nReturn JSON only mapping task IDs to fast, default, or deep.\n\nTasks:\nA: Extract a professor name from a sentence.\nB: Explain recursion to a beginner.\nC: Compare three distributed database architectures and identify failure modes.\nD: Convert a list of dates into ISO format.\nE: Debug a race condition involving multiple asynchronous workers.\nF: Summarize a two-page project update.",
+      "expected": {
+        "mode": "semantic_json",
+        "value": {
+          "A": "fast",
+          "B": "default",
+          "C": "deep",
+          "D": "fast",
+          "E": "deep",
+          "F": "default"
+        },
+        "normalize": {
+          "A": "text",
+          "B": "text",
+          "C": "text",
+          "D": "text",
+          "E": "text",
+          "F": "text"
+        }
+      }
+    },
+    "long_003": {
+      "prompt": "Read the policy and scenario, then return only PASS or FAIL.\n\nPOLICY\n1. Requests classified as low risk may run on the fast profile.\n2. Requests involving ordinary summarization may run on the default profile.\n3. Requests involving difficult multi-step reasoning must use the deep profile.\n4. Any request containing private user documents must remain local unless cloud_fallback is explicitly enabled for that request.\n5. Automatic paid fallback is prohibited when cloud_fallback is false.\n6. If the requested local model fails to load and cloud_fallback is false, the gateway must return an error instead of calling a paid provider.\n7. Requests may be retried locally up to two times after the original attempt.\n8. Authentication failure must terminate processing immediately.\n9. Logging may record token counts, timing, selected model, and status code.\n10. Full prompt content must not be logged unless debug_prompt_logging is explicitly enabled.\n\nSCENARIO\nA request contains text from a private document. It is classified as deep. cloud_fallback is false and debug_prompt_logging is false. The deep local model fails to load. The gateway retries the deep model twice. Both retries fail. The gateway then sends the request to a paid cloud model and logs the complete prompt because troubleshooting information may be useful.\n\nQuestion: Does the gateway behavior comply with the policy?"
+    }
+  }
+}

@@ -1,3 +1,5 @@
+"""SQLite-backed operational metrics that deliberately exclude prompt content."""
+
 from __future__ import annotations
 
 import sqlite3
@@ -11,6 +13,8 @@ from app.config import settings
 
 @dataclass
 class RequestMetric:
+    """One gateway request's non-content operational measurements."""
+
     request_id: str
     project: str | None
     endpoint: str
@@ -29,12 +33,16 @@ class RequestMetric:
 
 
 def _db_path() -> Path:
+    """Return the configured metrics path, creating its parent directory if needed."""
+
     path = settings.metrics_db_path
     path.parent.mkdir(parents=True, exist_ok=True)
     return path
 
 
 def initialize_metrics_db() -> None:
+    """Create the request-metrics table when it does not already exist."""
+
     with sqlite3.connect(_db_path()) as connection:
         connection.execute(
             """
@@ -62,6 +70,8 @@ def initialize_metrics_db() -> None:
 
 
 def record_metric(metric: RequestMetric) -> None:
+    """Persist one operational metric record without storing request/response text."""
+
     initialize_metrics_db()
     with sqlite3.connect(_db_path()) as connection:
         connection.execute(
@@ -96,6 +106,8 @@ def record_metric(metric: RequestMetric) -> None:
 
 
 def summary(days: int = 30) -> dict[str, Any]:
+    """Aggregate recent request counts, latency, tokens, and profile usage."""
+
     initialize_metrics_db()
     modifier = f"-{int(days)} days"
     with sqlite3.connect(_db_path()) as connection:
@@ -114,7 +126,6 @@ def summary(days: int = 30) -> dict[str, Any]:
             """,
             (modifier,),
         ).fetchone()
-
         by_quality = connection.execute(
             """
             SELECT quality, COUNT(*) AS count
@@ -132,12 +143,14 @@ def summary(days: int = 30) -> dict[str, Any]:
         "days": days,
         "requests": request_count,
         "successes": successes,
-        "success_rate_percent": round(100 * successes / request_count, 2)
-        if request_count
-        else None,
-        "mean_latency_seconds": round(float(aggregate["mean_latency"]), 3)
-        if aggregate["mean_latency"] is not None
-        else None,
+        "success_rate_percent": (
+            round(100 * successes / request_count, 2) if request_count else None
+        ),
+        "mean_latency_seconds": (
+            round(float(aggregate["mean_latency"]), 3)
+            if aggregate["mean_latency"] is not None
+            else None
+        ),
         "input_tokens": int(aggregate["input_tokens"] or 0),
         "output_tokens": int(aggregate["output_tokens"] or 0),
         "reasoning_tokens": int(aggregate["reasoning_tokens"] or 0),

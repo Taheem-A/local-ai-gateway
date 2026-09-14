@@ -1,0 +1,2846 @@
+{
+  "metadata": {
+    "version": 2,
+    "started_at": "2026-09-13T21:37:46.655636-04:00",
+    "forced_quality": "default",
+    "forced_reasoning": "low",
+    "name": "gptoss-low",
+    "case_count": 40,
+    "state": "completed",
+    "execute_code": true,
+    "max_output_tokens_override": 4096,
+    "source_sha256": {
+      "benchmarks\\cases_core.json": "076f8b97ceb4ebc3f076499c86b8fc90a61e74b82ca69fb7728ecf2014c13702",
+      "benchmarks\\cases_long_context.json": "b04713ebde937789fa9d12f9cf8fd274139ea0f84e549d480b12d56c360d7c4d",
+      "benchmarks\\cases_project.json": "49e49a80d121adb7bb2d8bd5771592f81fad3e43d6e77527c35e0867b406873a",
+      "benchmarks\\code_execution.py": "679e059ab20131cb65a28a2f1fb7d1dcd8f47339e97874b1f5d3f1ed1a89e65e",
+      "benchmarks\\grading.py": "b78ff6a13892135a0e36a94c3351b0fd62eeeb38b25d85a8f94837af283e046c",
+      "benchmarks\\reporting.py": "c936af8e272a50339db406fc643b680e434598d9cfafdc6a444ff0eb05f3742c",
+      "benchmarks\\run_benchmarks.py": "ca87dab967b3f77f3c82c2e10ae48edac5396c73ff18463e4a92f5211cc79e2c",
+      "benchmarks\\test_benchmarks.py": "e200c42450d70d8e3aaf067a6f74327fc2b37e81fb54d459e3588d1b058ebe67",
+      "app\\__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "app\\config.py": "9b3fba7001ea93ed28ebdb0e7f6d4c52198fea206a1c0a81717b18d9ad027950",
+      "app\\errors.py": "5868e58597fb6fa0a088e49a83f2ba48e6afa8e34dfa0f22e2b21b9549676e09",
+      "app\\lmstudio.py": "3fd072587a1c7374368deb5329e58122b2b74060cd0b3ae879f2f699c5594c59",
+      "app\\main.py": "e8e71764b6320773cac3912459bf6c15e625d3ad4de91047f6147bbb1db5f7b2",
+      "app\\observability.py": "d6651ad183346631828edc0e8c64a18a1f8f6b2ceeb9dd6bfcd72d3de59b062c",
+      "app\\routing.py": "575b1924254dc70cae7257ca7ce208635fef7297f99e4e884778ccc452a9d9a3",
+      "app\\schemas.py": "19ea2f9a82a856beb037564f98baafd0e2341da95768df15d898cc3b9aa382b8"
+    },
+    "finished_at": "2026-09-13T21:39:52.572646-04:00"
+  },
+  "results": [
+    {
+      "id": "extract_001",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "structured_extraction",
+      "difficulty": "easy",
+      "quality": "default",
+      "reasoning": "low",
+      "prompt": "Extract the course code, assignment name, due date, due time, and timezone from the following announcement. Return only JSON with keys course, assignment, due_date, due_time, timezone.\n\nAnnouncement:\nMAT186 students: Problem Set 2 is due Friday, September 18, 2026 at 11:59 PM Eastern Time. Submit through Quercus.",
+      "expected": {
+        "mode": "semantic_json",
+        "value": {
+          "course": "MAT186",
+          "assignment": "Problem Set 2",
+          "due_date": "2026-09-18",
+          "due_time": "23:59",
+          "timezone": "Eastern Time"
+        },
+        "normalize": {
+          "course": "text",
+          "assignment": "text",
+          "due_date": "date",
+          "due_time": "time",
+          "timezone": "timezone"
+        }
+      },
+      "request": {
+        "prompt": "Extract the course code, assignment name, due date, due time, and timezone from the following announcement. Return only JSON with keys course, assignment, due_date, due_time, timezone.\n\nAnnouncement:\nMAT186 students: Problem Set 2 is due Friday, September 18, 2026 at 11:59 PM Eastern Time. Submit through Quercus.",
+        "quality": "default",
+        "temperature": 0.0,
+        "max_output_tokens": 4096,
+        "reasoning": "low"
+      },
+      "response": {
+        "text": "```json\n{\n  \"course\": \"MAT186\",\n  \"assignment\": \"Problem Set 2\",\n  \"due_date\": \"Friday, September 18, 2026\",\n  \"due_time\": \"11:59 PM\",\n  \"timezone\": \"Eastern Time\"\n}\n```",
+        "model": "openai/gpt-oss-20b",
+        "profile": "default",
+        "quality": "default",
+        "reasoning": "low",
+        "input_tokens": 141,
+        "output_tokens": 146,
+        "reasoning_output_tokens": 76,
+        "tokens_per_second": 48.054313968328564,
+        "time_to_first_token_seconds": 1.3248820000000001,
+        "model_load_time_seconds": 13.712,
+        "request_id": "560999d6-0ee9-4c02-add8-cab8cb668510"
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass_with_format_issue",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": false,
+        "instruction_following": false,
+        "schema_correct": true,
+        "differences": [],
+        "actual": {
+          "course": "MAT186",
+          "assignment": "Problem Set 2",
+          "due_date": "Friday, September 18, 2026",
+          "due_time": "11:59 PM",
+          "timezone": "Eastern Time"
+        },
+        "expected": {
+          "course": "MAT186",
+          "assignment": "Problem Set 2",
+          "due_date": "2026-09-18",
+          "due_time": "23:59",
+          "timezone": "Eastern Time"
+        }
+      },
+      "error": null,
+      "wall_time_seconds": 18.207
+    },
+    {
+      "id": "extract_002",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "structured_extraction",
+      "difficulty": "easy",
+      "quality": "default",
+      "reasoning": "low",
+      "prompt": "Extract the customer name, order number, item count, subtotal, tax, and total. Return only JSON.\n\nReceipt:\nCustomer: Amir Rahman\nOrder #A18492\nItems purchased: 4\nSubtotal: $82.50\nHST: $10.73\nTotal paid: $93.23",
+      "expected": {
+        "mode": "semantic_json",
+        "value": {
+          "customer_name": "Amir Rahman",
+          "order_number": "A18492",
+          "item_count": 4,
+          "subtotal": 82.5,
+          "tax": 10.73,
+          "total": 93.23
+        },
+        "normalize": {
+          "customer_name": "text",
+          "item_count": "number",
+          "subtotal": "number",
+          "tax": "number",
+          "total": "number"
+        }
+      },
+      "request": {
+        "prompt": "Extract the customer name, order number, item count, subtotal, tax, and total. Return only JSON.\n\nReceipt:\nCustomer: Amir Rahman\nOrder #A18492\nItems purchased: 4\nSubtotal: $82.50\nHST: $10.73\nTotal paid: $93.23",
+        "quality": "default",
+        "temperature": 0.0,
+        "max_output_tokens": 4096,
+        "reasoning": "low"
+      },
+      "response": {
+        "text": "```json\n{\n  \"customer_name\": \"Amir Rahman\",\n  \"order_number\": \"A18492\",\n  \"item_count\": 4,\n  \"subtotal\": 82.50,\n  \"tax\": 10.73,\n  \"total\": 93.23\n}\n```",
+        "model": "openai/gpt-oss-20b",
+        "profile": "default",
+        "quality": "default",
+        "reasoning": "low",
+        "input_tokens": 131,
+        "output_tokens": 80,
+        "reasoning_output_tokens": 7,
+        "tokens_per_second": 49.28610019677007,
+        "time_to_first_token_seconds": 0.345634,
+        "model_load_time_seconds": null,
+        "request_id": "f40e70a8-4af6-4f5f-86d7-8934691ae9ea"
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass_with_format_issue",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": false,
+        "instruction_following": false,
+        "schema_correct": true,
+        "differences": [],
+        "actual": {
+          "customer_name": "Amir Rahman",
+          "order_number": "A18492",
+          "item_count": 4,
+          "subtotal": 82.5,
+          "tax": 10.73,
+          "total": 93.23
+        },
+        "expected": {
+          "customer_name": "Amir Rahman",
+          "order_number": "A18492",
+          "item_count": 4,
+          "subtotal": 82.5,
+          "tax": 10.73,
+          "total": 93.23
+        }
+      },
+      "error": null,
+      "wall_time_seconds": 1.994
+    },
+    {
+      "id": "extract_003",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "structured_extraction",
+      "difficulty": "medium",
+      "quality": "default",
+      "reasoning": "low",
+      "prompt": "Extract only the error code, service name, affected user count, first occurrence time, and resolved time. Return JSON only.\n\nIncident report:\nAt 14:03, several users began reporting failed uploads. The StorageProxy service logged error E_UPLOAD_17. Monitoring showed 218 affected users. The issue was traced to an expired internal credential. Service was fully restored at 14:41.",
+      "expected": {
+        "mode": "semantic_json",
+        "value": {
+          "error_code": "E_UPLOAD_17",
+          "service": "StorageProxy",
+          "affected_users": 218,
+          "first_occurrence": "14:03",
+          "resolved": "14:41"
+        },
+        "normalize": {
+          "service": "text",
+          "affected_users": "number",
+          "first_occurrence": "time",
+          "resolved": "time"
+        },
+        "key_aliases": {
+          "": {
+            "service_name": "service",
+            "affected_user_count": "affected_users",
+            "first_occurrence_time": "first_occurrence",
+            "resolved_time": "resolved"
+          }
+        }
+      },
+      "request": {
+        "prompt": "Extract only the error code, service name, affected user count, first occurrence time, and resolved time. Return JSON only.\n\nIncident report:\nAt 14:03, several users began reporting failed uploads. The StorageProxy service logged error E_UPLOAD_17. Monitoring showed 218 affected users. The issue was traced to an expired internal credential. Service was fully restored at 14:41.",
+        "quality": "default",
+        "temperature": 0.0,
+        "max_output_tokens": 4096,
+        "reasoning": "low"
+      },
+      "response": {
+        "text": "{\"error_code\":\"E_UPLOAD_17\",\"service_name\":\"StorageProxy\",\"affected_user_count\":218,\"first_occurrence_time\":\"14:03\",\"resolved_time\":\"14:41\"}",
+        "model": "openai/gpt-oss-20b",
+        "profile": "default",
+        "quality": "default",
+        "reasoning": "low",
+        "input_tokens": 146,
+        "output_tokens": 90,
+        "reasoning_output_tokens": 43,
+        "tokens_per_second": 49.19883293734722,
+        "time_to_first_token_seconds": 0.34963299999999997,
+        "model_load_time_seconds": null,
+        "request_id": "308bf1b6-84f3-4eeb-9d2b-94c8e0654265"
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass_with_format_issue",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": false,
+        "instruction_following": false,
+        "schema_correct": false,
+        "differences": [],
+        "actual": {
+          "error_code": "E_UPLOAD_17",
+          "service_name": "StorageProxy",
+          "affected_user_count": 218,
+          "first_occurrence_time": "14:03",
+          "resolved_time": "14:41"
+        },
+        "expected": {
+          "error_code": "E_UPLOAD_17",
+          "service": "StorageProxy",
+          "affected_users": 218,
+          "first_occurrence": "14:03",
+          "resolved": "14:41"
+        }
+      },
+      "error": null,
+      "wall_time_seconds": 2.203
+    },
+    {
+      "id": "extract_004",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "structured_extraction",
+      "difficulty": "medium",
+      "quality": "default",
+      "reasoning": "low",
+      "prompt": "Read the schedule and return a JSON array containing only events occurring on Friday. Each object must contain name, start, end, and room.\n\nSchedule:\nMonday 09:00-10:00 Calculus Lecture, BA1170\nWednesday 13:00-14:00 Chemistry Tutorial, WB130\nFriday 10:00-11:00 Programming Lecture, MY150\nFriday 12:00-13:00 Design Studio, SF1101\nFriday 15:00-16:00 Chemistry Lecture, MS2158",
+      "expected": {
+        "mode": "semantic_json",
+        "value": [
+          {
+            "name": "Programming Lecture",
+            "start": "10:00",
+            "end": "11:00",
+            "room": "MY150"
+          },
+          {
+            "name": "Design Studio",
+            "start": "12:00",
+            "end": "13:00",
+            "room": "SF1101"
+          },
+          {
+            "name": "Chemistry Lecture",
+            "start": "15:00",
+            "end": "16:00",
+            "room": "MS2158"
+          }
+        ],
+        "normalize": {
+          "*.name": "text",
+          "*.start": "time",
+          "*.end": "time",
+          "*.room": "text"
+        }
+      },
+      "request": {
+        "prompt": "Read the schedule and return a JSON array containing only events occurring on Friday. Each object must contain name, start, end, and room.\n\nSchedule:\nMonday 09:00-10:00 Calculus Lecture, BA1170\nWednesday 13:00-14:00 Chemistry Tutorial, WB130\nFriday 10:00-11:00 Programming Lecture, MY150\nFriday 12:00-13:00 Design Studio, SF1101\nFriday 15:00-16:00 Chemistry Lecture, MS2158",
+        "quality": "default",
+        "temperature": 0.0,
+        "max_output_tokens": 4096,
+        "reasoning": "low"
+      },
+      "response": {
+        "text": "```json\n[\n    {\n        \"name\": \"Programming Lecture\",\n        \"start\": \"10:00\",\n        \"end\": \"11:00\",\n        \"room\": \"MY150\"\n    },\n    {\n        \"name\": \"Design Studio\",\n        \"start\": \"12:0\",\n        \"end\": \"13:00\",\n        \"room\": \"SF1101\"\n    },\n    {\n        \"name\": \"Chemistry Lecture\",\n        \"start\": \"15:00\",\n        \"end\": \"16:00\",\n        \"room\": \"MS2158\"\n    }\n]\n```",
+        "model": "openai/gpt-oss-20b",
+        "profile": "default",
+        "quality": "default",
+        "reasoning": "low",
+        "input_tokens": 175,
+        "output_tokens": 150,
+        "reasoning_output_tokens": 17,
+        "tokens_per_second": 48.29546191205947,
+        "time_to_first_token_seconds": 0.394078,
+        "model_load_time_seconds": null,
+        "request_id": "7c3aa1da-17cc-477c-aabc-1216816f5986"
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass_with_format_issue",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": false,
+        "instruction_following": false,
+        "schema_correct": true,
+        "differences": [],
+        "actual": [
+          {
+            "name": "Programming Lecture",
+            "start": "10:00",
+            "end": "11:00",
+            "room": "MY150"
+          },
+          {
+            "name": "Design Studio",
+            "start": "12:0",
+            "end": "13:00",
+            "room": "SF1101"
+          },
+          {
+            "name": "Chemistry Lecture",
+            "start": "15:00",
+            "end": "16:00",
+            "room": "MS2158"
+          }
+        ],
+        "expected": [
+          {
+            "name": "Programming Lecture",
+            "start": "10:00",
+            "end": "11:00",
+            "room": "MY150"
+          },
+          {
+            "name": "Design Studio",
+            "start": "12:00",
+            "end": "13:00",
+            "room": "SF1101"
+          },
+          {
+            "name": "Chemistry Lecture",
+            "start": "15:00",
+            "end": "16:00",
+            "room": "MS2158"
+          }
+        ]
+      },
+      "error": null,
+      "wall_time_seconds": 3.513
+    },
+    {
+      "id": "extract_005",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "structured_extraction",
+      "difficulty": "hard",
+      "quality": "default",
+      "reasoning": "low",
+      "prompt": "Extract the final configuration after all changes have been applied. Ignore superseded values. Return JSON only with keys port, context_length, ttl_seconds, authentication, cors.\n\nConfiguration history:\nInitial port was 8000.\nContext length started at 8192.\nAuthentication was disabled during testing.\nPort was later changed from 8000 to 4812.\nTTL was initially 120 seconds.\nContext length was increased to 16384.\nCORS remained disabled throughout.\nAuthentication was enabled before deployment.\nTTL was finally changed from 120 to 300 seconds.",
+      "expected": {
+        "mode": "semantic_json",
+        "value": {
+          "port": 4812,
+          "context_length": 16384,
+          "ttl_seconds": 300,
+          "authentication": true,
+          "cors": false
+        },
+        "normalize": {
+          "port": "number",
+          "context_length": "number",
+          "ttl_seconds": "number",
+          "authentication": "enabled_state",
+          "cors": "enabled_state"
+        }
+      },
+      "request": {
+        "prompt": "Extract the final configuration after all changes have been applied. Ignore superseded values. Return JSON only with keys port, context_length, ttl_seconds, authentication, cors.\n\nConfiguration history:\nInitial port was 8000.\nContext length started at 8192.\nAuthentication was disabled during testing.\nPort was later changed from 8000 to 4812.\nTTL was initially 120 seconds.\nContext length was increased to 16384.\nCORS remained disabled throughout.\nAuthentication was enabled before deployment.\nTTL was finally changed from 120 to 300 seconds.",
+        "quality": "default",
+        "temperature": 0.0,
+        "max_output_tokens": 4096,
+        "reasoning": "low"
+      },
+      "response": {
+        "text": "{\"port\":4812,\"context_length\":16384,\"ttl_seconds\":300,\"authentication\":true,\"cors\":false}",
+        "model": "openai/gpt-oss-20b",
+        "profile": "default",
+        "quality": "default",
+        "reasoning": "low",
+        "input_tokens": 177,
+        "output_tokens": 68,
+        "reasoning_output_tokens": 33,
+        "tokens_per_second": 49.43511162005501,
+        "time_to_first_token_seconds": 0.372908,
+        "model_load_time_seconds": null,
+        "request_id": "83ef8ada-e494-471c-b75e-5bb8fa897def"
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": true,
+        "instruction_following": true,
+        "schema_correct": true,
+        "differences": [],
+        "actual": {
+          "port": 4812,
+          "context_length": 16384,
+          "ttl_seconds": 300,
+          "authentication": true,
+          "cors": false
+        },
+        "expected": {
+          "port": 4812,
+          "context_length": 16384,
+          "ttl_seconds": 300,
+          "authentication": true,
+          "cors": false
+        }
+      },
+      "error": null,
+      "wall_time_seconds": 1.771
+    },
+    {
+      "id": "classify_001",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "classification",
+      "difficulty": "easy",
+      "quality": "default",
+      "reasoning": "low",
+      "prompt": "Classify the message as exactly one of: assignment, exam, announcement, irrelevant. Return only the label.\n\nMessage: Homework 4 has been posted and must be submitted by Sunday at 11:59 PM.",
+      "expected": {
+        "mode": "label",
+        "value": "assignment",
+        "labels": [
+          "assignment",
+          "exam",
+          "announcement",
+          "irrelevant"
+        ]
+      },
+      "request": {
+        "prompt": "Classify the message as exactly one of: assignment, exam, announcement, irrelevant. Return only the label.\n\nMessage: Homework 4 has been posted and must be submitted by Sunday at 11:59 PM.",
+        "quality": "default",
+        "temperature": 0.0,
+        "max_output_tokens": 4096,
+        "reasoning": "low"
+      },
+      "response": {
+        "text": "announcement",
+        "model": "openai/gpt-oss-20b",
+        "profile": "default",
+        "quality": "default",
+        "reasoning": "low",
+        "input_tokens": 110,
+        "output_tokens": 29,
+        "reasoning_output_tokens": 18,
+        "tokens_per_second": 48.538724367653096,
+        "time_to_first_token_seconds": 0.33275,
+        "model_load_time_seconds": null,
+        "request_id": "aca72180-2815-4cd0-9ef2-8acbbd2a4a87"
+      },
+      "grade": {
+        "version": 2,
+        "status": "fail",
+        "passed": false,
+        "semantic_correct": false,
+        "format_correct": true,
+        "instruction_following": true,
+        "actual": "announcement",
+        "reason": "Unambiguous label"
+      },
+      "error": null,
+      "wall_time_seconds": 0.945
+    },
+    {
+      "id": "classify_002",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "classification",
+      "difficulty": "easy",
+      "quality": "default",
+      "reasoning": "low",
+      "prompt": "Classify the message as exactly one of: assignment, exam, announcement, irrelevant. Return only the label.\n\nMessage: The midterm will take place next Wednesday from 6:00 PM to 8:00 PM.",
+      "expected": {
+        "mode": "label",
+        "value": "exam",
+        "labels": [
+          "assignment",
+          "exam",
+          "announcement",
+          "irrelevant"
+        ]
+      },
+      "request": {
+        "prompt": "Classify the message as exactly one of: assignment, exam, announcement, irrelevant. Return only the label.\n\nMessage: The midterm will take place next Wednesday from 6:00 PM to 8:00 PM.",
+        "quality": "default",
+        "temperature": 0.0,
+        "max_output_tokens": 4096,
+        "reasoning": "low"
+      },
+      "response": {
+        "text": "announcement",
+        "model": "openai/gpt-oss-20b",
+        "profile": "default",
+        "quality": "default",
+        "reasoning": "low",
+        "input_tokens": 112,
+        "output_tokens": 27,
+        "reasoning_output_tokens": 16,
+        "tokens_per_second": 49.12036757148903,
+        "time_to_first_token_seconds": 0.349493,
+        "model_load_time_seconds": null,
+        "request_id": "81a15166-ec24-40de-b81f-47b5549ba003"
+      },
+      "grade": {
+        "version": 2,
+        "status": "fail",
+        "passed": false,
+        "semantic_correct": false,
+        "format_correct": true,
+        "instruction_following": true,
+        "actual": "announcement",
+        "reason": "Unambiguous label"
+      },
+      "error": null,
+      "wall_time_seconds": 0.91
+    },
+    {
+      "id": "classify_003",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "classification",
+      "difficulty": "easy",
+      "quality": "default",
+      "reasoning": "low",
+      "prompt": "Classify the message as exactly one of: assignment, exam, announcement, irrelevant. Return only the label.\n\nMessage: Friday's lecture has been moved from room BA1130 to BA1170.",
+      "expected": {
+        "mode": "label",
+        "value": "announcement",
+        "labels": [
+          "assignment",
+          "exam",
+          "announcement",
+          "irrelevant"
+        ]
+      },
+      "request": {
+        "prompt": "Classify the message as exactly one of: assignment, exam, announcement, irrelevant. Return only the label.\n\nMessage: Friday's lecture has been moved from room BA1130 to BA1170.",
+        "quality": "default",
+        "temperature": 0.0,
+        "max_output_tokens": 4096,
+        "reasoning": "low"
+      },
+      "response": {
+        "text": "announcement",
+        "model": "openai/gpt-oss-20b",
+        "profile": "default",
+        "quality": "default",
+        "reasoning": "low",
+        "input_tokens": 107,
+        "output_tokens": 32,
+        "reasoning_output_tokens": 21,
+        "tokens_per_second": 49.968568158738854,
+        "time_to_first_token_seconds": 0.338915,
+        "model_load_time_seconds": null,
+        "request_id": "e9f7ad5b-5817-41f2-ad27-893430aa557d"
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": true,
+        "instruction_following": true,
+        "actual": "announcement",
+        "reason": "Unambiguous label"
+      },
+      "error": null,
+      "wall_time_seconds": 0.992
+    },
+    {
+      "id": "classify_004",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "classification",
+      "difficulty": "easy",
+      "quality": "default",
+      "reasoning": "low",
+      "prompt": "Classify the message as exactly one of: assignment, exam, announcement, irrelevant. Return only the label.\n\nMessage: The engineering cafeteria will be serving tacos today.",
+      "expected": {
+        "mode": "label",
+        "value": "irrelevant",
+        "labels": [
+          "assignment",
+          "exam",
+          "announcement",
+          "irrelevant"
+        ]
+      },
+      "request": {
+        "prompt": "Classify the message as exactly one of: assignment, exam, announcement, irrelevant. Return only the label.\n\nMessage: The engineering cafeteria will be serving tacos today.",
+        "quality": "default",
+        "temperature": 0.0,
+        "max_output_tokens": 4096,
+        "reasoning": "low"
+      },
+      "response": {
+        "text": "announcement",
+        "model": "openai/gpt-oss-20b",
+        "profile": "default",
+        "quality": "default",
+        "reasoning": "low",
+        "input_tokens": 100,
+        "output_tokens": 30,
+        "reasoning_output_tokens": 19,
+        "tokens_per_second": 49.270624853462365,
+        "time_to_first_token_seconds": 0.330256,
+        "model_load_time_seconds": null,
+        "request_id": "c6a8eb28-13c9-41ea-8e31-391095aaad43"
+      },
+      "grade": {
+        "version": 2,
+        "status": "fail",
+        "passed": false,
+        "semantic_correct": false,
+        "format_correct": true,
+        "instruction_following": true,
+        "actual": "announcement",
+        "reason": "Unambiguous label"
+      },
+      "error": null,
+      "wall_time_seconds": 0.95
+    },
+    {
+      "id": "classify_005",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "classification",
+      "difficulty": "medium",
+      "quality": "default",
+      "reasoning": "low",
+      "prompt": "Classify the message as exactly one of: assignment, exam, announcement, irrelevant. Return only the label.\n\nMessage: Reminder: Project Milestone 1 is still due tomorrow despite the campus closure announcement.",
+      "expected": {
+        "mode": "label",
+        "value": "assignment",
+        "labels": [
+          "assignment",
+          "exam",
+          "announcement",
+          "irrelevant"
+        ]
+      },
+      "request": {
+        "prompt": "Classify the message as exactly one of: assignment, exam, announcement, irrelevant. Return only the label.\n\nMessage: Reminder: Project Milestone 1 is still due tomorrow despite the campus closure announcement.",
+        "quality": "default",
+        "temperature": 0.0,
+        "max_output_tokens": 4096,
+        "reasoning": "low"
+      },
+      "response": {
+        "text": "assignment",
+        "model": "openai/gpt-oss-20b",
+        "profile": "default",
+        "quality": "default",
+        "reasoning": "low",
+        "input_tokens": 108,
+        "output_tokens": 63,
+        "reasoning_output_tokens": 52,
+        "tokens_per_second": 49.58599691447135,
+        "time_to_first_token_seconds": 0.345703,
+        "model_load_time_seconds": null,
+        "request_id": "36761b09-cdb6-4b40-aa1a-9285db2591dc"
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": true,
+        "instruction_following": true,
+        "actual": "assignment",
+        "reason": "Unambiguous label"
+      },
+      "error": null,
+      "wall_time_seconds": 1.621
+    },
+    {
+      "id": "instruction_001",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "instruction_following",
+      "difficulty": "easy",
+      "quality": "default",
+      "reasoning": "low",
+      "prompt": "Return exactly the following JSON object and nothing else: {\"status\":\"ok\",\"count\":3}",
+      "expected": {
+        "mode": "exact_json",
+        "value": {
+          "status": "ok",
+          "count": 3
+        }
+      },
+      "request": {
+        "prompt": "Return exactly the following JSON object and nothing else: {\"status\":\"ok\",\"count\":3}",
+        "quality": "default",
+        "temperature": 0.0,
+        "max_output_tokens": 4096,
+        "reasoning": "low"
+      },
+      "response": {
+        "text": "{\"status\":\"ok\",\"count\":3}",
+        "model": "openai/gpt-oss-20b",
+        "profile": "default",
+        "quality": "default",
+        "reasoning": "low",
+        "input_tokens": 86,
+        "output_tokens": 26,
+        "reasoning_output_tokens": 7,
+        "tokens_per_second": 48.673169402098786,
+        "time_to_first_token_seconds": 0.251212,
+        "model_load_time_seconds": null,
+        "request_id": "3ce4a828-0042-493b-8727-9497ed998bc3"
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": true,
+        "instruction_following": true,
+        "schema_correct": true,
+        "differences": [],
+        "actual": {
+          "status": "ok",
+          "count": 3
+        },
+        "expected": {
+          "status": "ok",
+          "count": 3
+        }
+      },
+      "error": null,
+      "wall_time_seconds": 0.801
+    },
+    {
+      "id": "instruction_002",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "instruction_following",
+      "difficulty": "easy",
+      "quality": "default",
+      "reasoning": "low",
+      "prompt": "Sort these words alphabetically and return them as a JSON array only: zebra, apple, mango, banana.",
+      "expected": {
+        "mode": "exact_json",
+        "value": [
+          "apple",
+          "banana",
+          "mango",
+          "zebra"
+        ]
+      },
+      "request": {
+        "prompt": "Sort these words alphabetically and return them as a JSON array only: zebra, apple, mango, banana.",
+        "quality": "default",
+        "temperature": 0.0,
+        "max_output_tokens": 4096,
+        "reasoning": "low"
+      },
+      "response": {
+        "text": "[\"apple\",\"banana\",\"mango\",\"zebra\"]",
+        "model": "openai/gpt-oss-20b",
+        "profile": "default",
+        "quality": "default",
+        "reasoning": "low",
+        "input_tokens": 89,
+        "output_tokens": 40,
+        "reasoning_output_tokens": 19,
+        "tokens_per_second": 48.80209623773378,
+        "time_to_first_token_seconds": 0.250154,
+        "model_load_time_seconds": null,
+        "request_id": "5713ae83-1817-4d62-b859-7dfb93339be2"
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": true,
+        "instruction_following": true,
+        "schema_correct": true,
+        "differences": [],
+        "actual": [
+          "apple",
+          "banana",
+          "mango",
+          "zebra"
+        ],
+        "expected": [
+          "apple",
+          "banana",
+          "mango",
+          "zebra"
+        ]
+      },
+      "error": null,
+      "wall_time_seconds": 1.073
+    },
+    {
+      "id": "instruction_003",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "instruction_following",
+      "difficulty": "medium",
+      "quality": "default",
+      "reasoning": "low",
+      "prompt": "Convert the following phrase to lowercase, replace spaces with hyphens, and output nothing except the result:\n\nLocal Artificial Intelligence Gateway",
+      "expected": {
+        "mode": "exact_text",
+        "value": "local-artificial-intelligence-gateway"
+      },
+      "request": {
+        "prompt": "Convert the following phrase to lowercase, replace spaces with hyphens, and output nothing except the result:\n\nLocal Artificial Intelligence Gateway",
+        "quality": "default",
+        "temperature": 0.0,
+        "max_output_tokens": 4096,
+        "reasoning": "low"
+      },
+      "response": {
+        "text": "local-artificial-intelligence-gateway",
+        "model": "openai/gpt-oss-20b",
+        "profile": "default",
+        "quality": "default",
+        "reasoning": "low",
+        "input_tokens": 92,
+        "output_tokens": 73,
+        "reasoning_output_tokens": 56,
+        "tokens_per_second": 49.26866820631255,
+        "time_to_first_token_seconds": 0.26981,
+        "model_load_time_seconds": null,
+        "request_id": "972a83af-8b2b-4975-979f-0167c60b9333"
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": true,
+        "instruction_following": true,
+        "actual": "local-artificial-intelligence-gateway",
+        "expected": "local-artificial-intelligence-gateway"
+      },
+      "error": null,
+      "wall_time_seconds": 1.772
+    },
+    {
+      "id": "instruction_004",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "instruction_following",
+      "difficulty": "medium",
+      "quality": "default",
+      "reasoning": "low",
+      "prompt": "Return exactly three lines. Line 1 must be RED. Line 2 must be GREEN. Line 3 must be BLUE. Do not add numbering, punctuation, Markdown, or any other text.",
+      "expected": {
+        "mode": "exact_text",
+        "value": "RED\nGREEN\nBLUE"
+      },
+      "request": {
+        "prompt": "Return exactly three lines. Line 1 must be RED. Line 2 must be GREEN. Line 3 must be BLUE. Do not add numbering, punctuation, Markdown, or any other text.",
+        "quality": "default",
+        "temperature": 0.0,
+        "max_output_tokens": 4096,
+        "reasoning": "low"
+      },
+      "response": {
+        "text": "RED\nGREEN\nBLUE",
+        "model": "openai/gpt-oss-20b",
+        "profile": "default",
+        "quality": "default",
+        "reasoning": "low",
+        "input_tokens": 107,
+        "output_tokens": 67,
+        "reasoning_output_tokens": 52,
+        "tokens_per_second": 49.23976782703412,
+        "time_to_first_token_seconds": 0.326667,
+        "model_load_time_seconds": null,
+        "request_id": "281ef383-0763-4aaa-a767-36810a04cb82"
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": true,
+        "instruction_following": true,
+        "actual": "RED\nGREEN\nBLUE",
+        "expected": "RED\nGREEN\nBLUE"
+      },
+      "error": null,
+      "wall_time_seconds": 1.701
+    },
+    {
+      "id": "instruction_005",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "instruction_following",
+      "difficulty": "hard",
+      "quality": "default",
+      "reasoning": "low",
+      "prompt": "Read the values below. Return only a JSON object with exactly two keys in this order: even and odd. Each value must be an array containing the corresponding numbers in ascending order. Do not include duplicates.\n\nValues: 9, 4, 2, 9, 7, 8, 4, 3, 6, 2",
+      "expected": {
+        "mode": "exact_json",
+        "value": {
+          "even": [
+            2,
+            4,
+            6,
+            8
+          ],
+          "odd": [
+            3,
+            7,
+            9
+          ]
+        },
+        "key_order": [
+          "even",
+          "odd"
+        ]
+      },
+      "request": {
+        "prompt": "Read the values below. Return only a JSON object with exactly two keys in this order: even and odd. Each value must be an array containing the corresponding numbers in ascending order. Do not include duplicates.\n\nValues: 9, 4, 2, 9, 7, 8, 4, 3, 6, 2",
+        "quality": "default",
+        "temperature": 0.0,
+        "max_output_tokens": 4096,
+        "reasoning": "low"
+      },
+      "response": {
+        "text": "{\"even\":[2,4,6,8],\"odd\":[3,7,9]}",
+        "model": "openai/gpt-oss-20b",
+        "profile": "default",
+        "quality": "default",
+        "reasoning": "low",
+        "input_tokens": 139,
+        "output_tokens": 120,
+        "reasoning_output_tokens": 91,
+        "tokens_per_second": 49.156003806905304,
+        "time_to_first_token_seconds": 0.37351,
+        "model_load_time_seconds": null,
+        "request_id": "e6fc2096-d643-400e-ac0f-d6b9258d82bf"
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": true,
+        "instruction_following": true,
+        "schema_correct": true,
+        "differences": [],
+        "actual": {
+          "even": [
+            2,
+            4,
+            6,
+            8
+          ],
+          "odd": [
+            3,
+            7,
+            9
+          ]
+        },
+        "expected": {
+          "even": [
+            2,
+            4,
+            6,
+            8
+          ],
+          "odd": [
+            3,
+            7,
+            9
+          ]
+        }
+      },
+      "error": null,
+      "wall_time_seconds": 2.829
+    },
+    {
+      "id": "reason_001",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "reasoning",
+      "difficulty": "easy",
+      "quality": "default",
+      "reasoning": "low",
+      "prompt": "A bag contains 3 red balls and 2 blue balls. Two balls are drawn without replacement. What is the probability that both are red? Return only a decimal number.",
+      "expected": {
+        "mode": "numeric",
+        "value": 0.3,
+        "tolerance": 0.0001
+      },
+      "request": {
+        "prompt": "A bag contains 3 red balls and 2 blue balls. Two balls are drawn without replacement. What is the probability that both are red? Return only a decimal number.",
+        "quality": "default",
+        "temperature": 0.0,
+        "max_output_tokens": 4096,
+        "reasoning": "low"
+      },
+      "response": {
+        "text": "0.3",
+        "model": "openai/gpt-oss-20b",
+        "profile": "default",
+        "quality": "default",
+        "reasoning": "low",
+        "input_tokens": 102,
+        "output_tokens": 57,
+        "reasoning_output_tokens": 44,
+        "tokens_per_second": 49.63623728957781,
+        "time_to_first_token_seconds": 0.342318,
+        "model_load_time_seconds": null,
+        "request_id": "13a1119c-08d4-48f8-8f97-d89b149e6479"
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": true,
+        "instruction_following": true,
+        "actual": "0.3",
+        "expected": 0.3
+      },
+      "error": null,
+      "wall_time_seconds": 1.502
+    },
+    {
+      "id": "reason_002",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "reasoning",
+      "difficulty": "medium",
+      "quality": "default",
+      "reasoning": "low",
+      "prompt": "Four tasks A, B, C, and D must be scheduled Monday through Thursday, one task per day. C must occur on Thursday. B must occur immediately after A. D cannot occur on Thursday. D must occur after B. Determine the schedule. Return only a JSON object mapping Monday, Tuesday, Wednesday, Thursday to task letters.",
+      "expected": {
+        "mode": "semantic_json",
+        "value": {
+          "Monday": "A",
+          "Tuesday": "B",
+          "Wednesday": "D",
+          "Thursday": "C"
+        },
+        "normalize": {
+          "Monday": "text",
+          "Tuesday": "text",
+          "Wednesday": "text",
+          "Thursday": "text"
+        }
+      },
+      "request": {
+        "prompt": "Four tasks A, B, C, and D must be scheduled Monday through Thursday, one task per day. C must occur on Thursday. B must occur immediately after A. D cannot occur on Thursday. D must occur after B. Determine the schedule. Return only a JSON object mapping Monday, Tuesday, Wednesday, Thursday to task letters.",
+        "quality": "default",
+        "temperature": 0.0,
+        "max_output_tokens": 4096,
+        "reasoning": "low"
+      },
+      "response": {
+        "text": "{\"Monday\":\"A\",\"Tuesday\":\"B\",\"Wednesday\":\"D\",\"Thursday\":\"C\"}",
+        "model": "openai/gpt-oss-20b",
+        "profile": "default",
+        "quality": "default",
+        "reasoning": "low",
+        "input_tokens": 135,
+        "output_tokens": 400,
+        "reasoning_output_tokens": 373,
+        "tokens_per_second": 46.963415028881315,
+        "time_to_first_token_seconds": 0.353144,
+        "model_load_time_seconds": null,
+        "request_id": "e1f6cd34-666a-4441-b102-2de3ff6fd1d2"
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": true,
+        "instruction_following": true,
+        "schema_correct": true,
+        "differences": [],
+        "actual": {
+          "Monday": "A",
+          "Tuesday": "B",
+          "Wednesday": "D",
+          "Thursday": "C"
+        },
+        "expected": {
+          "Monday": "A",
+          "Tuesday": "B",
+          "Wednesday": "D",
+          "Thursday": "C"
+        }
+      },
+      "error": null,
+      "wall_time_seconds": 8.885
+    },
+    {
+      "id": "reason_003",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "reasoning",
+      "difficulty": "easy",
+      "quality": "default",
+      "reasoning": "low",
+      "prompt": "Solve for x: 3(x - 2) + 4 = 2x + 9. Return only the number.",
+      "expected": {
+        "mode": "numeric",
+        "value": 11,
+        "tolerance": 0.0001
+      },
+      "request": {
+        "prompt": "Solve for x: 3(x - 2) + 4 = 2x + 9. Return only the number.",
+        "quality": "default",
+        "temperature": 0.0,
+        "max_output_tokens": 4096,
+        "reasoning": "low"
+      },
+      "response": {
+        "text": "11",
+        "model": "openai/gpt-oss-20b",
+        "profile": "default",
+        "quality": "default",
+        "reasoning": "low",
+        "input_tokens": 94,
+        "output_tokens": 74,
+        "reasoning_output_tokens": 63,
+        "tokens_per_second": 49.18219442866796,
+        "time_to_first_token_seconds": 0.279565,
+        "model_load_time_seconds": null,
+        "request_id": "136fe406-bfb7-464a-9968-b50ce2a03f28"
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": true,
+        "instruction_following": true,
+        "actual": "11",
+        "expected": 11
+      },
+      "error": null,
+      "wall_time_seconds": 1.807
+    },
+    {
+      "id": "reason_004",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "reasoning",
+      "difficulty": "medium",
+      "quality": "default",
+      "reasoning": "low",
+      "prompt": "Consider this pseudocode:\n\nfor i = 1 to n:\n    for j = 1 to i:\n        doConstantTimeWork()\n\nWhat is the asymptotic time complexity? Return only one of: O(1), O(log n), O(n), O(n log n), O(n^2), O(n^3).",
+      "expected": {
+        "mode": "label",
+        "value": "O(n^2)",
+        "labels": [
+          "O(1)",
+          "O(log n)",
+          "O(n)",
+          "O(n log n)",
+          "O(n^2)",
+          "O(n^3)"
+        ]
+      },
+      "request": {
+        "prompt": "Consider this pseudocode:\n\nfor i = 1 to n:\n    for j = 1 to i:\n        doConstantTimeWork()\n\nWhat is the asymptotic time complexity? Return only one of: O(1), O(log n), O(n), O(n log n), O(n^2), O(n^3).",
+        "quality": "default",
+        "temperature": 0.0,
+        "max_output_tokens": 4096,
+        "reasoning": "low"
+      },
+      "response": {
+        "text": "O(n²)",
+        "model": "openai/gpt-oss-20b",
+        "profile": "default",
+        "quality": "default",
+        "reasoning": "low",
+        "input_tokens": 135,
+        "output_tokens": 45,
+        "reasoning_output_tokens": 31,
+        "tokens_per_second": 48.9809185926001,
+        "time_to_first_token_seconds": 0.390911,
+        "model_load_time_seconds": null,
+        "request_id": "9431dba6-d121-4cd0-a435-c29fd17fef28"
+      },
+      "grade": {
+        "version": 2,
+        "status": "manual",
+        "passed": null,
+        "semantic_correct": null,
+        "format_correct": false,
+        "instruction_following": false,
+        "actual": null,
+        "reason": "Ambiguous prose requires review"
+      },
+      "error": null,
+      "wall_time_seconds": 1.325
+    },
+    {
+      "id": "reason_005",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "reasoning",
+      "difficulty": "medium",
+      "quality": "default",
+      "reasoning": "low",
+      "prompt": "A 6-ohm resistor and a 3-ohm resistor are connected in parallel. That parallel combination is connected in series with a 4-ohm resistor. The circuit is connected to a 12-volt source. Return JSON only with equivalent_parallel_resistance_ohms, total_resistance_ohms, and total_current_amps.",
+      "expected": {
+        "mode": "semantic_json",
+        "value": {
+          "equivalent_parallel_resistance_ohms": 2,
+          "total_resistance_ohms": 6,
+          "total_current_amps": 2
+        },
+        "normalize": {
+          "equivalent_parallel_resistance_ohms": "number",
+          "total_resistance_ohms": "number",
+          "total_current_amps": "number"
+        }
+      },
+      "request": {
+        "prompt": "A 6-ohm resistor and a 3-ohm resistor are connected in parallel. That parallel combination is connected in series with a 4-ohm resistor. The circuit is connected to a 12-volt source. Return JSON only with equivalent_parallel_resistance_ohms, total_resistance_ohms, and total_current_amps.",
+        "quality": "default",
+        "temperature": 0.0,
+        "max_output_tokens": 4096,
+        "reasoning": "low"
+      },
+      "response": {
+        "text": "{\n  \"equivalent_parallel_resistance_ohms\": 2,\n  \"total_resistance_ohms\": 6,\n  \"total_current_amps\": 2\n}",
+        "model": "openai/gpt-oss-20b",
+        "profile": "default",
+        "quality": "default",
+        "reasoning": "low",
+        "input_tokens": 137,
+        "output_tokens": 126,
+        "reasoning_output_tokens": 78,
+        "tokens_per_second": 49.04528449207723,
+        "time_to_first_token_seconds": 0.382957,
+        "model_load_time_seconds": null,
+        "request_id": "36d44dda-497f-48ec-8d08-709e897548e9"
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": true,
+        "instruction_following": true,
+        "schema_correct": true,
+        "differences": [],
+        "actual": {
+          "equivalent_parallel_resistance_ohms": 2,
+          "total_resistance_ohms": 6,
+          "total_current_amps": 2
+        },
+        "expected": {
+          "equivalent_parallel_resistance_ohms": 2,
+          "total_resistance_ohms": 6,
+          "total_current_amps": 2
+        }
+      },
+      "error": null,
+      "wall_time_seconds": 2.975
+    },
+    {
+      "id": "coding_001",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "coding",
+      "difficulty": "easy",
+      "quality": "default",
+      "reasoning": "low",
+      "prompt": "Write a Python function named clamp(value, minimum, maximum). It must return minimum when value is below minimum, maximum when value is above maximum, and value otherwise. Return only Python code with no Markdown fences.",
+      "expected": {
+        "mode": "code_tests",
+        "language": "python",
+        "tests": [
+          {
+            "expression": "clamp(5, 0, 10)",
+            "expected": 5
+          },
+          {
+            "expression": "clamp(-3, 0, 10)",
+            "expected": 0
+          },
+          {
+            "expression": "clamp(22, 0, 10)",
+            "expected": 10
+          },
+          {
+            "expression": "clamp(4.5, 2.0, 4.0)",
+            "expected": 4.0
+          }
+        ]
+      },
+      "request": {
+        "prompt": "Write a Python function named clamp(value, minimum, maximum). It must return minimum when value is below minimum, maximum when value is above maximum, and value otherwise. Return only Python code with no Markdown fences.",
+        "quality": "default",
+        "temperature": 0.0,
+        "max_output_tokens": 4096,
+        "reasoning": "low"
+      },
+      "response": {
+        "text": "def clamp(value, minimum, maximum):\n    if value < minimum:\n        return minimum\n    elif value > maximum:\n        return maximum\n    else:\n        return value",
+        "model": "openai/gpt-oss-20b",
+        "profile": "default",
+        "quality": "default",
+        "reasoning": "low",
+        "input_tokens": 109,
+        "output_tokens": 49,
+        "reasoning_output_tokens": 5,
+        "tokens_per_second": 48.41374385498471,
+        "time_to_first_token_seconds": 0.350734,
+        "model_load_time_seconds": null,
+        "request_id": "913f10a6-921e-41df-9aa9-05d443325932"
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": true,
+        "instruction_following": true,
+        "tests": [
+          {
+            "expression": "clamp(5, 0, 10)",
+            "passed": true,
+            "actual": "5",
+            "expected": "5"
+          },
+          {
+            "expression": "clamp(-3, 0, 10)",
+            "passed": true,
+            "actual": "0",
+            "expected": "0"
+          },
+          {
+            "expression": "clamp(22, 0, 10)",
+            "passed": true,
+            "actual": "10",
+            "expected": "10"
+          },
+          {
+            "expression": "clamp(4.5, 2.0, 4.0)",
+            "passed": true,
+            "actual": "4.0",
+            "expected": "4.0"
+          }
+        ],
+        "reason": null
+      },
+      "error": null,
+      "wall_time_seconds": 1.38
+    },
+    {
+      "id": "coding_002",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "coding",
+      "difficulty": "medium",
+      "quality": "default",
+      "reasoning": "low",
+      "prompt": "Write a Python function named dedupe_preserve_order(items) that removes duplicate values while preserving the order in which each value first appeared. Assume all values are hashable. Return only Python code with no Markdown fences.",
+      "expected": {
+        "mode": "code_tests",
+        "language": "python",
+        "tests": [
+          {
+            "expression": "dedupe_preserve_order([1, 2, 1, 3, 2, 4])",
+            "expected": [
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          {
+            "expression": "dedupe_preserve_order(['a', 'b', 'a', 'c'])",
+            "expected": [
+              "a",
+              "b",
+              "c"
+            ]
+          },
+          {
+            "expression": "dedupe_preserve_order([])",
+            "expected": []
+          }
+        ]
+      },
+      "request": {
+        "prompt": "Write a Python function named dedupe_preserve_order(items) that removes duplicate values while preserving the order in which each value first appeared. Assume all values are hashable. Return only Python code with no Markdown fences.",
+        "quality": "default",
+        "temperature": 0.0,
+        "max_output_tokens": 4096,
+        "reasoning": "low"
+      },
+      "response": {
+        "text": "def dedupe_preserve_order(items):\n    \"\"\"\n    Remove duplicates from an iterable while preserving the order of first appearance.\n\n    Parameters\n    ----------\n    items : Iterable[Hashable]\n        The input sequence containing hashable elements.\n\n    Returns\n    -------\n    list\n        A new list with duplicates removed, keeping only the first occurrence of each element.\n    \"\"\"\n    seen = set()\n    result = []\n    for item in items:\n        if item not in seen:\n            seen.add(item)\n            result.append(item)\n    return result\n\n# Example usage:\n# print(dedupe_preserve_order([1, 2, 3, 2, 4, 1]))  # Output: [1, 2, 3, 4]",
+        "model": "openai/gpt-oss-20b",
+        "profile": "default",
+        "quality": "default",
+        "reasoning": "low",
+        "input_tokens": 110,
+        "output_tokens": 175,
+        "reasoning_output_tokens": 10,
+        "tokens_per_second": 48.78976155265845,
+        "time_to_first_token_seconds": 0.356164,
+        "model_load_time_seconds": null,
+        "request_id": "96639e3f-106a-4731-b6bf-5a2127c79d2f"
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": true,
+        "instruction_following": true,
+        "tests": [
+          {
+            "expression": "dedupe_preserve_order([1, 2, 1, 3, 2, 4])",
+            "passed": true,
+            "actual": "[1, 2, 3, 4]",
+            "expected": "[1, 2, 3, 4]"
+          },
+          {
+            "expression": "dedupe_preserve_order(['a', 'b', 'a', 'c'])",
+            "passed": true,
+            "actual": "['a', 'b', 'c']",
+            "expected": "['a', 'b', 'c']"
+          },
+          {
+            "expression": "dedupe_preserve_order([])",
+            "passed": true,
+            "actual": "[]",
+            "expected": "[]"
+          }
+        ],
+        "reason": null
+      },
+      "error": null,
+      "wall_time_seconds": 3.961
+    },
+    {
+      "id": "coding_003",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "coding",
+      "difficulty": "medium",
+      "quality": "default",
+      "reasoning": "low",
+      "prompt": "The following Python function is intended to return the largest number in a non-empty list, but it is incorrect:\n\ndef largest(numbers):\n    result = 0\n    for number in numbers:\n        if number > result:\n            result = number\n    return result\n\nFix the function so that it works for any non-empty list of integers, including lists containing only negative numbers. Return only the corrected Python function with no Markdown fences.",
+      "expected": {
+        "mode": "code_tests",
+        "language": "python",
+        "tests": [
+          {
+            "expression": "largest([3, 1, 8, 2])",
+            "expected": 8
+          },
+          {
+            "expression": "largest([-8, -2, -14, -3])",
+            "expected": -2
+          },
+          {
+            "expression": "largest([7])",
+            "expected": 7
+          }
+        ]
+      },
+      "request": {
+        "prompt": "The following Python function is intended to return the largest number in a non-empty list, but it is incorrect:\n\ndef largest(numbers):\n    result = 0\n    for number in numbers:\n        if number > result:\n            result = number\n    return result\n\nFix the function so that it works for any non-empty list of integers, including lists containing only negative numbers. Return only the corrected Python function with no Markdown fences.",
+        "quality": "default",
+        "temperature": 0.0,
+        "max_output_tokens": 4096,
+        "reasoning": "low"
+      },
+      "response": {
+        "text": "def largest(numbers):\n    result = numbers[0]\n    for number in numbers[1:]:\n        if number > result:\n            result = number\n    return result",
+        "model": "openai/gpt-oss-20b",
+        "profile": "default",
+        "quality": "default",
+        "reasoning": "low",
+        "input_tokens": 153,
+        "output_tokens": 103,
+        "reasoning_output_tokens": 59,
+        "tokens_per_second": 49.73877390996502,
+        "time_to_first_token_seconds": 0.37648899999999996,
+        "model_load_time_seconds": null,
+        "request_id": "37c2f4f0-a629-4276-9b3c-91cc800629fa"
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": true,
+        "instruction_following": true,
+        "tests": [
+          {
+            "expression": "largest([3, 1, 8, 2])",
+            "passed": true,
+            "actual": "8",
+            "expected": "8"
+          },
+          {
+            "expression": "largest([-8, -2, -14, -3])",
+            "passed": true,
+            "actual": "-2",
+            "expected": "-2"
+          },
+          {
+            "expression": "largest([7])",
+            "passed": true,
+            "actual": "7",
+            "expected": "7"
+          }
+        ],
+        "reason": null
+      },
+      "error": null,
+      "wall_time_seconds": 2.467
+    },
+    {
+      "id": "coding_004",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "coding",
+      "difficulty": "hard",
+      "quality": "default",
+      "reasoning": "low",
+      "prompt": "Write a Python function named flatten_dict(data, prefix='') that converts a nested dictionary into a flat dictionary using dots between nested keys. You only need to support nested dictionaries; lists should remain unchanged. Return only Python code with no Markdown fences.\n\nExample:\n{'user': {'name': 'Ali', 'settings': {'theme': 'dark'}}, 'active': True}\nbecomes\n{'user.name': 'Ali', 'user.settings.theme': 'dark', 'active': True}",
+      "expected": {
+        "mode": "code_tests",
+        "language": "python",
+        "tests": [
+          {
+            "expression": "flatten_dict({'a': {'b': 1}, 'c': 2})",
+            "expected": {
+              "a.b": 1,
+              "c": 2
+            }
+          },
+          {
+            "expression": "flatten_dict({'user': {'name': 'Ali', 'settings': {'theme': 'dark'}}, 'active': True})",
+            "expected": {
+              "user.name": "Ali",
+              "user.settings.theme": "dark",
+              "active": true
+            }
+          },
+          {
+            "expression": "flatten_dict({'items': [1, 2, 3]})",
+            "expected": {
+              "items": [
+                1,
+                2,
+                3
+              ]
+            }
+          }
+        ]
+      },
+      "request": {
+        "prompt": "Write a Python function named flatten_dict(data, prefix='') that converts a nested dictionary into a flat dictionary using dots between nested keys. You only need to support nested dictionaries; lists should remain unchanged. Return only Python code with no Markdown fences.\n\nExample:\n{'user': {'name': 'Ali', 'settings': {'theme': 'dark'}}, 'active': True}\nbecomes\n{'user.name': 'Ali', 'user.settings.theme': 'dark', 'active': True}",
+        "quality": "default",
+        "temperature": 0.0,
+        "max_output_tokens": 4096,
+        "reasoning": "low"
+      },
+      "response": {},
+      "grade": {
+        "version": 2,
+        "status": "error",
+        "passed": null,
+        "semantic_correct": null,
+        "format_correct": null,
+        "instruction_following": null,
+        "reason": "Server error '502 Bad Gateway' for url 'http://127.0.0.1:4812/v1/generate'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+      },
+      "error": "Server error '502 Bad Gateway' for url 'http://127.0.0.1:4812/v1/generate'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502",
+      "wall_time_seconds": 3.751
+    },
+    {
+      "id": "summary_001",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "summarization",
+      "difficulty": "easy",
+      "quality": "default",
+      "reasoning": "low",
+      "prompt": "Summarize the following in no more than 50 words:\n\nThe development team deployed version 2.4 on Tuesday morning. Shortly after deployment, users began experiencing slower page loads. Engineers discovered that a new database query was performing a full table scan. The deployment was rolled back at 10:35 AM, restoring normal performance. The query will be redesigned before version 2.4 is deployed again.",
+      "expected": {
+        "mode": "summary_rubric",
+        "max_words": 50,
+        "must_include_concepts": [
+          "version 2.4",
+          "slow performance after deployment",
+          "database query or full table scan",
+          "rollback",
+          "query will be redesigned"
+        ]
+      },
+      "request": {
+        "prompt": "Summarize the following in no more than 50 words:\n\nThe development team deployed version 2.4 on Tuesday morning. Shortly after deployment, users began experiencing slower page loads. Engineers discovered that a new database query was performing a full table scan. The deployment was rolled back at 10:35 AM, restoring normal performance. The query will be redesigned before version 2.4 is deployed again.",
+        "quality": "default",
+        "temperature": 0.0,
+        "max_output_tokens": 4096,
+        "reasoning": "low"
+      },
+      "response": {
+        "text": "Version 2.4 launched Tuesday morning, but users saw slower page loads due to a new query that performed a full table scan. Engineers rolled back the release at 10:35 AM, restoring performance. The problematic query will be redesigned before redeploying version 2.4.",
+        "model": "openai/gpt-oss-20b",
+        "profile": "default",
+        "quality": "default",
+        "reasoning": "low",
+        "input_tokens": 149,
+        "output_tokens": 74,
+        "reasoning_output_tokens": 5,
+        "tokens_per_second": 49.25659650413114,
+        "time_to_first_token_seconds": 0.373092,
+        "model_load_time_seconds": null,
+        "request_id": "c1ca1096-351c-44fa-ac74-cd4cf704af3d"
+      },
+      "grade": {
+        "version": 2,
+        "status": "manual",
+        "passed": null,
+        "semantic_correct": null,
+        "format_correct": true,
+        "instruction_following": true,
+        "mechanical_checks": {
+          "nonempty": true,
+          "word_limit": true
+        },
+        "counts": {
+          "words": 45
+        },
+        "rubric": {
+          "mode": "summary_rubric",
+          "max_words": 50,
+          "must_include_concepts": [
+            "version 2.4",
+            "slow performance after deployment",
+            "database query or full table scan",
+            "rollback",
+            "query will be redesigned"
+          ]
+        },
+        "reason": "Manual semantic review: accuracy, coverage, unsupported claims. Sentence counting is heuristic."
+      },
+      "error": null,
+      "wall_time_seconds": 1.897
+    },
+    {
+      "id": "summary_002",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "summarization",
+      "difficulty": "medium",
+      "quality": "default",
+      "reasoning": "low",
+      "prompt": "Summarize the following in exactly two sentences. Do not add information that is not present in the text.\n\nStudents may submit Lab 3 until 11:59 PM on October 2 without penalty. The original deadline was September 30. The extension applies to all sections and does not require students to contact their instructor. Lab 4 has not been extended and remains due October 7.",
+      "expected": {
+        "mode": "summary_rubric",
+        "sentence_count": 2,
+        "must_include_concepts": [
+          "Lab 3 extended to October 2 at 11:59 PM",
+          "extension applies to all sections",
+          "Lab 4 remains due October 7"
+        ],
+        "must_not_claim": [
+          "Lab 4 was extended"
+        ]
+      },
+      "request": {
+        "prompt": "Summarize the following in exactly two sentences. Do not add information that is not present in the text.\n\nStudents may submit Lab 3 until 11:59 PM on October 2 without penalty. The original deadline was September 30. The extension applies to all sections and does not require students to contact their instructor. Lab 4 has not been extended and remains due October 7.",
+        "quality": "default",
+        "temperature": 0.0,
+        "max_output_tokens": 4096,
+        "reasoning": "low"
+      },
+      "response": {
+        "text": "Students may submit Lab 3 until 11:59 PM on October 2 without penalty; the original deadline was September 30 and the extension applies to all sections without requiring students to contact their instructor. Lab 4 has not been extended and remains due October 7.",
+        "model": "openai/gpt-oss-20b",
+        "profile": "default",
+        "quality": "default",
+        "reasoning": "low",
+        "input_tokens": 146,
+        "output_tokens": 74,
+        "reasoning_output_tokens": 8,
+        "tokens_per_second": 48.81872070876758,
+        "time_to_first_token_seconds": 0.364465,
+        "model_load_time_seconds": null,
+        "request_id": "609ec637-6ed0-4fe2-bc4b-4d60a4516095"
+      },
+      "grade": {
+        "version": 2,
+        "status": "manual",
+        "passed": null,
+        "semantic_correct": null,
+        "format_correct": true,
+        "instruction_following": true,
+        "mechanical_checks": {
+          "nonempty": true,
+          "sentence_count": true
+        },
+        "counts": {
+          "sentences": 2
+        },
+        "rubric": {
+          "mode": "summary_rubric",
+          "sentence_count": 2,
+          "must_include_concepts": [
+            "Lab 3 extended to October 2 at 11:59 PM",
+            "extension applies to all sections",
+            "Lab 4 remains due October 7"
+          ],
+          "must_not_claim": [
+            "Lab 4 was extended"
+          ]
+        },
+        "reason": "Manual semantic review: accuracy, coverage, unsupported claims. Sentence counting is heuristic."
+      },
+      "error": null,
+      "wall_time_seconds": 1.898
+    },
+    {
+      "id": "summary_003",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "summarization",
+      "difficulty": "medium",
+      "quality": "default",
+      "reasoning": "low",
+      "prompt": "Write a concise technical summary in no more than 70 words.\n\nThe application currently sends every AI request directly to a specific model endpoint. This makes model replacement difficult because each application contains provider-specific code. The proposed architecture introduces a local gateway between applications and model providers. Applications send provider-independent requests to the gateway, while the gateway handles routing, authentication, model selection, and future fallback behavior. This allows model providers to change without requiring modifications to every application.",
+      "expected": {
+        "mode": "summary_rubric",
+        "max_words": 70,
+        "must_include_concepts": [
+          "gateway abstraction",
+          "applications become provider-independent",
+          "gateway handles routing or model selection",
+          "providers can change without modifying every application"
+        ]
+      },
+      "request": {
+        "prompt": "Write a concise technical summary in no more than 70 words.\n\nThe application currently sends every AI request directly to a specific model endpoint. This makes model replacement difficult because each application contains provider-specific code. The proposed architecture introduces a local gateway between applications and model providers. Applications send provider-independent requests to the gateway, while the gateway handles routing, authentication, model selection, and future fallback behavior. This allows model providers to change without requiring modifications to every application.",
+        "quality": "default",
+        "temperature": 0.0,
+        "max_output_tokens": 4096,
+        "reasoning": "low"
+      },
+      "response": {
+        "text": "The current system routes each AI request directly to a specific model endpoint, embedding provider‑specific logic in every application and hindering model swaps. The new design introduces a local gateway that receives provider‑agnostic requests from applications. The gateway manages routing, authentication, model selection, and fallback handling, enabling providers to change or upgrade models without modifying individual applications.",
+        "model": "openai/gpt-oss-20b",
+        "profile": "default",
+        "quality": "default",
+        "reasoning": "low",
+        "input_tokens": 158,
+        "output_tokens": 93,
+        "reasoning_output_tokens": 12,
+        "tokens_per_second": 49.267256659915624,
+        "time_to_first_token_seconds": 0.363017,
+        "model_load_time_seconds": null,
+        "request_id": "0edd465a-d555-470c-9d41-11bdebc658eb"
+      },
+      "grade": {
+        "version": 2,
+        "status": "manual",
+        "passed": null,
+        "semantic_correct": null,
+        "format_correct": true,
+        "instruction_following": true,
+        "mechanical_checks": {
+          "nonempty": true,
+          "word_limit": true
+        },
+        "counts": {
+          "words": 59
+        },
+        "rubric": {
+          "mode": "summary_rubric",
+          "max_words": 70,
+          "must_include_concepts": [
+            "gateway abstraction",
+            "applications become provider-independent",
+            "gateway handles routing or model selection",
+            "providers can change without modifying every application"
+          ]
+        },
+        "reason": "Manual semantic review: accuracy, coverage, unsupported claims. Sentence counting is heuristic."
+      },
+      "error": null,
+      "wall_time_seconds": 2.268
+    },
+    {
+      "id": "summary_004",
+      "suite": "core",
+      "source_file": "cases_core.json",
+      "category": "summarization",
+      "difficulty": "hard",
+      "quality": "default",
+      "reasoning": "low",
+      "prompt": "Summarize the incident below for a technical project lead. Use no more than four bullet points.\n\nAt 08:12, monitoring detected elevated latency on the recommendation service. CPU usage remained normal, but database connection counts were close to their maximum. At 08:19, engineers discovered that a recently deployed worker was failing to release connections after completed jobs. The worker deployment was disabled at 08:26. Connection counts began falling immediately and latency returned to normal by 08:31. No data loss occurred. A code fix and regression test are required before the worker is re-enabled.",
+      "expected": {
+        "mode": "summary_rubric",
+        "max_bullets": 4,
+        "must_include_concepts": [
+          "latency detected at 08:12",
+          "connection leak in newly deployed worker",
+          "worker disabled at 08:26",
+          "service recovered by 08:31",
+          "no data loss",
+          "fix and regression test required"
+        ]
+      },
+      "request": {
+        "prompt": "Summarize the incident below for a technical project lead. Use no more than four bullet points.\n\nAt 08:12, monitoring detected elevated latency on the recommendation service. CPU usage remained normal, but database connection counts were close to their maximum. At 08:19, engineers discovered that a recently deployed worker was failing to release connections after completed jobs. The worker deployment was disabled at 08:26. Connection counts began falling immediately and latency returned to normal by 08:31. No data loss occurred. A code fix and regression test are required before the worker is re-enabled.",
+        "quality": "default",
+        "temperature": 0.0,
+        "max_output_tokens": 4096,
+        "reasoning": "low"
+      },
+      "response": {
+        "text": "- **Incident trigger (08:12):** Latency spiked in the recommendation service; CPU was fine but DB connection pool hit near‑max capacity.  \n- **Root cause (08:19):** A newly deployed worker failed to close database connections after job completion, exhausting the pool.  \n- **Remediation (08:26–08:31):** Disabled the faulty worker; connection counts dropped and latency normalized within 5 minutes—no data loss observed.  \n- **Next steps:** Implement a code fix that guarantees connection release and add regression tests before re‑enabling the worker.",
+        "model": "openai/gpt-oss-20b",
+        "profile": "default",
+        "quality": "default",
+        "reasoning": "low",
+        "input_tokens": 186,
+        "output_tokens": 141,
+        "reasoning_output_tokens": 8,
+        "tokens_per_second": 48.597105695233665,
+        "time_to_first_token_seconds": 0.38038,
+        "model_load_time_seconds": null,
+        "request_id": "a395feed-22f4-4df8-842c-12cc32335630"
+      },
+      "grade": {
+        "version": 2,
+        "status": "manual",
+        "passed": null,
+        "semantic_correct": null,
+        "format_correct": true,
+        "instruction_following": true,
+        "mechanical_checks": {
+          "nonempty": true,
+          "bullet_limit": true,
+          "bullet_format": true
+        },
+        "counts": {
+          "bullets": 4
+        },
+        "rubric": {
+          "mode": "summary_rubric",
+          "max_bullets": 4,
+          "must_include_concepts": [
+            "latency detected at 08:12",
+            "connection leak in newly deployed worker",
+            "worker disabled at 08:26",
+            "service recovered by 08:31",
+            "no data loss",
+            "fix and regression test required"
+          ]
+        },
+        "reason": "Manual semantic review: accuracy, coverage, unsupported claims. Sentence counting is heuristic."
+      },
+      "error": null,
+      "wall_time_seconds": 3.305
+    },
+    {
+      "id": "long_001",
+      "suite": "long_context",
+      "source_file": "cases_long_context.json",
+      "category": "long_context_retrieval",
+      "difficulty": "medium",
+      "quality": "default",
+      "reasoning": "low",
+      "prompt": "Read the project log and answer the question at the end. Return JSON only with first_failure_time, root_cause, recovery_time.\n\nPROJECT LOG\n\n08:00 - API server started normally.\n08:04 - Health check returned 200.\n08:07 - Model registry loaded 4 entries.\n08:11 - First inference request completed in 1.8 seconds.\n08:14 - Cache cleanup completed.\n08:18 - Health check returned 200.\n08:23 - User authentication succeeded.\n08:27 - Inference request completed normally.\n08:32 - Memory usage reached 61 percent.\n08:36 - Health check returned 200.\n08:41 - Background metrics export completed.\n08:45 - New model configuration deployed.\n08:48 - First request after deployment returned HTTP 502.\n08:49 - Second request returned HTTP 502.\n08:50 - Gateway logged MODEL_LOAD_FAILED.\n08:52 - Engineers began investigation.\n08:55 - Configuration comparison showed that the newly deployed model identifier did not exist on the inference server.\n08:59 - Previous configuration restored.\n09:01 - Model loaded successfully.\n09:02 - First successful inference request completed.\n09:06 - Health check returned 200.\n09:12 - Memory usage returned to normal.\n09:20 - Incident closed.\n\nQuestion: When did the first failure occur, what caused the incident, and when was normal inference first restored?",
+      "expected": {
+        "mode": "semantic_json",
+        "value": {
+          "first_failure_time": "08:48",
+          "root_cause": "invalid model identifier",
+          "recovery_time": "09:02"
+        },
+        "normalize": {
+          "first_failure_time": "time",
+          "root_cause": "text",
+          "recovery_time": "time"
+        },
+        "review_paths": [
+          "root_cause"
+        ]
+      },
+      "request": {
+        "prompt": "Read the project log and answer the question at the end. Return JSON only with first_failure_time, root_cause, recovery_time.\n\nPROJECT LOG\n\n08:00 - API server started normally.\n08:04 - Health check returned 200.\n08:07 - Model registry loaded 4 entries.\n08:11 - First inference request completed in 1.8 seconds.\n08:14 - Cache cleanup completed.\n08:18 - Health check returned 200.\n08:23 - User authentication succeeded.\n08:27 - Inference request completed normally.\n08:32 - Memory usage reached 61 percent.\n08:36 - Health check returned 200.\n08:41 - Background metrics export completed.\n08:45 - New model configuration deployed.\n08:48 - First request after deployment returned HTTP 502.\n08:49 - Second request returned HTTP 502.\n08:50 - Gateway logged MODEL_LOAD_FAILED.\n08:52 - Engineers began investigation.\n08:55 - Configuration comparison showed that the newly deployed model identifier did not exist on the inference server.\n08:59 - Previous configuration restored.\n09:01 - Model loaded successfully.\n09:02 - First successful inference request completed.\n09:06 - Health check returned 200.\n09:12 - Memory usage returned to normal.\n09:20 - Incident closed.\n\nQuestion: When did the first failure occur, what caused the incident, and when was normal inference first restored?",
+        "quality": "default",
+        "temperature": 0.0,
+        "max_output_tokens": 4096,
+        "reasoning": "low"
+      },
+      "response": {
+        "text": "{\"first_failure_time\":\"08:48\",\"root_cause\":\"The newly deployed model identifier did not exist on the inference server, causing a MODEL_LOAD_FAILED error and resulting in HTTP 502 responses.\",\"recovery_time\":\"09:02\"}",
+        "model": "openai/gpt-oss-20b",
+        "profile": "default",
+        "quality": "default",
+        "reasoning": "low",
+        "input_tokens": 355,
+        "output_tokens": 147,
+        "reasoning_output_tokens": 89,
+        "tokens_per_second": 46.417403092543594,
+        "time_to_first_token_seconds": 0.41295,
+        "model_load_time_seconds": null,
+        "request_id": "0c9c7ddf-76e1-404c-846a-3acaf879e71b"
+      },
+      "grade": {
+        "version": 2,
+        "status": "manual",
+        "passed": null,
+        "semantic_correct": null,
+        "format_correct": true,
+        "instruction_following": true,
+        "schema_correct": true,
+        "differences": [
+          {
+            "path": "root_cause",
+            "actual": "The newly deployed model identifier did not exist on the inference server, causing a MODEL_LOAD_FAILED error and resulting in HTTP 502 responses.",
+            "expected": "invalid model identifier",
+            "reason": "Value differs"
+          }
+        ],
+        "actual": {
+          "first_failure_time": "08:48",
+          "root_cause": "The newly deployed model identifier did not exist on the inference server, causing a MODEL_LOAD_FAILED error and resulting in HTTP 502 responses.",
+          "recovery_time": "09:02"
+        },
+        "expected": {
+          "first_failure_time": "08:48",
+          "root_cause": "invalid model identifier",
+          "recovery_time": "09:02"
+        }
+      },
+      "error": null,
+      "wall_time_seconds": 3.594
+    },
+    {
+      "id": "long_002",
+      "suite": "long_context",
+      "source_file": "cases_long_context.json",
+      "category": "long_context_retrieval",
+      "difficulty": "hard",
+      "quality": "default",
+      "reasoning": "low",
+      "prompt": "Read all announcements carefully. Return JSON only containing the current deadlines for Lab 2, Lab 3, Project Milestone 1, and Problem Set 4. Later announcements override earlier announcements. All dates mentioned are in 2026.\n\nANNOUNCEMENT 1\nLab 2 is due September 16 at 11:59 PM. Lab 3 is due September 23 at 11:59 PM.\n\nANNOUNCEMENT 2\nProblem Set 4 is due September 20 at 6:00 PM. Project Milestone 1 is due September 25 at 5:00 PM.\n\nANNOUNCEMENT 3\nDue to the campus closure, Lab 2 has been extended from September 16 to September 18 at 11:59 PM. No other deadlines are affected.\n\nANNOUNCEMENT 4\nThe tutorial scheduled for September 19 will take place online. This does not affect assessment deadlines.\n\nANNOUNCEMENT 5\nProject Milestone 1 is now due September 27 at 5:00 PM instead of September 25.\n\nANNOUNCEMENT 6\nProblem Set 4 submissions will be accepted until September 21 at 6:00 PM without penalty. This replaces the previously announced September 20 deadline.\n\nANNOUNCEMENT 7\nLab 3 remains due September 23 at 11:59 PM. Students should ignore a calendar entry incorrectly showing September 24.\n\nReturn dates in YYYY-MM-DD format and times in 24-hour HH:MM format.",
+      "expected": {
+        "mode": "semantic_json",
+        "value": {
+          "Lab 2": {
+            "date": "2026-09-18",
+            "time": "23:59"
+          },
+          "Lab 3": {
+            "date": "2026-09-23",
+            "time": "23:59"
+          },
+          "Project Milestone 1": {
+            "date": "2026-09-27",
+            "time": "17:00"
+          },
+          "Problem Set 4": {
+            "date": "2026-09-21",
+            "time": "18:00"
+          }
+        },
+        "normalize": {
+          "Lab 2.date": "date",
+          "Lab 2.time": "time",
+          "Lab 3.date": "date",
+          "Lab 3.time": "time",
+          "Project Milestone 1.date": "date",
+          "Project Milestone 1.time": "time",
+          "Problem Set 4.date": "date",
+          "Problem Set 4.time": "time"
+        },
+        "require_canonical": true
+      },
+      "request": {
+        "prompt": "Read all announcements carefully. Return JSON only containing the current deadlines for Lab 2, Lab 3, Project Milestone 1, and Problem Set 4. Later announcements override earlier announcements. All dates mentioned are in 2026.\n\nANNOUNCEMENT 1\nLab 2 is due September 16 at 11:59 PM. Lab 3 is due September 23 at 11:59 PM.\n\nANNOUNCEMENT 2\nProblem Set 4 is due September 20 at 6:00 PM. Project Milestone 1 is due September 25 at 5:00 PM.\n\nANNOUNCEMENT 3\nDue to the campus closure, Lab 2 has been extended from September 16 to September 18 at 11:59 PM. No other deadlines are affected.\n\nANNOUNCEMENT 4\nThe tutorial scheduled for September 19 will take place online. This does not affect assessment deadlines.\n\nANNOUNCEMENT 5\nProject Milestone 1 is now due September 27 at 5:00 PM instead of September 25.\n\nANNOUNCEMENT 6\nProblem Set 4 submissions will be accepted until September 21 at 6:00 PM without penalty. This replaces the previously announced September 20 deadline.\n\nANNOUNCEMENT 7\nLab 3 remains due September 23 at 11:59 PM. Students should ignore a calendar entry incorrectly showing September 24.\n\nReturn dates in YYYY-MM-DD format and times in 24-hour HH:MM format.",
+        "quality": "default",
+        "temperature": 0.0,
+        "max_output_tokens": 4096,
+        "reasoning": "low"
+      },
+      "response": {
+        "text": "```json\n{\n  \"Lab 2\": {\n    \"date\": \"2026-09-18\",\n    \"time\": \"23:59\"\n  },\n  \"Lab 3\": {\n    \"date\": \"2026-09-23\",\n    \"time\": \"23:59\"\n  },\n  \"Project Milestone 1\": {\n    \"date\": \"2026-09-27\",\n    \"time\": \"17:00\"\n  },\n  \"Problem Set 4\": {\n    \"date\": \"2026-09-21\",\n    \"time\": \"18:00\"\n  }\n}\n```",
+        "model": "openai/gpt-oss-20b",
+        "profile": "default",
+        "quality": "default",
+        "reasoning": "low",
+        "input_tokens": 378,
+        "output_tokens": 205,
+        "reasoning_output_tokens": 65,
+        "tokens_per_second": 46.491636291371286,
+        "time_to_first_token_seconds": 0.413011,
+        "model_load_time_seconds": null,
+        "request_id": "2324f6bb-fe82-447a-985b-be4ee5cee816"
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass_with_format_issue",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": false,
+        "instruction_following": false,
+        "schema_correct": true,
+        "differences": [],
+        "actual": {
+          "Lab 2": {
+            "date": "2026-09-18",
+            "time": "23:59"
+          },
+          "Lab 3": {
+            "date": "2026-09-23",
+            "time": "23:59"
+          },
+          "Project Milestone 1": {
+            "date": "2026-09-27",
+            "time": "17:00"
+          },
+          "Problem Set 4": {
+            "date": "2026-09-21",
+            "time": "18:00"
+          }
+        },
+        "expected": {
+          "Lab 2": {
+            "date": "2026-09-18",
+            "time": "23:59"
+          },
+          "Lab 3": {
+            "date": "2026-09-23",
+            "time": "23:59"
+          },
+          "Project Milestone 1": {
+            "date": "2026-09-27",
+            "time": "17:00"
+          },
+          "Problem Set 4": {
+            "date": "2026-09-21",
+            "time": "18:00"
+          }
+        }
+      },
+      "error": null,
+      "wall_time_seconds": 4.842
+    },
+    {
+      "id": "long_003",
+      "suite": "long_context",
+      "source_file": "cases_long_context.json",
+      "category": "long_context_reasoning",
+      "difficulty": "hard",
+      "quality": "default",
+      "reasoning": "low",
+      "prompt": "Read the policy and scenario, then return only PASS or FAIL.\n\nPOLICY\n1. Requests classified as low risk may run on the fast model.\n2. Requests involving ordinary summarization may run on the balanced model.\n3. Requests involving difficult multi-step reasoning must use the deep model.\n4. Any request containing private user documents must remain local unless cloud_fallback is explicitly enabled for that request.\n5. Automatic paid fallback is prohibited when cloud_fallback is false.\n6. If the requested local model fails to load and cloud_fallback is false, the gateway must return an error instead of calling a paid provider.\n7. Requests may be retried locally up to two times after the original attempt.\n8. Authentication failure must terminate processing immediately.\n9. Logging may record token counts, timing, selected model, and status code.\n10. Full prompt content must not be logged unless debug_prompt_logging is explicitly enabled.\n\nSCENARIO\nA request contains text from a private document. It is classified as deep. cloud_fallback is false and debug_prompt_logging is false. The deep local model fails to load. The gateway retries the deep model twice. Both retries fail. The gateway then sends the request to a paid cloud model and logs the complete prompt because troubleshooting information may be useful.\n\nQuestion: Does the gateway behavior comply with the policy?",
+      "expected": {
+        "mode": "label",
+        "value": "FAIL",
+        "labels": [
+          "PASS",
+          "FAIL"
+        ]
+      },
+      "request": {
+        "prompt": "Read the policy and scenario, then return only PASS or FAIL.\n\nPOLICY\n1. Requests classified as low risk may run on the fast model.\n2. Requests involving ordinary summarization may run on the balanced model.\n3. Requests involving difficult multi-step reasoning must use the deep model.\n4. Any request containing private user documents must remain local unless cloud_fallback is explicitly enabled for that request.\n5. Automatic paid fallback is prohibited when cloud_fallback is false.\n6. If the requested local model fails to load and cloud_fallback is false, the gateway must return an error instead of calling a paid provider.\n7. Requests may be retried locally up to two times after the original attempt.\n8. Authentication failure must terminate processing immediately.\n9. Logging may record token counts, timing, selected model, and status code.\n10. Full prompt content must not be logged unless debug_prompt_logging is explicitly enabled.\n\nSCENARIO\nA request contains text from a private document. It is classified as deep. cloud_fallback is false and debug_prompt_logging is false. The deep local model fails to load. The gateway retries the deep model twice. Both retries fail. The gateway then sends the request to a paid cloud model and logs the complete prompt because troubleshooting information may be useful.\n\nQuestion: Does the gateway behavior comply with the policy?",
+        "quality": "default",
+        "temperature": 0.0,
+        "max_output_tokens": 4096,
+        "reasoning": "low"
+      },
+      "response": {
+        "text": "FAIL",
+        "model": "openai/gpt-oss-20b",
+        "profile": "default",
+        "quality": "default",
+        "reasoning": "low",
+        "input_tokens": 336,
+        "output_tokens": 126,
+        "reasoning_output_tokens": 115,
+        "tokens_per_second": 46.28107496497448,
+        "time_to_first_token_seconds": 0.413375,
+        "model_load_time_seconds": null,
+        "request_id": "f68f349a-0b4f-4492-a512-f6a4560293b5"
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": true,
+        "instruction_following": true,
+        "actual": "FAIL",
+        "reason": "Unambiguous label"
+      },
+      "error": null,
+      "wall_time_seconds": 3.159
+    },
+    {
+      "id": "long_004",
+      "suite": "long_context",
+      "source_file": "cases_long_context.json",
+      "category": "long_context_analysis",
+      "difficulty": "hard",
+      "quality": "default",
+      "reasoning": "low",
+      "prompt": "Analyze the listening history. Return JSON only with total_listening_ms, unique_tracks, most_played_track_by_count, most_listened_track_by_ms, completed_listens. A completed listen is one where ms_played is at least 80 percent of duration_ms. If multiple tracks tie for most_played_track_by_count, choose the alphabetically earliest track.\n\nHISTORY\n1. track=Paris, ms_played=185000, duration_ms=190000\n2. track=Bad Time, ms_played=90000, duration_ms=210000\n3. track=Almost Love, ms_played=175000, duration_ms=200000\n4. track=Paris, ms_played=190000, duration_ms=190000\n5. track=Sue Me, ms_played=45000, duration_ms=180000\n6. track=Almost Love, ms_played=200000, duration_ms=200000\n7. track=Paris, ms_played=60000, duration_ms=190000\n8. track=Bad Time, ms_played=205000, duration_ms=210000\n9. track=Almost Love, ms_played=150000, duration_ms=200000\n10. track=Paris, ms_played=188000, duration_ms=190000\n11. track=Sue Me, ms_played=180000, duration_ms=180000\n12. track=Almost Love, ms_played=199000, duration_ms=200000",
+      "expected": {
+        "mode": "semantic_json",
+        "value": {
+          "total_listening_ms": 1867000,
+          "unique_tracks": 4,
+          "most_played_track_by_count": "Almost Love",
+          "most_listened_track_by_ms": "Almost Love",
+          "completed_listens": 8
+        },
+        "normalize": {
+          "total_listening_ms": "number",
+          "unique_tracks": "number",
+          "most_played_track_by_count": "text",
+          "most_listened_track_by_ms": "text",
+          "completed_listens": "number"
+        }
+      },
+      "request": {
+        "prompt": "Analyze the listening history. Return JSON only with total_listening_ms, unique_tracks, most_played_track_by_count, most_listened_track_by_ms, completed_listens. A completed listen is one where ms_played is at least 80 percent of duration_ms. If multiple tracks tie for most_played_track_by_count, choose the alphabetically earliest track.\n\nHISTORY\n1. track=Paris, ms_played=185000, duration_ms=190000\n2. track=Bad Time, ms_played=90000, duration_ms=210000\n3. track=Almost Love, ms_played=175000, duration_ms=200000\n4. track=Paris, ms_played=190000, duration_ms=190000\n5. track=Sue Me, ms_played=45000, duration_ms=180000\n6. track=Almost Love, ms_played=200000, duration_ms=200000\n7. track=Paris, ms_played=60000, duration_ms=190000\n8. track=Bad Time, ms_played=205000, duration_ms=210000\n9. track=Almost Love, ms_played=150000, duration_ms=200000\n10. track=Paris, ms_played=188000, duration_ms=190000\n11. track=Sue Me, ms_played=180000, duration_ms=180000\n12. track=Almost Love, ms_played=199000, duration_ms=200000",
+        "quality": "default",
+        "temperature": 0.0,
+        "max_output_tokens": 4096,
+        "reasoning": "low"
+      },
+      "response": {
+        "text": "```json\n{\n  \"total_listening_ms\": 1867000,\n  \"unique_tracks\": 4,\n  \"most_played_track_by_count\": \"Almost Love\",\n  \"most_listened_track_by_ms\": \"Almost Love\",\n  \"completed_listens\": 8\n}\n```",
+        "model": "openai/gpt-oss-20b",
+        "profile": "default",
+        "quality": "default",
+        "reasoning": "low",
+        "input_tokens": 378,
+        "output_tokens": 615,
+        "reasoning_output_tokens": 543,
+        "tokens_per_second": 45.79232316313679,
+        "time_to_first_token_seconds": 0.439837,
+        "model_load_time_seconds": null,
+        "request_id": "bb258939-1243-41e1-a24b-80aaaa0d89e2"
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass_with_format_issue",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": false,
+        "instruction_following": false,
+        "schema_correct": true,
+        "differences": [],
+        "actual": {
+          "total_listening_ms": 1867000,
+          "unique_tracks": 4,
+          "most_played_track_by_count": "Almost Love",
+          "most_listened_track_by_ms": "Almost Love",
+          "completed_listens": 8
+        },
+        "expected": {
+          "total_listening_ms": 1867000,
+          "unique_tracks": 4,
+          "most_played_track_by_count": "Almost Love",
+          "most_listened_track_by_ms": "Almost Love",
+          "completed_listens": 8
+        }
+      },
+      "error": null,
+      "wall_time_seconds": 13.891
+    },
+    {
+      "id": "project_001",
+      "suite": "project",
+      "source_file": "cases_project.json",
+      "category": "itqaan_metadata",
+      "difficulty": "easy",
+      "quality": "default",
+      "reasoning": "low",
+      "prompt": "Normalize the following Quran software metadata. Return JSON only with keys surah_number, ayah_number, reciter_id, timestamp_seconds.\n\nInput:\nsurah = '002'\nayah = '255'\nreciter = 'abdul_baset_01'\ntimestamp = '83.4s'",
+      "expected": {
+        "mode": "semantic_json",
+        "value": {
+          "surah_number": 2,
+          "ayah_number": 255,
+          "reciter_id": "abdul_baset_01",
+          "timestamp_seconds": 83.4
+        },
+        "normalize": {
+          "surah_number": "number",
+          "ayah_number": "number",
+          "timestamp_seconds": "number"
+        }
+      },
+      "request": {
+        "prompt": "Normalize the following Quran software metadata. Return JSON only with keys surah_number, ayah_number, reciter_id, timestamp_seconds.\n\nInput:\nsurah = '002'\nayah = '255'\nreciter = 'abdul_baset_01'\ntimestamp = '83.4s'",
+        "quality": "default",
+        "temperature": 0.0,
+        "max_output_tokens": 4096,
+        "reasoning": "low"
+      },
+      "response": {
+        "text": "{\"surah_number\":2,\"ayah_number\":255,\"reciter_id\":\"abdul_baset_01\",\"timestamp_seconds\":83.4}",
+        "model": "openai/gpt-oss-20b",
+        "profile": "default",
+        "quality": "default",
+        "reasoning": "low",
+        "input_tokens": 126,
+        "output_tokens": 97,
+        "reasoning_output_tokens": 57,
+        "tokens_per_second": 49.560537422077665,
+        "time_to_first_token_seconds": 0.37292899999999995,
+        "model_load_time_seconds": null,
+        "request_id": "d772eff5-3219-407d-b63d-6e5d8516c478"
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": true,
+        "instruction_following": true,
+        "schema_correct": true,
+        "differences": [],
+        "actual": {
+          "surah_number": 2,
+          "ayah_number": 255,
+          "reciter_id": "abdul_baset_01",
+          "timestamp_seconds": 83.4
+        },
+        "expected": {
+          "surah_number": 2,
+          "ayah_number": 255,
+          "reciter_id": "abdul_baset_01",
+          "timestamp_seconds": 83.4
+        }
+      },
+      "error": null,
+      "wall_time_seconds": 2.364
+    },
+    {
+      "id": "project_002",
+      "suite": "project",
+      "source_file": "cases_project.json",
+      "category": "itqaan_metadata",
+      "difficulty": "medium",
+      "quality": "default",
+      "reasoning": "low",
+      "prompt": "A Quran application stores playback positions as seconds. Convert the following entries into minutes and seconds. Return JSON only. Preserve the id field.\n\nEntries:\n[\n  {\"id\":\"a1\",\"seconds\":63},\n  {\"id\":\"a2\",\"seconds\":125},\n  {\"id\":\"a3\",\"seconds\":3599}\n]",
+      "expected": {
+        "mode": "semantic_json",
+        "value": [
+          {
+            "id": "a1",
+            "minutes": 1,
+            "seconds": 3
+          },
+          {
+            "id": "a2",
+            "minutes": 2,
+            "seconds": 5
+          },
+          {
+            "id": "a3",
+            "minutes": 59,
+            "seconds": 59
+          }
+        ],
+        "normalize": {
+          "*.minutes": "number",
+          "*.seconds": "number"
+        }
+      },
+      "request": {
+        "prompt": "A Quran application stores playback positions as seconds. Convert the following entries into minutes and seconds. Return JSON only. Preserve the id field.\n\nEntries:\n[\n  {\"id\":\"a1\",\"seconds\":63},\n  {\"id\":\"a2\",\"seconds\":125},\n  {\"id\":\"a3\",\"seconds\":3599}\n]",
+        "quality": "default",
+        "temperature": 0.0,
+        "max_output_tokens": 4096,
+        "reasoning": "low"
+      },
+      "response": {
+        "text": "[\n  {\"id\":\"a1\",\"minutes\":1,\"seconds\":3},\n  {\"id\":\"a2\",\"minutes\":2,\"seconds\":5},\n  {\"id\":\"a3\",\"minutes\":59,\"seconds\":59}\n]",
+        "model": "openai/gpt-oss-20b",
+        "profile": "default",
+        "quality": "default",
+        "reasoning": "low",
+        "input_tokens": 132,
+        "output_tokens": 151,
+        "reasoning_output_tokens": 94,
+        "tokens_per_second": 49.17857033961737,
+        "time_to_first_token_seconds": 0.383713,
+        "model_load_time_seconds": null,
+        "request_id": "4fcbfb66-b389-438a-b345-9f098378772d"
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": true,
+        "instruction_following": true,
+        "schema_correct": true,
+        "differences": [],
+        "actual": [
+          {
+            "id": "a1",
+            "minutes": 1,
+            "seconds": 3
+          },
+          {
+            "id": "a2",
+            "minutes": 2,
+            "seconds": 5
+          },
+          {
+            "id": "a3",
+            "minutes": 59,
+            "seconds": 59
+          }
+        ],
+        "expected": [
+          {
+            "id": "a1",
+            "minutes": 1,
+            "seconds": 3
+          },
+          {
+            "id": "a2",
+            "minutes": 2,
+            "seconds": 5
+          },
+          {
+            "id": "a3",
+            "minutes": 59,
+            "seconds": 59
+          }
+        ]
+      },
+      "error": null,
+      "wall_time_seconds": 3.469
+    },
+    {
+      "id": "project_003",
+      "suite": "project",
+      "source_file": "cases_project.json",
+      "category": "listening_data",
+      "difficulty": "medium",
+      "quality": "default",
+      "reasoning": "low",
+      "prompt": "For each listening event, calculate completion_percent as ms_played divided by track_duration_ms multiplied by 100. Round to one decimal place. Return JSON only with track and completion_percent.\n\nEvents:\n[\n  {\"track\":\"Song A\",\"ms_played\":180000,\"track_duration_ms\":200000},\n  {\"track\":\"Song B\",\"ms_played\":60000,\"track_duration_ms\":240000},\n  {\"track\":\"Song C\",\"ms_played\":205000,\"track_duration_ms\":205000}\n]",
+      "expected": {
+        "mode": "semantic_json",
+        "value": [
+          {
+            "track": "Song A",
+            "completion_percent": 90.0
+          },
+          {
+            "track": "Song B",
+            "completion_percent": 25.0
+          },
+          {
+            "track": "Song C",
+            "completion_percent": 100.0
+          }
+        ],
+        "normalize": {
+          "*.track": "text",
+          "*.completion_percent": "number"
+        }
+      },
+      "request": {
+        "prompt": "For each listening event, calculate completion_percent as ms_played divided by track_duration_ms multiplied by 100. Round to one decimal place. Return JSON only with track and completion_percent.\n\nEvents:\n[\n  {\"track\":\"Song A\",\"ms_played\":180000,\"track_duration_ms\":200000},\n  {\"track\":\"Song B\",\"ms_played\":60000,\"track_duration_ms\":240000},\n  {\"track\":\"Song C\",\"ms_played\":205000,\"track_duration_ms\":205000}\n]",
+        "quality": "default",
+        "temperature": 0.0,
+        "max_output_tokens": 4096,
+        "reasoning": "low"
+      },
+      "response": {
+        "text": "```json\n[\n  {\"track\":\"Song A\",\"completion_percent\":90.0},\n  {\"track\":\"Song B\",\"completion_percent\":25.0},\n  {\"track\":\"Song C\",\"completion_percent\":100.0}\n]\n```",
+        "model": "openai/gpt-oss-20b",
+        "profile": "default",
+        "quality": "default",
+        "reasoning": "low",
+        "input_tokens": 171,
+        "output_tokens": 62,
+        "reasoning_output_tokens": 3,
+        "tokens_per_second": 49.92993438715507,
+        "time_to_first_token_seconds": 0.370577,
+        "model_load_time_seconds": null,
+        "request_id": "ef545c62-b621-45ba-a8a4-b7ca147c5b56"
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass_with_format_issue",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": false,
+        "instruction_following": false,
+        "schema_correct": true,
+        "differences": [],
+        "actual": [
+          {
+            "track": "Song A",
+            "completion_percent": 90.0
+          },
+          {
+            "track": "Song B",
+            "completion_percent": 25.0
+          },
+          {
+            "track": "Song C",
+            "completion_percent": 100.0
+          }
+        ],
+        "expected": [
+          {
+            "track": "Song A",
+            "completion_percent": 90.0
+          },
+          {
+            "track": "Song B",
+            "completion_percent": 25.0
+          },
+          {
+            "track": "Song C",
+            "completion_percent": 100.0
+          }
+        ]
+      },
+      "error": null,
+      "wall_time_seconds": 1.63
+    },
+    {
+      "id": "project_004",
+      "suite": "project",
+      "source_file": "cases_project.json",
+      "category": "listening_data",
+      "difficulty": "hard",
+      "quality": "default",
+      "reasoning": "low",
+      "prompt": "Analyze the listening events below. A completed listen is any event with completion_percent greater than or equal to 80. Return JSON only with total_events, completed_events, completion_rate_percent, and most_played_track. completion_rate_percent must be rounded to one decimal place. If tracks are tied for most plays, choose the alphabetically earlier track.\n\nEvents:\n[\n  {\"track\":\"Paris\",\"completion_percent\":98},\n  {\"track\":\"Almost Love\",\"completion_percent\":91},\n  {\"track\":\"Paris\",\"completion_percent\":84},\n  {\"track\":\"Bad Time\",\"completion_percent\":42},\n  {\"track\":\"Almost Love\",\"completion_percent\":79},\n  {\"track\":\"Paris\",\"completion_percent\":100}\n]",
+      "expected": {
+        "mode": "semantic_json",
+        "value": {
+          "total_events": 6,
+          "completed_events": 4,
+          "completion_rate_percent": 66.7,
+          "most_played_track": "Paris"
+        },
+        "normalize": {
+          "total_events": "number",
+          "completed_events": "number",
+          "completion_rate_percent": "number",
+          "most_played_track": "text"
+        }
+      },
+      "request": {
+        "prompt": "Analyze the listening events below. A completed listen is any event with completion_percent greater than or equal to 80. Return JSON only with total_events, completed_events, completion_rate_percent, and most_played_track. completion_rate_percent must be rounded to one decimal place. If tracks are tied for most plays, choose the alphabetically earlier track.\n\nEvents:\n[\n  {\"track\":\"Paris\",\"completion_percent\":98},\n  {\"track\":\"Almost Love\",\"completion_percent\":91},\n  {\"track\":\"Paris\",\"completion_percent\":84},\n  {\"track\":\"Bad Time\",\"completion_percent\":42},\n  {\"track\":\"Almost Love\",\"completion_percent\":79},\n  {\"track\":\"Paris\",\"completion_percent\":100}\n]",
+        "quality": "default",
+        "temperature": 0.0,
+        "max_output_tokens": 4096,
+        "reasoning": "low"
+      },
+      "response": {
+        "text": "```json\n{\n  \"total_events\": 6,\n  \"completed_events\": 4,\n  \"completion_rate_percent\": 66.7,\n  \"most_played_track\": \"Paris\"\n}\n```",
+        "model": "openai/gpt-oss-20b",
+        "profile": "default",
+        "quality": "default",
+        "reasoning": "low",
+        "input_tokens": 209,
+        "output_tokens": 137,
+        "reasoning_output_tokens": 83,
+        "tokens_per_second": 48.29322509969355,
+        "time_to_first_token_seconds": 0.391052,
+        "model_load_time_seconds": null,
+        "request_id": "bbf2c5c4-bf9c-4f20-9fdc-8b4897fbe52d"
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass_with_format_issue",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": false,
+        "instruction_following": false,
+        "schema_correct": true,
+        "differences": [],
+        "actual": {
+          "total_events": 6,
+          "completed_events": 4,
+          "completion_rate_percent": 66.7,
+          "most_played_track": "Paris"
+        },
+        "expected": {
+          "total_events": 6,
+          "completed_events": 4,
+          "completion_rate_percent": 66.7,
+          "most_played_track": "Paris"
+        }
+      },
+      "error": null,
+      "wall_time_seconds": 3.248
+    },
+    {
+      "id": "project_005",
+      "suite": "project",
+      "source_file": "cases_project.json",
+      "category": "university_tooling",
+      "difficulty": "medium",
+      "quality": "default",
+      "reasoning": "low",
+      "prompt": "Parse the following university message into structured data. Return JSON only with course, event_type, date, start_time, end_time, location. Assume the date is in 2026.\n\nMessage:\nAPS110 students: Friday's chemistry lecture will take place on September 25 from 3:00 PM to 4:00 PM in MS2158.",
+      "expected": {
+        "mode": "semantic_json",
+        "value": {
+          "course": "APS110",
+          "event_type": "lecture",
+          "date": "2026-09-25",
+          "start_time": "15:00",
+          "end_time": "16:00",
+          "location": "MS2158"
+        },
+        "normalize": {
+          "course": "text",
+          "event_type": "text",
+          "date": "date",
+          "start_time": "time",
+          "end_time": "time",
+          "location": "text"
+        }
+      },
+      "request": {
+        "prompt": "Parse the following university message into structured data. Return JSON only with course, event_type, date, start_time, end_time, location. Assume the date is in 2026.\n\nMessage:\nAPS110 students: Friday's chemistry lecture will take place on September 25 from 3:00 PM to 4:00 PM in MS2158.",
+        "quality": "default",
+        "temperature": 0.0,
+        "max_output_tokens": 4096,
+        "reasoning": "low"
+      },
+      "response": {
+        "text": "{\"course\":\"APS110\",\"event_type\":\"lecture\",\"date\":\"2026-09-25\",\"start_time\":\"15:00\",\"end_time\":\"16:00\",\"location\":\"MS2158\"}",
+        "model": "openai/gpt-oss-20b",
+        "profile": "default",
+        "quality": "default",
+        "reasoning": "low",
+        "input_tokens": 138,
+        "output_tokens": 106,
+        "reasoning_output_tokens": 56,
+        "tokens_per_second": 49.8007259522966,
+        "time_to_first_token_seconds": 0.360106,
+        "model_load_time_seconds": null,
+        "request_id": "67c96bbb-59b3-4128-9962-b065170f1974"
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": true,
+        "instruction_following": true,
+        "schema_correct": true,
+        "differences": [],
+        "actual": {
+          "course": "APS110",
+          "event_type": "lecture",
+          "date": "2026-09-25",
+          "start_time": "15:00",
+          "end_time": "16:00",
+          "location": "MS2158"
+        },
+        "expected": {
+          "course": "APS110",
+          "event_type": "lecture",
+          "date": "2026-09-25",
+          "start_time": "15:00",
+          "end_time": "16:00",
+          "location": "MS2158"
+        }
+      },
+      "error": null,
+      "wall_time_seconds": 2.505
+    },
+    {
+      "id": "project_006",
+      "suite": "project",
+      "source_file": "cases_project.json",
+      "category": "university_tooling",
+      "difficulty": "hard",
+      "quality": "default",
+      "reasoning": "low",
+      "prompt": "Determine which tasks are overdue as of 2026-09-12T16:00:00-04:00. A task is overdue only if its due timestamp is earlier than the current timestamp and completed is false. Return only a JSON array of overdue task IDs in ascending order.\n\nTasks:\n[\n  {\"id\":1,\"due\":\"2026-09-12T14:00:00-04:00\",\"completed\":false},\n  {\"id\":2,\"due\":\"2026-09-12T18:00:00-04:00\",\"completed\":false},\n  {\"id\":3,\"due\":\"2026-09-11T23:59:00-04:00\",\"completed\":true},\n  {\"id\":4,\"due\":\"2026-09-10T09:00:00-04:00\",\"completed\":false},\n  {\"id\":5,\"due\":\"2026-09-13T10:00:00-04:00\",\"completed\":false}\n]",
+      "expected": {
+        "mode": "semantic_json",
+        "value": [
+          1,
+          4
+        ],
+        "normalize": {
+          "*": "number"
+        }
+      },
+      "request": {
+        "prompt": "Determine which tasks are overdue as of 2026-09-12T16:00:00-04:00. A task is overdue only if its due timestamp is earlier than the current timestamp and completed is false. Return only a JSON array of overdue task IDs in ascending order.\n\nTasks:\n[\n  {\"id\":1,\"due\":\"2026-09-12T14:00:00-04:00\",\"completed\":false},\n  {\"id\":2,\"due\":\"2026-09-12T18:00:00-04:00\",\"completed\":false},\n  {\"id\":3,\"due\":\"2026-09-11T23:59:00-04:00\",\"completed\":true},\n  {\"id\":4,\"due\":\"2026-09-10T09:00:00-04:00\",\"completed\":false},\n  {\"id\":5,\"due\":\"2026-09-13T10:00:00-04:00\",\"completed\":false}\n]",
+        "quality": "default",
+        "temperature": 0.0,
+        "max_output_tokens": 4096,
+        "reasoning": "low"
+      },
+      "response": {
+        "text": "```json\n[1, 4]\n```",
+        "model": "openai/gpt-oss-20b",
+        "profile": "default",
+        "quality": "default",
+        "reasoning": "low",
+        "input_tokens": 274,
+        "output_tokens": 107,
+        "reasoning_output_tokens": 86,
+        "tokens_per_second": 47.17594133805211,
+        "time_to_first_token_seconds": 0.397004,
+        "model_load_time_seconds": null,
+        "request_id": "f45511fd-9bf8-491a-a1dd-de728c47618b"
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass_with_format_issue",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": false,
+        "instruction_following": false,
+        "schema_correct": true,
+        "differences": [],
+        "actual": [
+          1,
+          4
+        ],
+        "expected": [
+          1,
+          4
+        ]
+      },
+      "error": null,
+      "wall_time_seconds": 2.68
+    },
+    {
+      "id": "project_007",
+      "suite": "project",
+      "source_file": "cases_project.json",
+      "category": "gateway_operations",
+      "difficulty": "medium",
+      "quality": "default",
+      "reasoning": "low",
+      "prompt": "Analyze these gateway requests and return JSON only with total_requests, successful_requests, failed_requests, average_latency_ms. Round average_latency_ms to one decimal place.\n\nRequests:\n[\n  {\"status\":200,\"latency_ms\":1200},\n  {\"status\":200,\"latency_ms\":900},\n  {\"status\":502,\"latency_ms\":3000},\n  {\"status\":200,\"latency_ms\":1100},\n  {\"status\":200,\"latency_ms\":800}\n]",
+      "expected": {
+        "mode": "semantic_json",
+        "value": {
+          "total_requests": 5,
+          "successful_requests": 4,
+          "failed_requests": 1,
+          "average_latency_ms": 1400.0
+        },
+        "normalize": {
+          "total_requests": "number",
+          "successful_requests": "number",
+          "failed_requests": "number",
+          "average_latency_ms": "number"
+        }
+      },
+      "request": {
+        "prompt": "Analyze these gateway requests and return JSON only with total_requests, successful_requests, failed_requests, average_latency_ms. Round average_latency_ms to one decimal place.\n\nRequests:\n[\n  {\"status\":200,\"latency_ms\":1200},\n  {\"status\":200,\"latency_ms\":900},\n  {\"status\":502,\"latency_ms\":3000},\n  {\"status\":200,\"latency_ms\":1100},\n  {\"status\":200,\"latency_ms\":800}\n]",
+        "quality": "default",
+        "temperature": 0.0,
+        "max_output_tokens": 4096,
+        "reasoning": "low"
+      },
+      "response": {
+        "text": "{\"total_requests\":5,\"successful_requests\":4,\"failed_requests\":1,\"average_latency_ms\":1400.0}",
+        "model": "openai/gpt-oss-20b",
+        "profile": "default",
+        "quality": "default",
+        "reasoning": "low",
+        "input_tokens": 165,
+        "output_tokens": 96,
+        "reasoning_output_tokens": 61,
+        "tokens_per_second": 49.65375651574886,
+        "time_to_first_token_seconds": 0.37599,
+        "model_load_time_seconds": null,
+        "request_id": "e40ca1d4-cf62-4ddf-82e9-02c75e1a9c61"
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": true,
+        "instruction_following": true,
+        "schema_correct": true,
+        "differences": [],
+        "actual": {
+          "total_requests": 5,
+          "successful_requests": 4,
+          "failed_requests": 1,
+          "average_latency_ms": 1400.0
+        },
+        "expected": {
+          "total_requests": 5,
+          "successful_requests": 4,
+          "failed_requests": 1,
+          "average_latency_ms": 1400.0
+        }
+      },
+      "error": null,
+      "wall_time_seconds": 2.323
+    },
+    {
+      "id": "project_008",
+      "suite": "project",
+      "source_file": "cases_project.json",
+      "category": "gateway_operations",
+      "difficulty": "hard",
+      "quality": "default",
+      "reasoning": "low",
+      "prompt": "Select the appropriate quality level for each task using these rules:\n- fast: simple classification, extraction, or formatting\n- balanced: ordinary explanation, summarization, or moderate coding\n- deep: difficult multi-step reasoning, architecture analysis, or complex debugging\n\nReturn JSON only mapping task IDs to fast, balanced, or deep.\n\nTasks:\nA: Extract a professor name from a sentence.\nB: Explain recursion to a beginner.\nC: Compare three distributed database architectures and identify failure modes.\nD: Convert a list of dates into ISO format.\nE: Debug a race condition involving multiple asynchronous workers.\nF: Summarize a two-page project update.",
+      "expected": {
+        "mode": "semantic_json",
+        "value": {
+          "A": "fast",
+          "B": "balanced",
+          "C": "deep",
+          "D": "fast",
+          "E": "deep",
+          "F": "balanced"
+        },
+        "normalize": {
+          "A": "text",
+          "B": "text",
+          "C": "text",
+          "D": "text",
+          "E": "text",
+          "F": "text"
+        }
+      },
+      "request": {
+        "prompt": "Select the appropriate quality level for each task using these rules:\n- fast: simple classification, extraction, or formatting\n- balanced: ordinary explanation, summarization, or moderate coding\n- deep: difficult multi-step reasoning, architecture analysis, or complex debugging\n\nReturn JSON only mapping task IDs to fast, balanced, or deep.\n\nTasks:\nA: Extract a professor name from a sentence.\nB: Explain recursion to a beginner.\nC: Compare three distributed database architectures and identify failure modes.\nD: Convert a list of dates into ISO format.\nE: Debug a race condition involving multiple asynchronous workers.\nF: Summarize a two-page project update.",
+        "quality": "default",
+        "temperature": 0.0,
+        "max_output_tokens": 4096,
+        "reasoning": "low"
+      },
+      "response": {
+        "text": "{\"A\":\"fast\",\"B\":\"balanced\",\"C\":\"deep\",\"D\":\"fast\",\"E\":\"deep\",\"F\":\"balanced\"}",
+        "model": "openai/gpt-oss-20b",
+        "profile": "default",
+        "quality": "default",
+        "reasoning": "low",
+        "input_tokens": 197,
+        "output_tokens": 117,
+        "reasoning_output_tokens": 82,
+        "tokens_per_second": 49.012379428490306,
+        "time_to_first_token_seconds": 0.384098,
+        "model_load_time_seconds": null,
+        "request_id": "72a27038-8d09-4a32-9d45-e764d8997d99"
+      },
+      "grade": {
+        "version": 2,
+        "status": "pass",
+        "passed": true,
+        "semantic_correct": true,
+        "format_correct": true,
+        "instruction_following": true,
+        "schema_correct": true,
+        "differences": [],
+        "actual": {
+          "A": "fast",
+          "B": "balanced",
+          "C": "deep",
+          "D": "fast",
+          "E": "deep",
+          "F": "balanced"
+        },
+        "expected": {
+          "A": "fast",
+          "B": "balanced",
+          "C": "deep",
+          "D": "fast",
+          "E": "deep",
+          "F": "balanced"
+        }
+      },
+      "error": null,
+      "wall_time_seconds": 2.792
+    }
+  ]
+}

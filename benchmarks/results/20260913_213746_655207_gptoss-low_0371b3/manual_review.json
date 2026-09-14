@@ -1,0 +1,282 @@
+[
+  {
+    "id": "reason_004",
+    "prompt": "Consider this pseudocode:\n\nfor i = 1 to n:\n    for j = 1 to i:\n        doConstantTimeWork()\n\nWhat is the asymptotic time complexity? Return only one of: O(1), O(log n), O(n), O(n log n), O(n^2), O(n^3).",
+    "expected": {
+      "mode": "label",
+      "value": "O(n^2)",
+      "labels": [
+        "O(1)",
+        "O(log n)",
+        "O(n)",
+        "O(n log n)",
+        "O(n^2)",
+        "O(n^3)"
+      ]
+    },
+    "response_text": "O(n²)",
+    "grade": {
+      "version": 2,
+      "status": "manual",
+      "passed": null,
+      "semantic_correct": null,
+      "format_correct": false,
+      "instruction_following": false,
+      "actual": null,
+      "reason": "Ambiguous prose requires review"
+    },
+    "review": {
+      "semantic_correct": null,
+      "notes": "",
+      "reviewer": ""
+    }
+  },
+  {
+    "id": "summary_001",
+    "prompt": "Summarize the following in no more than 50 words:\n\nThe development team deployed version 2.4 on Tuesday morning. Shortly after deployment, users began experiencing slower page loads. Engineers discovered that a new database query was performing a full table scan. The deployment was rolled back at 10:35 AM, restoring normal performance. The query will be redesigned before version 2.4 is deployed again.",
+    "expected": {
+      "mode": "summary_rubric",
+      "max_words": 50,
+      "must_include_concepts": [
+        "version 2.4",
+        "slow performance after deployment",
+        "database query or full table scan",
+        "rollback",
+        "query will be redesigned"
+      ]
+    },
+    "response_text": "Version 2.4 launched Tuesday morning, but users saw slower page loads due to a new query that performed a full table scan. Engineers rolled back the release at 10:35 AM, restoring performance. The problematic query will be redesigned before redeploying version 2.4.",
+    "grade": {
+      "version": 2,
+      "status": "manual",
+      "passed": null,
+      "semantic_correct": null,
+      "format_correct": true,
+      "instruction_following": true,
+      "mechanical_checks": {
+        "nonempty": true,
+        "word_limit": true
+      },
+      "counts": {
+        "words": 45
+      },
+      "rubric": {
+        "mode": "summary_rubric",
+        "max_words": 50,
+        "must_include_concepts": [
+          "version 2.4",
+          "slow performance after deployment",
+          "database query or full table scan",
+          "rollback",
+          "query will be redesigned"
+        ]
+      },
+      "reason": "Manual semantic review: accuracy, coverage, unsupported claims. Sentence counting is heuristic."
+    },
+    "review": {
+      "semantic_correct": null,
+      "notes": "",
+      "reviewer": ""
+    }
+  },
+  {
+    "id": "summary_002",
+    "prompt": "Summarize the following in exactly two sentences. Do not add information that is not present in the text.\n\nStudents may submit Lab 3 until 11:59 PM on October 2 without penalty. The original deadline was September 30. The extension applies to all sections and does not require students to contact their instructor. Lab 4 has not been extended and remains due October 7.",
+    "expected": {
+      "mode": "summary_rubric",
+      "sentence_count": 2,
+      "must_include_concepts": [
+        "Lab 3 extended to October 2 at 11:59 PM",
+        "extension applies to all sections",
+        "Lab 4 remains due October 7"
+      ],
+      "must_not_claim": [
+        "Lab 4 was extended"
+      ]
+    },
+    "response_text": "Students may submit Lab 3 until 11:59 PM on October 2 without penalty; the original deadline was September 30 and the extension applies to all sections without requiring students to contact their instructor. Lab 4 has not been extended and remains due October 7.",
+    "grade": {
+      "version": 2,
+      "status": "manual",
+      "passed": null,
+      "semantic_correct": null,
+      "format_correct": true,
+      "instruction_following": true,
+      "mechanical_checks": {
+        "nonempty": true,
+        "sentence_count": true
+      },
+      "counts": {
+        "sentences": 2
+      },
+      "rubric": {
+        "mode": "summary_rubric",
+        "sentence_count": 2,
+        "must_include_concepts": [
+          "Lab 3 extended to October 2 at 11:59 PM",
+          "extension applies to all sections",
+          "Lab 4 remains due October 7"
+        ],
+        "must_not_claim": [
+          "Lab 4 was extended"
+        ]
+      },
+      "reason": "Manual semantic review: accuracy, coverage, unsupported claims. Sentence counting is heuristic."
+    },
+    "review": {
+      "semantic_correct": null,
+      "notes": "",
+      "reviewer": ""
+    }
+  },
+  {
+    "id": "summary_003",
+    "prompt": "Write a concise technical summary in no more than 70 words.\n\nThe application currently sends every AI request directly to a specific model endpoint. This makes model replacement difficult because each application contains provider-specific code. The proposed architecture introduces a local gateway between applications and model providers. Applications send provider-independent requests to the gateway, while the gateway handles routing, authentication, model selection, and future fallback behavior. This allows model providers to change without requiring modifications to every application.",
+    "expected": {
+      "mode": "summary_rubric",
+      "max_words": 70,
+      "must_include_concepts": [
+        "gateway abstraction",
+        "applications become provider-independent",
+        "gateway handles routing or model selection",
+        "providers can change without modifying every application"
+      ]
+    },
+    "response_text": "The current system routes each AI request directly to a specific model endpoint, embedding provider‑specific logic in every application and hindering model swaps. The new design introduces a local gateway that receives provider‑agnostic requests from applications. The gateway manages routing, authentication, model selection, and fallback handling, enabling providers to change or upgrade models without modifying individual applications.",
+    "grade": {
+      "version": 2,
+      "status": "manual",
+      "passed": null,
+      "semantic_correct": null,
+      "format_correct": true,
+      "instruction_following": true,
+      "mechanical_checks": {
+        "nonempty": true,
+        "word_limit": true
+      },
+      "counts": {
+        "words": 59
+      },
+      "rubric": {
+        "mode": "summary_rubric",
+        "max_words": 70,
+        "must_include_concepts": [
+          "gateway abstraction",
+          "applications become provider-independent",
+          "gateway handles routing or model selection",
+          "providers can change without modifying every application"
+        ]
+      },
+      "reason": "Manual semantic review: accuracy, coverage, unsupported claims. Sentence counting is heuristic."
+    },
+    "review": {
+      "semantic_correct": null,
+      "notes": "",
+      "reviewer": ""
+    }
+  },
+  {
+    "id": "summary_004",
+    "prompt": "Summarize the incident below for a technical project lead. Use no more than four bullet points.\n\nAt 08:12, monitoring detected elevated latency on the recommendation service. CPU usage remained normal, but database connection counts were close to their maximum. At 08:19, engineers discovered that a recently deployed worker was failing to release connections after completed jobs. The worker deployment was disabled at 08:26. Connection counts began falling immediately and latency returned to normal by 08:31. No data loss occurred. A code fix and regression test are required before the worker is re-enabled.",
+    "expected": {
+      "mode": "summary_rubric",
+      "max_bullets": 4,
+      "must_include_concepts": [
+        "latency detected at 08:12",
+        "connection leak in newly deployed worker",
+        "worker disabled at 08:26",
+        "service recovered by 08:31",
+        "no data loss",
+        "fix and regression test required"
+      ]
+    },
+    "response_text": "- **Incident trigger (08:12):** Latency spiked in the recommendation service; CPU was fine but DB connection pool hit near‑max capacity.  \n- **Root cause (08:19):** A newly deployed worker failed to close database connections after job completion, exhausting the pool.  \n- **Remediation (08:26–08:31):** Disabled the faulty worker; connection counts dropped and latency normalized within 5 minutes—no data loss observed.  \n- **Next steps:** Implement a code fix that guarantees connection release and add regression tests before re‑enabling the worker.",
+    "grade": {
+      "version": 2,
+      "status": "manual",
+      "passed": null,
+      "semantic_correct": null,
+      "format_correct": true,
+      "instruction_following": true,
+      "mechanical_checks": {
+        "nonempty": true,
+        "bullet_limit": true,
+        "bullet_format": true
+      },
+      "counts": {
+        "bullets": 4
+      },
+      "rubric": {
+        "mode": "summary_rubric",
+        "max_bullets": 4,
+        "must_include_concepts": [
+          "latency detected at 08:12",
+          "connection leak in newly deployed worker",
+          "worker disabled at 08:26",
+          "service recovered by 08:31",
+          "no data loss",
+          "fix and regression test required"
+        ]
+      },
+      "reason": "Manual semantic review: accuracy, coverage, unsupported claims. Sentence counting is heuristic."
+    },
+    "review": {
+      "semantic_correct": null,
+      "notes": "",
+      "reviewer": ""
+    }
+  },
+  {
+    "id": "long_001",
+    "prompt": "Read the project log and answer the question at the end. Return JSON only with first_failure_time, root_cause, recovery_time.\n\nPROJECT LOG\n\n08:00 - API server started normally.\n08:04 - Health check returned 200.\n08:07 - Model registry loaded 4 entries.\n08:11 - First inference request completed in 1.8 seconds.\n08:14 - Cache cleanup completed.\n08:18 - Health check returned 200.\n08:23 - User authentication succeeded.\n08:27 - Inference request completed normally.\n08:32 - Memory usage reached 61 percent.\n08:36 - Health check returned 200.\n08:41 - Background metrics export completed.\n08:45 - New model configuration deployed.\n08:48 - First request after deployment returned HTTP 502.\n08:49 - Second request returned HTTP 502.\n08:50 - Gateway logged MODEL_LOAD_FAILED.\n08:52 - Engineers began investigation.\n08:55 - Configuration comparison showed that the newly deployed model identifier did not exist on the inference server.\n08:59 - Previous configuration restored.\n09:01 - Model loaded successfully.\n09:02 - First successful inference request completed.\n09:06 - Health check returned 200.\n09:12 - Memory usage returned to normal.\n09:20 - Incident closed.\n\nQuestion: When did the first failure occur, what caused the incident, and when was normal inference first restored?",
+    "expected": {
+      "mode": "semantic_json",
+      "value": {
+        "first_failure_time": "08:48",
+        "root_cause": "invalid model identifier",
+        "recovery_time": "09:02"
+      },
+      "normalize": {
+        "first_failure_time": "time",
+        "root_cause": "text",
+        "recovery_time": "time"
+      },
+      "review_paths": [
+        "root_cause"
+      ]
+    },
+    "response_text": "{\"first_failure_time\":\"08:48\",\"root_cause\":\"The newly deployed model identifier did not exist on the inference server, causing a MODEL_LOAD_FAILED error and resulting in HTTP 502 responses.\",\"recovery_time\":\"09:02\"}",
+    "grade": {
+      "version": 2,
+      "status": "manual",
+      "passed": null,
+      "semantic_correct": null,
+      "format_correct": true,
+      "instruction_following": true,
+      "schema_correct": true,
+      "differences": [
+        {
+          "path": "root_cause",
+          "actual": "The newly deployed model identifier did not exist on the inference server, causing a MODEL_LOAD_FAILED error and resulting in HTTP 502 responses.",
+          "expected": "invalid model identifier",
+          "reason": "Value differs"
+        }
+      ],
+      "actual": {
+        "first_failure_time": "08:48",
+        "root_cause": "The newly deployed model identifier did not exist on the inference server, causing a MODEL_LOAD_FAILED error and resulting in HTTP 502 responses.",
+        "recovery_time": "09:02"
+      },
+      "expected": {
+        "first_failure_time": "08:48",
+        "root_cause": "invalid model identifier",
+        "recovery_time": "09:02"
+      }
+    },
+    "review": {
+      "semantic_correct": null,
+      "notes": "",
+      "reviewer": ""
+    }
+  }
+]

@@ -1,0 +1,131 @@
+﻿id,category,difficulty,quality,model,status,semantic_correct,format_correct,instruction_following,wall_time_seconds,input_tokens,output_tokens,reasoning_output_tokens,tokens_per_second,time_to_first_token_seconds,model_load_time_seconds,response_text,error
+extract_001,structured_extraction,easy,default,openai/gpt-oss-20b,pass_with_format_issue,True,False,False,6.025,141,257,189,48.89054743280701,0.7356670000000001,,"```json
+{
+  ""course"": ""MAT186"",
+  ""assignment"": ""Problem Set 2"",
+  ""due_date"": ""September 18, 2026"",
+  ""due_time"": ""11:59 PM"",
+  ""timezone"": ""Eastern Time""
+}
+```",
+extract_002,structured_extraction,easy,default,openai/gpt-oss-20b,pass,True,True,True,5.37,131,241,192,48.319576011827024,0.36494099999999996,,"{""customer_name"":""Amir Rahman"",""order_number"":""A18492"",""item_count"":4,""subtotal"":82.5,""tax"":10.73,""total"":93.23}",
+extract_003,structured_extraction,medium,default,openai/gpt-oss-20b,pass_with_format_issue,True,False,False,5.714,146,256,209,47.92870914641412,0.3525,,"{""error_code"":""E_UPLOAD_17"",""service_name"":""StorageProxy"",""affected_user_count"":218,""first_occurrence_time"":""14:03"",""resolved_time"":""14:41""}",
+extract_004,structured_extraction,medium,default,openai/gpt-oss-20b,pass_with_format_issue,True,False,False,7.803,175,346,213,46.735789576781016,0.380171,,"```json
+[
+  {
+    ""name"": ""Programming Lecture"",
+    ""start"": ""10:00"",
+    ""end"": ""11:00"",
+    ""room"": ""MY150""
+  },
+  {
+    ""name"": ""Design Studio"",
+    ""start"": ""12:00"",
+    ""end"": ""13:00"",
+    ""room"": ""SF1101""
+  },
+  {
+    ""name"": ""Chemistry Lecture"",
+    ""start"": ""15:00"",
+    ""end"": ""16:00"",
+    ""room"": ""MS2158""
+  }
+]
+```",
+extract_005,structured_extraction,hard,default,openai/gpt-oss-20b,pass,True,True,True,6.236,177,277,242,47.36201309147818,0.36750900000000003,,"{""port"":4812,""context_length"":16384,""ttl_seconds"":300,""authentication"":true,""cors"":false}",
+classify_001,classification,easy,default,openai/gpt-oss-20b,fail,False,True,True,4.234,110,187,176,48.15904290893047,0.334522,,announcement,
+classify_002,classification,easy,default,openai/gpt-oss-20b,pass,True,True,True,1.836,112,72,61,48.611491482718954,0.329596,,exam,
+classify_003,classification,easy,default,openai/gpt-oss-20b,pass,True,True,True,1.801,107,71,60,49.19917795202096,0.337824,,announcement,
+classify_004,classification,easy,default,openai/gpt-oss-20b,fail,False,True,True,1.594,100,62,51,49.47628139513381,0.328577,,announcement,
+classify_005,classification,medium,default,openai/gpt-oss-20b,pass,True,True,True,1.964,108,79,68,48.90696077724447,0.34181599999999995,,assignment,
+instruction_001,instruction_following,easy,default,openai/gpt-oss-20b,pass,True,True,True,2.671,86,115,96,47.38188091935811,0.226116,,"{""status"":""ok"",""count"":3}",
+instruction_002,instruction_following,easy,default,openai/gpt-oss-20b,pass,True,True,True,2.3,89,101,80,49.13524426849659,0.22805799999999998,,"[""apple"",""banana"",""mango"",""zebra""]",
+instruction_003,instruction_following,medium,default,openai/gpt-oss-20b,pass,True,True,True,2.222,92,95,78,48.886658362869014,0.257733,,local-artificial-intelligence-gateway,
+instruction_004,instruction_following,medium,default,openai/gpt-oss-20b,pass,True,True,True,3.093,107,132,117,48.25781905601812,0.34053100000000003,,"RED
+GREEN
+BLUE",
+instruction_005,instruction_following,hard,default,openai/gpt-oss-20b,pass,True,True,True,6.57,139,296,267,47.853262108213585,0.35118299999999997,,"{""even"":[2,4,6,8],""odd"":[3,7,9]}",
+reason_001,reasoning,easy,default,openai/gpt-oss-20b,pass,True,True,True,1.884,102,75,62,49.281522026509464,0.33988,,0.3,
+reason_002,reasoning,medium,default,openai/gpt-oss-20b,pass,True,True,True,8.753,135,393,366,46.99453748443756,0.354989,,"{""Monday"":""A"",""Tuesday"":""B"",""Wednesday"":""D"",""Thursday"":""C""}",
+reason_003,reasoning,easy,default,openai/gpt-oss-20b,pass,True,True,True,2.186,94,95,84,49.56511881128082,0.249763,,11,
+reason_004,reasoning,medium,default,openai/gpt-oss-20b,manual,,False,False,2.74,135,114,100,48.897787613108584,0.381423,,O(n²),
+reason_005,reasoning,medium,default,openai/gpt-oss-20b,pass,True,True,True,5.032,137,224,186,48.42284828839346,0.379109,,"{""equivalent_parallel_resistance_ohms"":2,""total_resistance_ohms"":6,""total_current_amps"":2}",
+coding_001,coding,easy,default,openai/gpt-oss-20b,pass,True,True,True,4.233,109,186,142,47.982541617073906,0.339555,,"def clamp(value, minimum, maximum):
+    if value < minimum:
+        return minimum
+    elif value > maximum:
+        return maximum
+    else:
+        return value",
+coding_002,coding,medium,default,openai/gpt-oss-20b,pass,True,True,True,4.612,110,205,152,48.31055159282731,0.34658999999999995,,"def dedupe_preserve_order(items):
+    seen = set()
+    result = []
+    for item in items:
+        if item not in seen:
+            seen.add(item)
+            result.append(item)
+    return result",
+coding_003,coding,medium,default,openai/gpt-oss-20b,pass,True,True,True,4.839,153,211,167,47.42748788792298,0.374269,,"def largest(numbers):
+    result = numbers[0]
+    for number in numbers[1:]:
+        if number > result:
+            result = number
+    return result",
+coding_004,coding,hard,default,openai/gpt-oss-20b,pass,True,True,True,9.199,165,419,341,47.54913771117561,0.363408,,"def flatten_dict(data, prefix=''):
+    flat = {}
+    for key, value in data.items():
+        new_key = f""{prefix}.{key}"" if prefix else key
+        if isinstance(value, dict):
+            flat.update(flatten_dict(value, new_key))
+        else:
+            flat[new_key] = value
+    return flat",
+summary_001,summarization,easy,default,openai/gpt-oss-20b,manual,,True,True,7.25,149,326,262,47.3875118887977,0.351295,,"Version 2.4 was deployed Tuesday morning, causing slow page loads from a new query that performed a full table scan. Engineers rolled back at 10:35 AM, restoring performance; the query will be redesigned before redeploying version 2.4.",
+summary_002,summarization,medium,default,openai/gpt-oss-20b,manual,,True,True,5.602,146,247,180,47.249675158483285,0.354852,,"Students can submit Lab 3 until 11:59 PM on October 2 without penalty, an extension from the original September 30 deadline that applies to all sections and does not require contacting their instructor. Lab 4 has not been extended and remains due on October 7.",
+summary_003,summarization,medium,default,openai/gpt-oss-20b,manual,,True,True,6.327,158,280,207,47.11453848269909,0.362947,,"Current architecture sends AI requests directly to specific model endpoints, embedding provider‑specific code in each app and making changes difficult. A new local gateway decouples apps from providers: applications issue generic requests; the gateway handles routing, authentication, model selection, and fallback logic. This allows provider updates without modifying every application.",
+summary_004,summarization,hard,default,openai/gpt-oss-20b,manual,,True,True,6.454,186,286,178,47.11313052866388,0.361161,,"- **08:12** – Recommendation service latency spiked; CPU normal but DB connections near maximum.  
+- **08:19** – Engineers identified a newly‑deployed worker that failed to close database connections after jobs.  
+- **08:26–08:31** – Worker disabled, connection counts fell and latency returned to baseline; no data loss occurred.  
+- **Next steps** – Apply a code fix, add regression tests, then re‑enable the worker.",
+long_001,long_context_retrieval,medium,default,openai/gpt-oss-20b,manual,,True,True,7.448,355,320,273,45.614462558676784,0.40159300000000003,,"{""first_failure_time"":""08:48"",""root_cause"":""Deployed model identifier did not exist on the inference server (configuration mismatch)"",""recovery_time"":""09:02""}",
+long_002,long_context_retrieval,hard,default,openai/gpt-oss-20b,pass,True,True,True,15.561,378,678,585,44.812775599397355,0.413419,,"{""Lab 2"":{""date"":""2026-09-18"",""time"":""23:59""},""Lab 3"":{""date"":""2026-09-23"",""time"":""23:59""},""Project Milestone 1"":{""date"":""2026-09-27"",""time"":""17:00""},""Problem Set 4"":{""date"":""2026-09-21"",""time"":""18:00""}}",
+long_003,long_context_reasoning,hard,default,openai/gpt-oss-20b,pass,True,True,True,6.474,336,281,270,46.43587264033211,0.390003,,FAIL,
+long_004,long_context_analysis,hard,default,openai/gpt-oss-20b,pass,True,True,True,28.254,378,1234,1183,44.36260170072471,0.41009300000000004,,"{""total_listening_ms"":1867000,""unique_tracks"":4,""most_played_track_by_count"":""Almost Love"",""most_listened_track_by_ms"":""Almost Love"",""completed_listens"":8}",
+project_001,itqaan_metadata,easy,default,openai/gpt-oss-20b,pass,True,True,True,5.965,126,263,223,47.470948956952725,0.381284,,"{""surah_number"":2,""ayah_number"":255,""reciter_id"":""abdul_baset_01"",""timestamp_seconds"":83.4}",
+project_002,itqaan_metadata,medium,default,openai/gpt-oss-20b,pass_with_format_issue,True,False,False,6.704,132,287,207,45.68737534814659,0.388791,,"```json
+[
+  { ""id"": ""a1"", ""minutes"": 1, ""seconds"": 3 },
+  { ""id"": ""a2"", ""minutes"": 2, ""seconds"": 5 },
+  { ""id"": ""a3"", ""minutes"": 59, ""seconds"": 59 }
+]
+```",
+project_003,listening_data,medium,default,openai/gpt-oss-20b,pass_with_format_issue,True,False,False,5.29,171,233,174,47.5449391896129,0.367589,,"```json
+[
+  {""track"":""Song A"",""completion_percent"":90.0},
+  {""track"":""Song B"",""completion_percent"":25.0},
+  {""track"":""Song C"",""completion_percent"":100.0}
+]
+```",
+project_004,listening_data,hard,default,openai/gpt-oss-20b,fail,False,True,True,10.172,209,448,412,46.04641561103285,0.38325,,"{""total_events"":6,""completed_events"":5,""completion_rate_percent"":83.3,""most_played_track"":""Paris""}",
+project_005,university_tooling,medium,default,openai/gpt-oss-20b,fail,False,True,True,6.061,138,272,220,48.009059008271024,0.363041,,"{""course"":""APS110"",""event_type"":""chemistry lecture"",""date"":""2026-09-25"",""start_time"":""15:00"",""end_time"":""16:00"",""location"":""MS2158""}",
+project_006,university_tooling,hard,default,openai/gpt-oss-20b,pass_with_format_issue,True,False,False,5.3,274,223,202,45.82283570696998,0.387604,,"```json
+[1, 4]
+```",
+project_007,gateway_operations,medium,default,openai/gpt-oss-20b,pass_with_format_issue,True,False,False,6.478,165,287,234,47.38440565955365,0.367711,,"```json
+{
+  ""total_requests"": 5,
+  ""successful_requests"": 4,
+  ""failed_requests"": 1,
+  ""average_latency_ms"": 1400.0
+}
+```",
+project_008,gateway_operations,hard,default,openai/gpt-oss-20b,pass_with_format_issue,True,False,False,6.224,197,271,212,46.51105102572371,0.369453,,"```json
+{
+  ""A"": ""fast"",
+  ""B"": ""balanced"",
+  ""C"": ""deep"",
+  ""D"": ""fast"",
+  ""E"": ""deep"",
+  ""F"": ""balanced""
+}
+```",

@@ -172,7 +172,7 @@ Example response:
 ```json
 {
   "embeddings": [[0.0123, -0.044, 0.0081]],
-  "model": "text-embedding-bge-m3-embeddings",
+  "model": "text-embedding-bge-m3",
   "dimensions": 1024,
   "input_tokens": 7,
   "request_id": "..."
@@ -217,7 +217,7 @@ Example response:
   "collection": "university",
   "documents": 1,
   "chunks": 3,
-  "embedding_model": "text-embedding-bge-m3-embeddings",
+  "embedding_model": "text-embedding-bge-m3",
   "embedding_dimensions": 1024,
   "request_id": "..."
 }

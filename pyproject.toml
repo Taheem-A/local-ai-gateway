@@ -17,8 +17,7 @@ select = ["E4", "E7", "E9", "F", "I"]
 # turning the historical benchmark directory into an installable package.
 "benchmarks/run_benchmarks.py" = ["I001"]
 "benchmarks/test_benchmarks.py" = ["I001"]
-# These two modules group the RAG facade by architectural role. Ruff/isort would
-# split aliased facade imports into several separate blocks, which makes the API
-# entry point harder to scan without improving correctness.
+# The API entry point groups a few aliased RAG facade imports by architectural
+# role. Ruff/isort would split those aliases into multiple blocks and make the
+# route dependencies harder to scan without changing runtime behavior.
 "app/main.py" = ["I001"]
-"app/rag/service.py" = ["I001"]

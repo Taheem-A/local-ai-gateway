@@ -55,12 +55,12 @@ REASONING_DEEP=high
 RAG additionally needs an embedding model. The preferred default is BGE-M3:
 
 ```dotenv
-EMBEDDING_MODEL=text-embedding-bge-m3-embeddings
+EMBEDDING_MODEL=text-embedding-bge-m3
 EMBEDDING_QUERY_PREFIX=
 EMBEDDING_DOCUMENT_PREFIX=
 ```
 
-The exact LM Studio model key can vary by downloaded revision, so confirm it locally and override `EMBEDDING_MODEL` when necessary. Existing RAG collections must be reindexed after changing embedding model or dimension.
+The exact LM Studio model key can vary by downloaded revision, so confirm it locally with `lms ls --embedding` and override `EMBEDDING_MODEL` when necessary. Existing RAG collections must be reindexed after changing embedding model or dimension.
 
 ## 3. Start the local services
 

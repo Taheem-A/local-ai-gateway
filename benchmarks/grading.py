@@ -11,6 +11,7 @@ from typing import Any
 
 GRADING_VERSION = 3
 _SUPERSCRIPT_TRANSLATION = str.maketrans("⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻", "0123456789+-")
+_SUPERSCRIPT_PATTERN = re.compile(r"[⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻]+")
 
 
 def outcome(
@@ -115,9 +116,18 @@ def normalize(value: Any, rule: str) -> Any:
 
 
 def _canonical_label(text: str) -> str:
-    """Canonicalize harmless Unicode variants used in short label answers."""
+    """Canonicalize harmless Unicode variants used in short label answers.
 
-    return text.translate(_SUPERSCRIPT_TRANSLATION).casefold()
+    Superscript runs represent exponents, so ``n²`` becomes ``n^2`` rather than
+    merely ``n2``. Strict format scoring remains separate from this semantic
+    canonicalization.
+    """
+
+    normalized = _SUPERSCRIPT_PATTERN.sub(
+        lambda match: "^" + match.group(0).translate(_SUPERSCRIPT_TRANSLATION),
+        text,
+    )
+    return normalized.casefold()
 
 
 def strict_load(text: str) -> Any:

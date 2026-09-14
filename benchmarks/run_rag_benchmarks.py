@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import statistics
@@ -60,7 +61,9 @@ def main() -> int:
     if args.top_k < 1 or args.top_k > 50:
         parser.error("--top-k must be between 1 and 50")
 
-    suite = json.loads(SUITE_PATH.read_text(encoding="utf-8"))
+    suite_bytes = SUITE_PATH.read_bytes()
+    suite = json.loads(suite_bytes.decode("utf-8"))
+    suite_sha256 = hashlib.sha256(suite_bytes).hexdigest()
     collection = f"bench-{uuid.uuid4().hex[:12]}"
     base_url = args.gateway_url.rstrip("/")
     headers = _headers(args.api_key, "rag-benchmark")
@@ -68,7 +71,7 @@ def main() -> int:
     started = time.perf_counter()
 
     with httpx.Client(timeout=300.0) as client:
-        _post(
+        index_result = _post(
             client,
             base_url,
             "/v1/rag/index",
@@ -123,7 +126,13 @@ def main() -> int:
     reciprocal_ranks = [1.0 / row["rank"] if row["rank"] else 0.0 for row in rows]
     summary = {
         "suite_version": suite["version"],
+        "suite_sha256": suite_sha256,
+        "embedding_model": index_result["embedding_model"],
+        "embedding_dimensions": index_result["embedding_dimensions"],
+        "top_k": args.top_k,
         "cases": total,
+        "corpus_documents": len(suite["documents"]),
+        "indexed_chunks": index_result["chunks"],
         "recall_at_1_percent": round(recall_at(1), 2),
         "recall_at_3_percent": round(recall_at(3), 2),
         "recall_at_5_percent": round(recall_at(5), 2),
@@ -147,6 +156,11 @@ def main() -> int:
     report = [
         "# RAG retrieval benchmark",
         "",
+        f"- Suite version: {summary['suite_version']}",
+        f"- Suite SHA-256: `{summary['suite_sha256']}`",
+        f"- Embedding model: `{summary['embedding_model']}`",
+        f"- Embedding dimensions: {summary['embedding_dimensions']}",
+        f"- Top-k: {summary['top_k']}",
         f"- Cases: {total}",
         f"- Recall@1: {summary['recall_at_1_percent']:.2f}%",
         f"- Recall@3: {summary['recall_at_3_percent']:.2f}%",

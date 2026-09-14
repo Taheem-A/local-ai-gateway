@@ -31,7 +31,7 @@ class Settings(BaseSettings):
     # BGE-M3 is the preferred retrieval model because the gateway is intended to
     # handle multilingual personal data. LM Studio model keys can vary by install,
     # so this remains an environment override rather than an application concern.
-    embedding_model: str = "text-embedding-bge-m3-embeddings"
+    embedding_model: str = "text-embedding-bge-m3"
     # Some embedding families (notably Nomic) require task prefixes while BGE-M3
     # does not. Keeping these configurable avoids provider/model-specific logic in
     # the public API and preserves retrieval correctness when the model changes.

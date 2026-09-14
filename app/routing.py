@@ -1,5 +1,7 @@
+"""Model-profile routing for gateway quality tiers and reasoning overrides."""
+
 from dataclasses import dataclass
-from typing import Literal
+from typing import Literal, cast
 
 from app.config import settings
 
@@ -9,6 +11,8 @@ ReasoningEffort = Literal["low", "medium", "high"]
 
 @dataclass(frozen=True)
 class ModelProfile:
+    """Resolved model and reasoning configuration for a public quality profile."""
+
     name: str
     model: str
     reasoning: ReasoningEffort | None
@@ -18,6 +22,8 @@ def choose_profile(
     quality: Quality,
     reasoning_override: ReasoningEffort | None = None,
 ) -> ModelProfile:
+    """Resolve a public quality name into a concrete local model configuration."""
+
     if quality == "fast":
         model = settings.model_fast
         reasoning = settings.reasoning_fast
@@ -42,16 +48,19 @@ def choose_profile(
     return ModelProfile(
         name=quality,
         model=model,
-        reasoning=reasoning,  # type: ignore[arg-type]
+        reasoning=cast(ReasoningEffort | None, reasoning),
     )
 
 
 def choose_model(quality: Quality) -> str:
-    """Backwards-compatible helper used by older code/tests."""
+    """Return only the model ID for older callers that do not need the profile."""
+
     return choose_profile(quality).model
 
 
 def public_profiles() -> dict[str, dict[str, str | None]]:
+    """Return the configured public profile map exposed by the status API."""
+
     return {
         quality: {
             "model": choose_profile(quality).model,

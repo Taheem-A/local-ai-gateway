@@ -1,5 +1,14 @@
+"""Client-side exceptions for stable gateway error responses."""
+
+from __future__ import annotations
+
+from typing import Any
+
+
 class AIError(RuntimeError):
-    def __init__(self, code: str, message: str, details=None):
+    """Expose the gateway error code and structured details to Python callers."""
+
+    def __init__(self, code: str, message: str, details: Any | None = None) -> None:
         super().__init__(message)
         self.code = code
         self.message = message

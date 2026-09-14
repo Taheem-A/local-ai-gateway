@@ -1,3 +1,5 @@
+"""Application configuration loaded from environment variables and `.env`."""
+
 from pathlib import Path
 
 from pydantic import field_validator
@@ -5,12 +7,15 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
+    """Runtime settings for model profiles, limits, and local persistence."""
+
     lm_base_url: str = "http://127.0.0.1:1234"
     lm_api_token: str
     gateway_api_key: str
 
-    # Profile mappings. `balanced` intentionally preserves the historical Gemma
-    # benchmark mapping until that profile is explicitly retired in a future version.
+    # `balanced` intentionally preserves the historical Gemma mapping so old
+    # benchmark commands remain reproducible. New application code should use
+    # `default` or `deep` rather than depending on this legacy profile.
     model_fast: str = "google/gemma-4-12b-qat"
     model_balanced: str = "google/gemma-4-12b-qat"
     model_default: str = "openai/gpt-oss-20b"
@@ -18,9 +23,10 @@ class Settings(BaseSettings):
 
     reasoning_fast: str | None = None
     reasoning_balanced: str | None = None
-    reasoning_default: str | None = "medium"
-    # Keep deep at the benchmarked medium setting until low/medium/high is measured.
-    reasoning_deep: str | None = "medium"
+    # The September 2026 reasoning benchmark showed low reasoning to be the best
+    # everyday latency/quality trade-off, while high is reserved for hard tasks.
+    reasoning_default: str | None = "low"
+    reasoning_deep: str | None = "high"
 
     default_context_length: int = 16384
     default_max_output_tokens: int = 2048
@@ -39,6 +45,8 @@ class Settings(BaseSettings):
     )
     @classmethod
     def blank_reasoning_is_none(cls, value):
+        """Treat blank `.env` values as an intentionally disabled override."""
+
         if value == "":
             return None
         return value

@@ -9,8 +9,8 @@ from typing import Any, Literal
 from app.config import settings
 from app.errors import GatewayError
 from app.lmstudio import embed_texts
-from app.rag.chunking import chunk_text
 from app.rag import store
+from app.rag.chunking import chunk_text
 from app.structured import run_structured
 
 EmbeddingPurpose = Literal["raw", "query", "document"]

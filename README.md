@@ -1,8 +1,8 @@
 # Local AI Gateway
 
-A localhost-only AI service for personal projects. Applications call one stable API while the gateway owns model selection, reasoning effort, structured-output validation, retries, and usage metrics.
+A localhost-only AI service for personal projects. Applications call one stable API while the gateway owns model selection, reasoning effort, structured-output validation, retries, and operational metrics.
 
-## Current architecture
+## Current production profiles
 
 ```text
 Your apps / taheem_ai SDK
@@ -13,17 +13,17 @@ Local AI Gateway :4812
         v
 LM Studio :1234
         |
-        +-- fast profile      -> Gemma 4 12B (candidate; not yet proven as the final fast tier)
-        +-- balanced profile  -> Gemma 4 12B (historical benchmark mapping; kept reproducible)
-        +-- default profile   -> GPT-OSS 20B / medium reasoning
-        +-- deep profile      -> GPT-OSS 20B / medium reasoning until reasoning-level benchmark is complete
+        +-- fast      -> Gemma 4 12B (experimental candidate)
+        +-- balanced  -> Gemma 4 12B (historical compatibility profile)
+        +-- default   -> GPT-OSS 20B / low reasoning
+        +-- deep      -> GPT-OSS 20B / high reasoning
 ```
 
-New applications should use `default`. `balanced` is intentionally preserved as the original Gemma benchmark profile rather than silently changing what an old benchmark command means.
+New applications should normally use `default`. Use `deep` when a task justifies substantially more reasoning time. `medium` reasoning remains available as an explicit override. `balanced` intentionally preserves the original Gemma benchmark mapping so old experiments stay reproducible.
+
+The default/deep decision comes from the frozen September 2026 low/medium/high GPT-OSS benchmark. See [`benchmarks/history/2026-09-13-gptoss-reasoning/`](benchmarks/history/2026-09-13-gptoss-reasoning/).
 
 ## 1. Install dependencies
-
-From the repository root:
 
 ```powershell
 py -m venv .venv
@@ -32,45 +32,38 @@ python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-If you already have `.venv`:
-
-```powershell
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-```
+If `.venv` already exists, just activate it and rerun `pip install -r requirements.txt` after dependency changes.
 
 ## 2. Configure `.env`
-
-Copy `.env.example` to `.env` and insert your real LM Studio token and gateway key:
 
 ```powershell
 Copy-Item .env.example .env
 ```
 
-Never commit `.env`.
+Insert your real LM Studio token and gateway key. Never commit `.env`.
 
-## 3. Start LM Studio
+The production reasoning values should be:
 
-Keep it local-only:
+```dotenv
+REASONING_DEFAULT=low
+REASONING_DEEP=high
+```
+
+## 3. Start the local services
+
+Start LM Studio on loopback only:
 
 ```powershell
 lms server start --port 1234
 ```
 
-Expected address:
-
-```text
-http://127.0.0.1:1234
-```
-
-## 4. Start the gateway
+Start the gateway:
 
 ```powershell
-.\.venv\Scripts\Activate.ps1
 uvicorn app.main:app --host 127.0.0.1 --port 4812
 ```
 
-Or:
+or:
 
 ```powershell
 scripts\start_gateway.cmd
@@ -88,13 +81,19 @@ Expected:
 {"status":"ok"}
 ```
 
-## 5. Run tests
+## 4. Quality checks
+
+Before committing Python changes:
 
 ```powershell
+ruff check .
+python -m compileall -q app benchmarks clients/python/taheem_ai scripts tests work
 pytest -q
 ```
 
-## 6. Free-form generation
+GitHub Actions runs the same checks.
+
+## 5. Free-form generation
 
 ```powershell
 $headers = @{
@@ -116,9 +115,11 @@ Invoke-RestMethod `
     -Body $body
 ```
 
-## 7. Structured extraction
+`default` resolves to GPT-OSS 20B with low reasoning unless the request explicitly supplies `reasoning`.
 
-`/v1/extract` uses LM Studio JSON-schema constrained generation and then validates the returned object again inside the gateway. If validation fails, the gateway can retry with the exact validation errors.
+## 6. Structured extraction
+
+`/v1/extract` combines LM Studio JSON-schema constrained generation with gateway-side normalization, Draft 2020-12 validation, and bounded repair retries.
 
 ```powershell
 $body = @{
@@ -144,16 +145,15 @@ Invoke-RestMethod `
     -Body $body
 ```
 
-For this gateway, `format = "time"` means a local clock value in exact `HH:MM` form. Standard JSON Schema defines `time` more broadly as RFC 3339 full-time (for example `18:59:00Z`). The gateway therefore translates `format = "time"` to an explicit `HH:MM` pattern in the copy sent to LM Studio, while keeping the caller's original schema for local validation. A source value of `11:59 PM` should therefore remain the same local clock time and be returned as `23:59`, not be timezone-converted or given a suffix.
+For this gateway, `format = "time"` means an exact local `HH:MM` clock value. The gateway translates that convenience contract to a model-facing pattern and deliberately refuses to hide timezone conversions. A source value of `11:59 PM` therefore canonicalizes to `23:59`.
 
-## 8. Classification
+## 7. Classification
 
 ```powershell
 $body = @{
-    text = "Homework 4 is due Sunday at 11:59 PM."
+    text = "Homework 4. Due Sunday at 11:59 PM."
     labels = @("assignment", "exam", "announcement", "irrelevant")
     quality = "default"
-    max_output_tokens = 512
 } | ConvertTo-Json
 
 Invoke-RestMethod `
@@ -163,15 +163,17 @@ Invoke-RestMethod `
     -Body $body
 ```
 
-Classification defaults to a 512-token generation ceiling. The original 128-token hard cap was too small for GPT-OSS at medium reasoning because hidden reasoning can consume the output budget before the final JSON label is emitted. Structured failures now also retain `finish_reason` and token diagnostics when LM Studio provides them.
+The gateway converts the supplied labels into an enum-constrained JSON schema. Classification keeps a 512-token default generation budget because hidden reasoning can consume far more tokens than the tiny visible label.
 
-## 9. Install the Python client
+## 8. Python SDK
+
+Install the local client in editable mode:
 
 ```powershell
 pip install -e .\clients\python
 ```
 
-Basic usage:
+Set `LOCAL_AI_GATEWAY_KEY`, then:
 
 ```python
 from taheem_ai import AI
@@ -180,17 +182,20 @@ ai = AI(project="itqaan")
 print(ai.ask("Explain this error."))
 ```
 
-Structured extraction with Pydantic:
+Typed extraction:
 
 ```python
 from datetime import date
+
 from pydantic import BaseModel
 from taheem_ai import AI
+
 
 class Assignment(BaseModel):
     course: str
     title: str
     due_date: date
+
 
 ai = AI(project="university")
 assignment = ai.extract(
@@ -200,33 +205,46 @@ assignment = ai.extract(
 print(assignment)
 ```
 
-## 10. Metrics
+`AsyncAI` provides the same generation, extraction, and classification methods for async applications.
 
-Requests are recorded in `data/gateway.db`; prompt and response content are not recorded.
+## 9. Metrics
+
+Requests are recorded in `data/gateway.db`. Prompt and response content are not stored.
 
 ```powershell
 python scripts\gateway_stats.py --days 30
 ```
 
-## 11. GPT-OSS reasoning benchmark
+## 10. Benchmarks
 
-The benchmark runner now accepts an explicit reasoning override. This lets you compare the same GPT-OSS model at low, medium, and high reasoning without changing routing code:
+The committed low/medium/high reasoning experiment is historical evidence and is never rewritten in place. Current benchmark runs use benchmark v3, which clarifies ambiguities found during that experiment.
+
+Example:
 
 ```powershell
-python benchmarks\run_benchmarks.py --quality default --reasoning low --max-output-tokens 4096 --name gptoss-low
-python benchmarks\run_benchmarks.py --quality default --reasoning medium --max-output-tokens 4096 --name gptoss-medium
-python benchmarks\run_benchmarks.py --quality default --reasoning high --max-output-tokens 4096 --name gptoss-high
+python benchmarks\run_benchmarks.py `
+    --quality default `
+    --reasoning low `
+    --max-output-tokens 4096 `
+    --name gptoss-low-v3
 ```
 
-Do not change the production defaults until those three runs are compared.
+See [`benchmarks/README.md`](benchmarks/README.md) for versioning, regrading, run comparison, and manual-review policy.
 
 ## Security rules
 
 - LM Studio stays on `127.0.0.1:1234`.
 - The gateway stays on `127.0.0.1:4812`.
-- Never port-forward either service to the public internet.
+- Never port-forward either service directly to the public internet.
 - Keep `.env` private.
 - Prompt content is not logged by default.
-- Cloud fallback is not implemented/enabled in this milestone, so local failures cannot silently create API charges.
+- Cloud fallback is not implemented in this milestone, so a local failure cannot silently create API charges.
 
-See `docs/` for architecture and API details.
+## Documentation
+
+- [`docs/architecture.md`](docs/architecture.md) — system boundaries and request path
+- [`docs/api.md`](docs/api.md) — HTTP endpoints and contracts
+- [`docs/current-models.md`](docs/current-models.md) — current routing decision and benchmark basis
+- [`docs/structured-output.md`](docs/structured-output.md) — structured generation/validation rules
+- [`docs/benchmarking.md`](docs/benchmarking.md) — benchmark history and methodology
+- [`docs/development.md`](docs/development.md) — coding conventions and release checks

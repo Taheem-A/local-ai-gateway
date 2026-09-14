@@ -1,6 +1,6 @@
 # Current model configuration
 
-## Production routing
+## Production generation routing
 
 | Profile | Model | Reasoning | Purpose |
 |---|---|---|---|
@@ -10,6 +10,24 @@
 | `deep` | `openai/gpt-oss-20b` | `high` | Tasks that justify substantially more reasoning time |
 
 Applications should normally request `default` or `deep`, not raw model IDs. `medium` reasoning remains available through the explicit `reasoning` override when an application or experiment needs it.
+
+## Embedding model
+
+Embeddings are a separate capability from generation profiles.
+
+Preferred configuration:
+
+```dotenv
+EMBEDDING_MODEL=text-embedding-bge-m3-embeddings
+EMBEDDING_QUERY_PREFIX=
+EMBEDDING_DOCUMENT_PREFIX=
+```
+
+BGE-M3 is preferred for the first RAG milestone because the gateway is expected to index multilingual as well as English personal material. The raw LM Studio model key is an environment setting because locally downloaded revisions may expose a different key.
+
+Applications call `/v1/embeddings` or the RAG endpoints and never need to know that key. If the embedding model or dimension changes, existing RAG collections are considered incompatible and must be reindexed rather than mixing vector spaces.
+
+If a different embedding family requires task prefixes, set `EMBEDDING_QUERY_PREFIX` and `EMBEDDING_DOCUMENT_PREFIX` in `.env`; do not bake those strings into applications.
 
 ## Why default uses low reasoning
 
@@ -32,6 +50,10 @@ The full immutable record is in [`benchmarks/history/2026-09-13-gptoss-reasoning
 ## Fast profile status
 
 `fast` currently points to Gemma 4 12B as an experimental mapping. The GPT-OSS reasoning experiment did **not** establish a final fast tier. A future fast-model comparison must beat GPT-OSS low by enough latency to justify another model and the associated loading/routing complexity.
+
+## RAG retrieval validation
+
+The chosen embedding model is validated separately with `benchmarks/run_rag_benchmarks.py`. That benchmark measures Recall@1/3/5, mean reciprocal rank, and retrieval latency on a fixed multilingual corpus. Retrieval-model changes should be compared with that benchmark rather than with the generation benchmark.
 
 ## Older model comparison
 

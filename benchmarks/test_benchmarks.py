@@ -1,223 +1,346 @@
+"""Regression tests for benchmark loading, grading, checkpointing, and code execution."""
+
+from __future__ import annotations
+
 import contextlib
 import copy
 import io
-import itertools
 import json
 import os
-from pathlib import Path
 import sys
 import tempfile
 import unittest
+from pathlib import Path
 from unittest.mock import patch
 
 import httpx
+
 import run_benchmarks as runner
 from grading import grade, normalize
-from reporting import make_summary, save_results
 
-CASES = {c['id']: c for c in runner.load_cases()}
+CASES = {case["id"]: case for case in runner.load_cases()}
 
 
 class GradingTests(unittest.TestCase):
+    """Verify deterministic grading rules independently from model inference."""
+
     def test_all_objective_golden_answers(self):
-        for c in CASES.values():
-            e = c['expected']
-            if 'value' not in e:
+        for case in CASES.values():
+            expected = case["expected"]
+            if "value" not in expected:
                 continue
-            text = json.dumps(e['value']) if 'json' in e['mode'] else str(e['value'])
-            with self.subTest(case=c['id']):
-                self.assertTrue(grade(c, text)['semantic_correct'])
-                self.assertTrue(grade(c, text)['format_correct'])
+            text = (
+                json.dumps(expected["value"])
+                if "json" in expected["mode"]
+                else str(expected["value"])
+            )
+            with self.subTest(case=case["id"]):
+                result = grade(case, text)
+                self.assertTrue(result["semantic_correct"])
+                self.assertTrue(result["format_correct"])
 
     def test_normalization_and_separate_format(self):
-        c = CASES['extract_001']
-        answer = dict(c['expected']['value'], course='mat186', assignment='Problem Set #2',
-                      due_date='Sept 18 2026', due_time='11:59pm', timezone='ET')
-        g = grade(c, json.dumps(answer))
-        self.assertTrue(g['semantic_correct'])
-        self.assertFalse(g['format_correct'])
-        self.assertTrue(g['instruction_following'])  # Prompt doesn't require ISO.
-        answer['due_date'] = '2026-09-19'
-        answer['due_time'] = '23:59'
-        g = grade(c, json.dumps(answer))
-        self.assertFalse(g['semantic_correct'])
-        self.assertTrue(g['format_correct'])
+        case = CASES["extract_001"]
+        answer = dict(
+            case["expected"]["value"],
+            course="mat186",
+            assignment="Problem Set #2",
+            due_date="Sept 18 2026",
+            due_time="11:59pm",
+            timezone="ET",
+        )
+        result = grade(case, json.dumps(answer))
+        self.assertTrue(result["semantic_correct"])
+        self.assertFalse(result["format_correct"])
+        self.assertTrue(result["instruction_following"])
+
+        answer["due_date"] = "2026-09-19"
+        answer["due_time"] = "23:59"
+        result = grade(case, json.dumps(answer))
+        self.assertFalse(result["semantic_correct"])
+        self.assertTrue(result["format_correct"])
 
     def test_guardrails(self):
-        for value in ('September sometime', '09/10/26', '2026-02-30'):
+        for value in ("September sometime", "09/10/26", "2026-02-30"):
             with self.assertRaises(ValueError):
-                normalize(value, 'date')
-        self.assertNotEqual(normalize('EST', 'timezone'), normalize('EDT', 'timezone'))
-        self.assertNotEqual(normalize('EST', 'timezone'), normalize('ET', 'timezone'))
-        for value in (True, 'NaN', 'Infinity', '1,2', '12 dollars'):
+                normalize(value, "date")
+        self.assertNotEqual(normalize("EST", "timezone"), normalize("EDT", "timezone"))
+        self.assertNotEqual(normalize("EST", "timezone"), normalize("ET", "timezone"))
+        for value in (True, "NaN", "Infinity", "1,2", "12 dollars"):
             with self.assertRaises(ValueError):
-                normalize(value, 'number')
+                normalize(value, "number")
 
-    def test_numbers_booleans_nested_aliases(self):
-        c = CASES['extract_002']
-        a = dict(c['expected']['value'], subtotal='82.50')
-        g = grade(c, json.dumps(a))
-        self.assertTrue(g['semantic_correct'])
-        self.assertFalse(g['format_correct'])
-        c = CASES['extract_005']
-        a = dict(c['expected']['value'], authentication=1)
-        self.assertFalse(grade(c, json.dumps(a))['semantic_correct'])
-        c = CASES['extract_003']
-        a = dict(c['expected']['value'])
-        a['service_name'] = a.pop('service')
-        self.assertTrue(grade(c, json.dumps(a))['semantic_correct'])
-        self.assertFalse(grade(c, json.dumps(a))['schema_correct'])
-        c = CASES['long_002']
-        a = copy.deepcopy(c['expected']['value'])
-        a['Lab 2']['time'] = '11:59 PM'
-        g = grade(c, json.dumps(a))
-        self.assertTrue(g['semantic_correct'])
-        self.assertFalse(g['instruction_following'])
+    def test_numbers_booleans_and_aliases(self):
+        case = CASES["extract_002"]
+        answer = dict(case["expected"]["value"], subtotal="82.50")
+        result = grade(case, json.dumps(answer))
+        self.assertTrue(result["semantic_correct"])
+        self.assertFalse(result["format_correct"])
+
+        case = CASES["extract_005"]
+        answer = dict(case["expected"]["value"], authentication=1)
+        self.assertFalse(grade(case, json.dumps(answer))["semantic_correct"])
+
+        case = CASES["extract_003"]
+        answer = dict(case["expected"]["value"])
+        answer["service_name"] = answer.pop("service")
+        result = grade(case, json.dumps(answer))
+        self.assertTrue(result["semantic_correct"])
+        self.assertFalse(result["schema_correct"])
+
+        case = CASES["long_002"]
+        answer = copy.deepcopy(case["expected"]["value"])
+        answer["Lab 2"]["time"] = "11:59 PM"
+        result = grade(case, json.dumps(answer))
+        self.assertTrue(result["semantic_correct"])
+        self.assertFalse(result["instruction_following"])
 
     def test_json_wrappers_truncation_and_duplicates(self):
-        c = CASES['extract_001']
-        text = json.dumps(c['expected']['value'])
-        for wrapped in ('```json\n' + text + '\n```', 'Here is the answer:\n' + text):
-            g = grade(c, wrapped)
-            self.assertTrue(g['semantic_correct'])
-            self.assertFalse(g['instruction_following'])
-        for invalid in (text[:-3], text + text, '{"a":1,"a":2}', '{"x":NaN}'):
-            self.assertIsNone(grade(c, invalid)['semantic_correct'])
+        case = CASES["extract_001"]
+        text = json.dumps(case["expected"]["value"])
+        for wrapped in (f"```json\n{text}\n```", f"Here is the answer:\n{text}"):
+            result = grade(case, wrapped)
+            self.assertTrue(result["semantic_correct"])
+            self.assertFalse(result["instruction_following"])
 
-    def test_labels(self):
-        c = CASES['classify_001']
-        for value in ('The correct classification is assignment.', '`assignment`', 'Assignment'):
-            g = grade(c, value)
-            self.assertTrue(g['semantic_correct'])
-            self.assertFalse(g['format_correct'])
-        g = grade(c, 'exam')
-        self.assertFalse(g['semantic_correct'])
-        self.assertTrue(g['instruction_following'])
-        for value in ('not assignment', 'assignment or exam', 'It could be an assignment but I am unsure.'):
-            self.assertIsNone(grade(c, value)['semantic_correct'])
+        for invalid in (text[:-3], text + text, '{"a":1,"a":2}', '{"x":NaN}'):
+            self.assertIsNone(grade(case, invalid)["semantic_correct"])
+
+    def test_labels_and_unicode_equivalence(self):
+        case = CASES["classify_001"]
+        for value in ("The correct classification is assignment.", "`assignment`", "Assignment"):
+            result = grade(case, value)
+            self.assertTrue(result["semantic_correct"])
+            self.assertFalse(result["format_correct"])
+
+        result = grade(case, "exam")
+        self.assertFalse(result["semantic_correct"])
+        self.assertTrue(result["instruction_following"])
+
+        for value in (
+            "not assignment",
+            "assignment or exam",
+            "It could be an assignment but I am unsure.",
+        ):
+            self.assertIsNone(grade(case, value)["semantic_correct"])
+
+        complexity = grade(CASES["reason_004"], "O(n²)")
+        self.assertTrue(complexity["semantic_correct"])
+        self.assertFalse(complexity["format_correct"])
 
     def test_numeric(self):
-        c = CASES['reason_003']
-        g = grade(c, 'The answer is 11.')
-        self.assertTrue(g['semantic_correct'])
-        self.assertFalse(g['format_correct'])
-        g = grade(c, '12')
-        self.assertFalse(g['semantic_correct'])
-        self.assertTrue(g['format_correct'])
-        for value in ('11 or 12', '11 + 2 = 13', 'NaN', 'Infinity'):
-            self.assertIsNone(grade(c, value)['semantic_correct'])
-        self.assertTrue(grade(CASES['reason_001'], '0.30001')['semantic_correct'])
+        case = CASES["reason_003"]
+        result = grade(case, "The answer is 11.")
+        self.assertTrue(result["semantic_correct"])
+        self.assertFalse(result["format_correct"])
+
+        result = grade(case, "12")
+        self.assertFalse(result["semantic_correct"])
+        self.assertTrue(result["format_correct"])
+
+        for value in ("11 or 12", "11 + 2 = 13", "NaN", "Infinity"):
+            self.assertIsNone(grade(case, value)["semantic_correct"])
+        self.assertTrue(grade(CASES["reason_001"], "0.30001")["semantic_correct"])
 
     def test_enabled_state_and_free_text_review(self):
-        c = CASES['extract_005']
-        a = dict(c['expected']['value'], authentication='enabled', cors='disabled')
-        g = grade(c, json.dumps(a))
-        self.assertTrue(g['semantic_correct'])
-        self.assertFalse(g['format_correct'])
-        a['cors'] = 'enabled'
-        self.assertFalse(grade(c, json.dumps(a))['semantic_correct'])
-        a['cors'] = 0
-        self.assertFalse(grade(c, json.dumps(a))['semantic_correct'])
-        c = CASES['long_001']
-        a = dict(c['expected']['value'], root_cause='A non-existent model was configured')
-        self.assertIsNone(grade(c, json.dumps(a))['semantic_correct'])
-        a['recovery_time'] = '09:01'
-        self.assertFalse(grade(c, json.dumps(a))['semantic_correct'])
+        case = CASES["extract_005"]
+        answer = dict(case["expected"]["value"], authentication="enabled", cors="disabled")
+        result = grade(case, json.dumps(answer))
+        self.assertTrue(result["semantic_correct"])
+        self.assertFalse(result["format_correct"])
+
+        answer["cors"] = "enabled"
+        self.assertFalse(grade(case, json.dumps(answer))["semantic_correct"])
+        answer["cors"] = 0
+        self.assertFalse(grade(case, json.dumps(answer))["semantic_correct"])
+
+        case = CASES["long_001"]
+        answer = dict(case["expected"]["value"], root_cause="A non-existent model was configured")
+        self.assertIsNone(grade(case, json.dumps(answer))["semantic_correct"])
+        answer["recovery_time"] = "09:01"
+        self.assertFalse(grade(case, json.dumps(answer))["semantic_correct"])
 
     def test_summary(self):
-        c = CASES['summary_004']
-        g = grade(c, 'An unbulleted paragraph.')
-        self.assertIsNone(g['semantic_correct'])
-        self.assertFalse(g['format_correct'])
-        self.assertFalse(grade(c, '')['format_correct'])
-        self.assertTrue(grade(c, '- One point.\n- Another point.')['format_correct'])
-        self.assertFalse(grade(CASES['summary_001'], 'word ' * 51)['instruction_following'])
-        self.assertTrue(grade(CASES['summary_002'], 'One sentence. Another sentence.')['instruction_following'])
+        case = CASES["summary_004"]
+        result = grade(case, "An unbulleted paragraph.")
+        self.assertIsNone(result["semantic_correct"])
+        self.assertFalse(result["format_correct"])
+        self.assertFalse(grade(case, "")["format_correct"])
+        self.assertTrue(grade(case, "- One point.\n- Another point.")["format_correct"])
+        self.assertFalse(
+            grade(CASES["summary_001"], "word " * 51)["instruction_following"]
+        )
+        self.assertTrue(
+            grade(CASES["summary_002"], "One sentence. Another sentence.")[
+                "instruction_following"
+            ]
+        )
 
     def test_key_order(self):
-        c = CASES['instruction_005']
-        a = dict(reversed(list(c['expected']['value'].items())))
-        g = grade(c, json.dumps(a))
-        self.assertTrue(g['semantic_correct'])
-        self.assertTrue(g['format_correct'])
-        self.assertFalse(g['instruction_following'])
+        case = CASES["instruction_005"]
+        answer = dict(reversed(list(case["expected"]["value"].items())))
+        result = grade(case, json.dumps(answer))
+        self.assertTrue(result["semantic_correct"])
+        self.assertTrue(result["format_correct"])
+        self.assertFalse(result["instruction_following"])
 
     def test_text_dimensions(self):
-        g = grade(CASES['instruction_003'], 'Local Artificial Intelligence Gateway')
-        self.assertTrue(g['semantic_correct'])
-        self.assertFalse(g['format_correct'])
-        g = grade(CASES['instruction_004'], 'RED\nGREEN\nYELLOW')
-        self.assertFalse(g['semantic_correct'])
-        self.assertTrue(g['format_correct'])
+        result = grade(CASES["instruction_003"], "Local Artificial Intelligence Gateway")
+        self.assertTrue(result["semantic_correct"])
+        self.assertFalse(result["format_correct"])
+
+        result = grade(CASES["instruction_004"], "RED\nGREEN\nYELLOW")
+        self.assertFalse(result["semantic_correct"])
+        self.assertTrue(result["format_correct"])
 
     def test_code_cases(self):
         answers = {
-            'coding_001': 'def clamp(value, minimum, maximum):\n return max(minimum, min(value, maximum))',
-            'coding_002': 'def dedupe_preserve_order(items):\n return list(dict.fromkeys(items))',
-            'coding_003': 'def largest(numbers):\n return max(numbers)',
-            'coding_004': "def flatten_dict(data, prefix=''):\n result = {}\n for k, v in data.items():\n  key = prefix + '.' + k if prefix else k\n  if isinstance(v, dict): result.update(flatten_dict(v, key))\n  else: result[key] = v\n return result",
+            "coding_001": (
+                "def clamp(value, minimum, maximum):\n"
+                " return max(minimum, min(value, maximum))"
+            ),
+            "coding_002": "def dedupe_preserve_order(items):\n return list(dict.fromkeys(items))",
+            "coding_003": "def largest(numbers):\n return max(numbers)",
+            "coding_004": (
+                "def flatten_dict(data, prefix=''):\n"
+                " result = {}\n"
+                " for k, v in data.items():\n"
+                "  key = prefix + '.' + k if prefix else k\n"
+                "  if isinstance(v, dict): result.update(flatten_dict(v, key))\n"
+                "  else: result[key] = v\n"
+                " return result"
+            ),
         }
         for key, code in answers.items():
             with self.subTest(case=key):
-                g = grade(CASES[key], code)
-                self.assertTrue(g['semantic_correct'])
-                self.assertTrue(g['format_correct'])
-                self.assertEqual(len(g['tests']), len(CASES[key]['expected']['tests']))
-        code = answers['coding_001']
-        self.assertFalse(grade(CASES['coding_001'], '```python\n' + code + '\n```')['format_correct'])
-        self.assertTrue(grade(CASES['coding_001'], '```python\n' + code + '\n```')['semantic_correct'])
-        self.assertFalse(grade(CASES['coding_001'], 'def clamp(*args): return 0')['semantic_correct'])
-        self.assertFalse(grade(CASES['coding_001'], 'this is invalid python')['semantic_correct'])
-        self.assertFalse(grade(CASES['coding_001'], 'while True: pass')['semantic_correct'])
-        self.assertIsNone(grade(CASES['coding_001'], code, False)['semantic_correct'])
+                result = grade(CASES[key], code)
+                self.assertTrue(result["semantic_correct"])
+                self.assertTrue(result["format_correct"])
+                self.assertEqual(len(result["tests"]), len(CASES[key]["expected"]["tests"]))
 
-    def test_cases_preserved(self):
+        code = answers["coding_001"]
+        fenced = f"```python\n{code}\n```"
+        self.assertFalse(grade(CASES["coding_001"], fenced)["format_correct"])
+        self.assertTrue(grade(CASES["coding_001"], fenced)["semantic_correct"])
+        self.assertFalse(
+            grade(CASES["coding_001"], "def clamp(*args): return 0")["semantic_correct"]
+        )
+        self.assertFalse(
+            grade(CASES["coding_001"], "this is invalid python")["semantic_correct"]
+        )
+        self.assertFalse(
+            grade(CASES["coding_001"], "while True: pass")["semantic_correct"]
+        )
+        self.assertIsNone(grade(CASES["coding_001"], code, False)["semantic_correct"])
+
+    def test_current_suite_v3_fixes_known_ambiguities(self):
+        policy = runner.load_suite_policy()
+        self.assertEqual(policy["version"], 3)
         self.assertEqual(len(CASES), 40)
-        for path in (runner.BENCH_DIR / 'backups/v1').glob('cases_*.json'):
-            old = json.loads(path.read_text(encoding='utf-8'))
-            for c in old['cases']:
-                self.assertEqual(c['prompt'], CASES[c['id']]['prompt'])
-                for key in ('value', 'tests'):
-                    self.assertEqual(c['expected'].get(key), CASES[c['id']]['expected'].get(key))
-        valid = [p for p in itertools.permutations('ABCD') if p[3]=='C' and p.index('B')==p.index('A')+1 and p.index('D')>p.index('B')]
-        self.assertEqual(valid, [('A','B','D','C')])
+        self.assertEqual(CASES["classify_001"]["expected"]["value"], "assignment")
+        self.assertIn("not the grammatical form", CASES["classify_001"]["prompt"])
+        self.assertIn("irrelevant = unrelated to course", CASES["classify_004"]["prompt"])
+        self.assertIn("generic value", CASES["project_005"]["prompt"])
+        self.assertEqual(CASES["project_008"]["expected"]["value"]["B"], "default")
+        self.assertIn("default profile", CASES["long_003"]["prompt"])
+
+    def test_frozen_base_case_files_remain_v2(self):
+        for path in runner.BENCH_DIR.glob("cases_*.json"):
+            data = json.loads(path.read_text(encoding="utf-8"))
+            self.assertEqual(data["version"], 2)
 
 
 class RunnerTests(unittest.TestCase):
-    def run_mock(self, interrupt=False):
+    """Verify sequential requests and crash-safe checkpoint behavior."""
+
+    def run_mock(self, interrupt: bool = False):
         with tempfile.TemporaryDirectory() as temp:
             events = []
+
             def request(req):
-                if req.url.path == '/health':
-                    return httpx.Response(200, json={'status':'ok'})
+                if req.url.path == "/health":
+                    return httpx.Response(200, json={"status": "ok"})
+
                 body = json.loads(req.content)
-                self.assertEqual(set(body), {'prompt','quality','temperature','max_output_tokens'})
-                self.assertEqual(req.headers['X-Local-AI-Key'], 'test-key')
+                self.assertEqual(
+                    set(body),
+                    {"prompt", "quality", "temperature", "max_output_tokens"},
+                )
+                self.assertEqual(req.headers["X-Local-AI-Key"], "test-key")
+
                 if events:
-                    snapshot = json.loads(next(Path(temp).glob('*/raw_results.json')).read_text(encoding='utf-8'))
-                    self.assertEqual(len(snapshot['results']), len(events))
+                    snapshot = json.loads(
+                        next(Path(temp).glob("*/raw_results.json")).read_text(
+                            encoding="utf-8"
+                        )
+                    )
+                    self.assertEqual(len(snapshot["results"]), len(events))
+
                 events.append(body)
                 if len(events) == 2:
                     if interrupt:
                         raise KeyboardInterrupt()
-                    return httpx.Response(502, json={'detail':'model load failed'})
-                c = next(c for c in CASES.values() if c['prompt'] == body['prompt'])
-                return httpx.Response(200, json={'text': json.dumps(c['expected']['value']), 'model':'mock',
-                    'quality':'balanced', 'tokens_per_second': 25, 'input_tokens':10, 'output_tokens':20})
+                    return httpx.Response(502, json={"detail": "model load failed"})
+
+                case = next(case for case in CASES.values() if case["prompt"] == body["prompt"])
+                return httpx.Response(
+                    200,
+                    json={
+                        "text": json.dumps(case["expected"]["value"]),
+                        "model": "mock",
+                        "quality": "default",
+                        "tokens_per_second": 25,
+                        "input_tokens": 10,
+                        "output_tokens": 20,
+                    },
+                )
+
             client = httpx.Client(transport=httpx.MockTransport(request))
-            with patch.object(runner, 'RESULTS_DIR', Path(temp)), patch.object(runner.httpx, 'Client', return_value=client), \
-                 patch.object(sys, 'argv', ['runner', '--quality','balanced','--category','structured_extraction','--name','test']), \
-                 patch.dict(os.environ, {'GATEWAY_API_KEY':'test-key'}), contextlib.redirect_stdout(io.StringIO()):
+            argv = [
+                "runner",
+                "--quality",
+                "default",
+                "--category",
+                "structured_extraction",
+                "--name",
+                "test",
+            ]
+            with (
+                patch.object(runner, "RESULTS_DIR", Path(temp)),
+                patch.object(runner.httpx, "Client", return_value=client),
+                patch.object(sys, "argv", argv),
+                patch.dict(os.environ, {"GATEWAY_API_KEY": "test-key"}),
+                contextlib.redirect_stdout(io.StringIO()),
+            ):
                 result = runner.main()
+
             folder = next(Path(temp).iterdir())
-            self.assertEqual({p.name for p in folder.iterdir()}, {'raw_results.json','summary.json','results.csv','manual_review.json','report.md'})
-            data = json.loads((folder/'raw_results.json').read_text(encoding='utf-8'))
-            self.assertEqual(data['metadata']['state'], 'interrupted' if interrupt else 'completed')
-            self.assertEqual(len(data['results']), 2 if interrupt else 5)
+            self.assertEqual(
+                {path.name for path in folder.iterdir()},
+                {
+                    "raw_results.json",
+                    "summary.json",
+                    "results.csv",
+                    "manual_review.json",
+                    "report.md",
+                },
+            )
+            data = json.loads((folder / "raw_results.json").read_text(encoding="utf-8"))
+            self.assertEqual(
+                data["metadata"]["state"], "interrupted" if interrupt else "completed"
+            )
+            self.assertEqual(data["metadata"]["version"], 3)
+            self.assertEqual(len(data["results"]), 2 if interrupt else 5)
             self.assertEqual(result, 130 if interrupt else 0)
-            summary = json.loads((folder/'summary.json').read_text(encoding='utf-8'))['summary']
-            self.assertEqual(summary['errors'], 1)
-            self.assertEqual(summary['scores']['semantic_correct']['evaluated'], 1 if interrupt else 4)
+
+            summary = json.loads(
+                (folder / "summary.json").read_text(encoding="utf-8")
+            )["summary"]
+            self.assertEqual(summary["errors"], 1)
+            expected_evaluated = 1 if interrupt else 4
+            self.assertEqual(
+                summary["scores"]["semantic_correct"]["evaluated"], expected_evaluated
+            )
 
     def test_sequential_checkpoint_and_error(self):
         self.run_mock()
@@ -226,5 +349,5 @@ class RunnerTests(unittest.TestCase):
         self.run_mock(True)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

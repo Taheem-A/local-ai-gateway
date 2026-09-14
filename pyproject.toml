@@ -1,0 +1,19 @@
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+extend-exclude = [
+    ".venv",
+    "benchmarks/backups",
+    "benchmarks/results",
+    "work",
+]
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I"]
+
+[tool.ruff.lint.per-file-ignores]
+# Benchmark scripts intentionally import sibling modules as top-level modules so
+# both `python benchmarks/run_benchmarks.py` and pytest discovery work without
+# turning the historical benchmark directory into an installable package.
+"benchmarks/run_benchmarks.py" = ["I001"]
+"benchmarks/test_benchmarks.py" = ["I001"]

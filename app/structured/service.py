@@ -1,8 +1,11 @@
+"""Structured-generation orchestration with validation and bounded repair retries."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import Any
 
+from app.errors import StructuredOutputError
 from app.lmstudio import generate_structured
 from app.structured.normalization import normalize_instance
 from app.structured.schema_prep import add_generation_hints, prepare_generation_schema
@@ -11,6 +14,8 @@ from app.structured.validation import check_schema, parse_json, validation_error
 
 @dataclass(frozen=True)
 class StructuredResult:
+    """Validated structured data plus aggregate token/attempt diagnostics."""
+
     data: Any
     model: str
     attempts: int
@@ -21,6 +26,8 @@ class StructuredResult:
 
 
 def _retry_prompt(original_prompt: str, previous_text: str, errors: list[str]) -> str:
+    """Build a repair prompt that exposes validation failures without changing facts."""
+
     error_lines = "\n".join(f"- {error}" for error in errors)
     return (
         f"{original_prompt}\n\n"
@@ -42,17 +49,14 @@ async def run_structured(
     max_output_tokens: int,
     max_attempts: int,
 ) -> StructuredResult:
+    """Generate, normalize, validate, and if necessary repair structured output."""
+
     check_schema(schema)
 
-    # The caller schema remains authoritative for local normalization/validation.
-    # A model-facing copy resolves representation details that JSON Schema itself
-    # leaves broader than this gateway's API contract (notably RFC3339 `time`).
+    # The caller schema remains authoritative for local validation. A transformed
+    # copy handles representation constraints that are narrower than standard JSON
+    # Schema semantics, notably the gateway's local HH:MM interpretation of time.
     generation_schema = prepare_generation_schema(schema)
-
-    # Constrained decoding controls syntax, but gateway-specific semantics such as
-    # "preserve the source's local clock time" also need to be visible to the
-    # model in natural language. Keep those instructions generated from the same
-    # caller schema so the prompt and validator cannot silently drift apart.
     canonical_prompt = add_generation_hints(prompt, schema)
 
     attempt_prompt = canonical_prompt
@@ -92,7 +96,7 @@ async def run_structured(
         else:
             try:
                 data = parse_json(last_text)
-            except Exception as exc:
+            except (ValueError, TypeError) as exc:
                 last_errors = [f"Response was not valid JSON: {exc}"]
             else:
                 data = normalize_instance(data, schema)
@@ -110,8 +114,6 @@ async def run_structured(
 
         if attempt < max_attempts:
             attempt_prompt = _retry_prompt(canonical_prompt, last_text, last_errors)
-
-    from app.errors import StructuredOutputError
 
     raise StructuredOutputError(
         f"The model failed structured-output validation after {max_attempts} attempt(s).",

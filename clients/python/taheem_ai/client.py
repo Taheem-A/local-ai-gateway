@@ -1,3 +1,5 @@
+"""Synchronous Python client for the Local AI Gateway."""
+
 from __future__ import annotations
 
 import os
@@ -9,9 +11,12 @@ from pydantic import BaseModel
 from taheem_ai.errors import AIError
 
 T = TypeVar("T", bound=BaseModel)
+DEFAULT_GATEWAY_URL = "http://127.0.0.1:4812"
 
 
 class AI:
+    """Small synchronous SDK over the gateway's public HTTP endpoints."""
+
     def __init__(
         self,
         *,
@@ -20,8 +25,13 @@ class AI:
         project: str | None = None,
         timeout: float = 300.0,
     ) -> None:
-        self.base_url = (base_url or os.getenv("LOCAL_AI_GATEWAY_URL") or "http://127.0.0.1:4812").rstrip("/")
-        self.api_key = api_key or os.getenv("LOCAL_AI_GATEWAY_KEY") or os.getenv("GATEWAY_API_KEY")
+        configured_url = base_url or os.getenv("LOCAL_AI_GATEWAY_URL") or DEFAULT_GATEWAY_URL
+        self.base_url = configured_url.rstrip("/")
+        self.api_key = (
+            api_key
+            or os.getenv("LOCAL_AI_GATEWAY_KEY")
+            or os.getenv("GATEWAY_API_KEY")
+        )
         self.project = project
         self.timeout = timeout
 
@@ -31,12 +41,16 @@ class AI:
             )
 
     def _headers(self) -> dict[str, str]:
+        """Build authentication and optional project-attribution headers."""
+
         headers = {"X-Local-AI-Key": self.api_key}
         if self.project:
             headers["X-Project-ID"] = self.project
         return headers
 
-    def _request(self, method: str, path: str, **kwargs) -> dict[str, Any]:
+    def _request(self, method: str, path: str, **kwargs: Any) -> dict[str, Any]:
+        """Send one authenticated request and translate gateway errors to AIError."""
+
         with httpx.Client(timeout=self.timeout) as client:
             response = client.request(
                 method,
@@ -49,7 +63,7 @@ class AI:
             try:
                 payload = response.json()
                 error = payload.get("error", {})
-            except Exception:
+            except (ValueError, TypeError):
                 error = {}
             raise AIError(
                 error.get("code", f"HTTP_{response.status_code}"),
@@ -59,12 +73,16 @@ class AI:
         return response.json()
 
     def health(self) -> dict[str, Any]:
+        """Check the gateway process without invoking a model."""
+
         with httpx.Client(timeout=10) as client:
             response = client.get(f"{self.base_url}/health")
             response.raise_for_status()
             return response.json()
 
     def status(self) -> dict[str, Any]:
+        """Return authenticated gateway/LM Studio status information."""
+
         return self._request("GET", "/v1/status")
 
     def ask(
@@ -77,6 +95,8 @@ class AI:
         temperature: float = 0.2,
         max_output_tokens: int = 2048,
     ) -> str:
+        """Return free-form generated text using a public gateway profile."""
+
         payload = self._request(
             "POST",
             "/v1/generate",
@@ -101,6 +121,8 @@ class AI:
         system: str | None = None,
         max_attempts: int = 2,
     ) -> T:
+        """Extract validated structured data directly into a Pydantic model."""
+
         payload = self._request(
             "POST",
             "/v1/extract",
@@ -124,6 +146,8 @@ class AI:
         reasoning: str | None = None,
         system: str | None = None,
     ) -> str:
+        """Return exactly one label from a caller-provided closed vocabulary."""
+
         payload = self._request(
             "POST",
             "/v1/classify",

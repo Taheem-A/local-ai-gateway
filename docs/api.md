@@ -12,26 +12,28 @@ Authenticated routes require:
 X-Local-AI-Key: <gateway key>
 ```
 
-Applications should also send:
+Applications should also send a stable project identifier:
 
 ```text
 X-Project-ID: itqaan
 ```
 
-so operational metrics can be grouped by project.
+so operational metrics can be grouped without storing prompt content.
 
 ## Profiles
 
-- `fast`: current Gemma fast candidate.
-- `balanced`: historical Gemma benchmark profile; preserved for reproducibility.
-- `default`: GPT-OSS 20B / medium reasoning; recommended for new application code.
-- `deep`: GPT-OSS 20B / medium reasoning until the reasoning-level benchmark is finished.
+| Profile | Current mapping | Intended use |
+|---|---|---|
+| `fast` | Gemma 4 12B | Experimental fast candidate |
+| `balanced` | Gemma 4 12B | Historical benchmark compatibility |
+| `default` | GPT-OSS 20B / low | Normal application work |
+| `deep` | GPT-OSS 20B / high | Difficult tasks that justify extra reasoning |
 
-All generation endpoints also accept an optional explicit `reasoning` override: `low`, `medium`, or `high`.
+Generation endpoints accept an optional explicit `reasoning` override: `low`, `medium`, or `high`. An override changes reasoning effort without requiring callers to know the raw model ID.
 
 ## `GET /health`
 
-Unauthenticated lightweight process health check. Does not invoke a model.
+Unauthenticated process health check. It does not contact LM Studio or load a model.
 
 ```json
 {"status":"ok"}
@@ -39,13 +41,15 @@ Unauthenticated lightweight process health check. Does not invoke a model.
 
 ## `GET /v1/status`
 
-Returns LM Studio availability, loaded models when reported by LM Studio, and configured profiles.
+Returns LM Studio availability, loaded models when reported by LM Studio, and the configured public profiles.
 
 ## `GET /v1/models`
 
 Returns public profile mappings. Normal applications should use profile names rather than raw model IDs.
 
 ## `POST /v1/generate`
+
+Free-form generation.
 
 Request:
 
@@ -60,7 +64,13 @@ Request:
 }
 ```
 
+With the current production configuration, `quality: "default"` and `reasoning: null` resolves to GPT-OSS 20B with low reasoning.
+
+Response fields include the visible text, resolved model/profile/reasoning, token counts, latency metrics when available, and an opaque `request_id`.
+
 ## `POST /v1/extract`
+
+Schema-constrained extraction with local validation and bounded repair retries.
 
 Request:
 
@@ -84,15 +94,15 @@ Request:
 
 ### Canonical local times
 
-The gateway's extraction API uses `format: "time"` as a convenience for a **local 24-hour `HH:MM` clock value**. This is intentionally narrower than standard JSON Schema's RFC 3339 `time` format, which can contain seconds and a timezone suffix.
+The extraction API uses `format: "time"` as a convenience for a **local 24-hour `HH:MM` clock value**. This is intentionally narrower than standard JSON Schema's RFC 3339 `time`, which can contain seconds and timezone information.
 
-Before the schema is sent to LM Studio, the gateway makes a model-facing copy and translates a string field with `format: "time"` to an explicit `HH:MM` regular-expression constraint using ordinary digit ranges rather than regex shorthand classes. It also injects a natural-language canonical-output requirement into the model prompt because constrained-decoding schemas are primarily syntax constraints, not a replacement for semantic instructions such as preserving the source's local clock time.
+Before generation, the gateway creates a model-facing copy of the schema, replaces a string `format: "time"` with an explicit `HH:MM` pattern, strips private `x-*` annotations, and adds matching natural-language representation hints to the prompt.
 
-The original caller schema remains authoritative for gateway-side normalization and validation. Private gateway annotations such as `x-normalize` are stripped from the model-facing copy.
+The original caller schema remains authoritative for gateway-side normalization and validation.
 
-The normalizer treats local values such as `23:59:00` as the same clock time as `23:59` **only when the seconds component is exactly zero and no timezone/offset is present**. It canonicalizes that value to `23:59`. It deliberately does not rewrite timezone-qualified values such as `18:59:00Z`, because silently removing the suffix could hide an incorrect timezone conversion.
+A local value such as `23:59:00` can canonicalize to `23:59` only when seconds are exactly zero and no timezone/offset is present. A value such as `18:59:00Z` is deliberately **not** rewritten because removing the suffix could hide a timezone-conversion error.
 
-Response:
+Example response:
 
 ```json
 {
@@ -103,7 +113,7 @@ Response:
   },
   "model": "openai/gpt-oss-20b",
   "profile": "default",
-  "reasoning": "medium",
+  "reasoning": "low",
   "attempts": 1,
   "validated": true,
   "request_id": "..."
@@ -112,22 +122,28 @@ Response:
 
 ## `POST /v1/classify`
 
+Closed-label classification implemented through enum-constrained structured output.
+
 Request:
 
 ```json
 {
-  "text": "Homework 4 is due Sunday.",
+  "text": "Homework 4. Due Sunday at 11:59 PM.",
   "labels": ["assignment", "exam", "announcement", "irrelevant"],
   "quality": "default",
   "max_output_tokens": 512
 }
 ```
 
-The gateway internally constructs a JSON schema whose label property is an enum, so the model cannot legally return a label outside the supplied set.
+The gateway constructs a JSON schema whose `label` property is an enum of the supplied labels, so a successful response cannot invent another label.
 
-`max_output_tokens` defaults to `512` for classification. The previous `128`-token hard cap was unsafe for reasoning models such as GPT-OSS: hidden reasoning can consume the generation budget before the model emits the tiny final JSON object. Values below `128` are rejected for this endpoint.
+The gateway does **not** invent definitions for ambiguous labels. If labels can overlap (for example, whether a message is an announcement versus whether it refers to an assignment), callers should choose mutually exclusive labels or supply a system instruction that defines the classification target.
 
-Structured-generation failures now preserve LM Studio's `finish_reason` plus token diagnostics when available. A length-limited empty response is reported explicitly instead of looking like a generic JSON parse failure.
+`max_output_tokens` defaults to `512`. The original 128-token ceiling was too small for a reasoning model because hidden reasoning could consume the generation budget before the tiny final JSON result was emitted.
+
+## Structured failure diagnostics
+
+Structured-generation failures retain the final validation errors and, when available, LM Studio's `finish_reason`, output-token count, and reasoning-token count. A length-limited empty response is therefore reported explicitly rather than appearing as a generic JSON parse failure.
 
 ## Errors
 
@@ -143,11 +159,11 @@ Gateway-owned errors use a stable envelope:
 }
 ```
 
-Current gateway codes include:
+Current codes include:
 
 - `AUTH_FAILED`
 - `INVALID_REQUEST`
 - `LMSTUDIO_UNAVAILABLE`
 - `OUTPUT_INVALID`
 
-More stable codes can be added as later tool/RAG/agent layers are implemented.
+Provider and validation failures are also recorded as operational metrics without storing prompt/response content.

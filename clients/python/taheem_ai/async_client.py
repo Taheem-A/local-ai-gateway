@@ -147,3 +147,111 @@ class AsyncAI:
             },
         )
         return payload["label"]
+
+    async def embed(
+        self,
+        inputs: str | list[str],
+        *,
+        purpose: str = "raw",
+    ) -> list[list[float]]:
+        """Return dense vectors without blocking the caller's event loop."""
+
+        payload = await self._request(
+            "POST",
+            "/v1/embeddings",
+            json={"input": inputs, "purpose": purpose},
+        )
+        return payload["embeddings"]
+
+    async def index_documents(
+        self,
+        collection: str,
+        documents: list[dict[str, Any]],
+        *,
+        chunk_size_chars: int | None = None,
+        chunk_overlap_chars: int | None = None,
+    ) -> dict[str, Any]:
+        """Chunk and index documents into a persistent local RAG collection."""
+
+        body: dict[str, Any] = {"collection": collection, "documents": documents}
+        if chunk_size_chars is not None:
+            body["chunk_size_chars"] = chunk_size_chars
+        if chunk_overlap_chars is not None:
+            body["chunk_overlap_chars"] = chunk_overlap_chars
+        return await self._request("POST", "/v1/rag/index", json=body)
+
+    async def search(
+        self,
+        collection: str,
+        query: str,
+        *,
+        top_k: int = 5,
+        min_score: float = 0.0,
+        metadata_filter: dict[str, Any] | None = None,
+    ) -> list[dict[str, Any]]:
+        """Return semantically similar indexed chunks asynchronously."""
+
+        payload = await self._request(
+            "POST",
+            "/v1/rag/search",
+            json={
+                "collection": collection,
+                "query": query,
+                "top_k": top_k,
+                "min_score": min_score,
+                "metadata_filter": metadata_filter,
+            },
+        )
+        return payload["hits"]
+
+    async def answer_with_sources(
+        self,
+        collection: str,
+        query: str,
+        *,
+        top_k: int = 5,
+        min_score: float = 0.0,
+        metadata_filter: dict[str, Any] | None = None,
+        quality: str = "default",
+        reasoning: str | None = None,
+        system: str | None = None,
+        max_output_tokens: int = 2048,
+    ) -> dict[str, Any]:
+        """Return a grounded answer and its verified citations asynchronously."""
+
+        return await self._request(
+            "POST",
+            "/v1/rag/answer",
+            json={
+                "collection": collection,
+                "query": query,
+                "top_k": top_k,
+                "min_score": min_score,
+                "metadata_filter": metadata_filter,
+                "quality": quality,
+                "reasoning": reasoning,
+                "system": system,
+                "max_output_tokens": max_output_tokens,
+            },
+        )
+
+    async def rag_collections(self) -> list[dict[str, Any]]:
+        """List persistent RAG collections and their index signatures."""
+
+        payload = await self._request("GET", "/v1/rag/collections")
+        return payload["collections"]
+
+    async def delete_rag_collection(self, collection: str) -> int:
+        """Delete a complete RAG collection and return removed chunk count."""
+
+        payload = await self._request("DELETE", f"/v1/rag/collections/{collection}")
+        return int(payload["deleted_chunks"])
+
+    async def delete_rag_document(self, collection: str, document_id: str) -> int:
+        """Delete one indexed document and return removed chunk count."""
+
+        payload = await self._request(
+            "DELETE",
+            f"/v1/rag/collections/{collection}/documents/{document_id}",
+        )
+        return int(payload["deleted_chunks"])

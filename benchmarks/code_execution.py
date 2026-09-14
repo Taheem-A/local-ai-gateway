@@ -1,62 +1,47 @@
+"""Execute only the benchmark suite's curated generated-Python test cases."""
+
+from __future__ import annotations
+
 import json
+import os
 import subprocess
 import sys
 import tempfile
-import os
 import uuid
 from pathlib import Path
+from typing import Any
+
 
 def clean(text: str) -> str:
-    return (
-        text
-        .replace("\r\n", "\n")
-        .replace("\r", "\n")
-        .strip()
-    )
+    """Normalize line endings and surrounding whitespace in generated code."""
+
+    return text.replace("\r\n", "\n").replace("\r", "\n").strip()
 
 
-# ---------------------------------------------------------
-# Code benchmark execution
-# ---------------------------------------------------------
+def run_code_tests(code: str, tests: list[dict[str, Any]]) -> dict[str, Any]:
+    """Run curated Python checks in an isolated child process.
 
-def run_code_tests(
-    code: str,
-    tests: list[dict],
-) -> dict:
-    """
-    Runs generated Python in a separate Python process.
-
-    IMPORTANT:
-    Python -I provides isolation from the user's Python
-    environment, but this is NOT a true security sandbox.
-
-    Only use this for the curated benchmark prompts.
+    Python's ``-I`` flag limits interaction with the user's normal Python
+    environment, but this is not a security sandbox. Only the repository's fixed
+    benchmark prompts should be executed through this helper.
     """
 
     code = clean(code)
 
-    # Remove Markdown fences if the model ignored instructions.
+    # A model may ignore the no-Markdown instruction. Strip exactly one outer
+    # fence so semantic correctness can still be tested separately from format.
     if code.startswith("```"):
-        lines = code.splitlines()
-
-        lines = lines[1:]
-
+        lines = code.splitlines()[1:]
         if lines and lines[-1].strip() == "```":
             lines = lines[:-1]
-
         code = "\n".join(lines)
 
-    marker = '__RESULT_' + uuid.uuid4().hex + '__'
-    harness = [
-        "",
-        "import json as _json",
-        "_results = []",
-    ]
+    marker = "__RESULT_" + uuid.uuid4().hex + "__"
+    harness = ["", "import json as _json", "_results = []"]
 
     for test in tests:
         expression = test["expression"]
         expected = test["expected"]
-
         harness += [
             "try:",
             f"    _actual = {expression}",
@@ -78,37 +63,31 @@ def run_code_tests(
         ]
 
     harness.append(
-        f"print({marker!r} + "
-        "_json.dumps(_results, ensure_ascii=False))"
+        f"print({marker!r} + _json.dumps(_results, ensure_ascii=False))"
     )
-
     script = code + "\n" + "\n".join(harness)
 
     with tempfile.TemporaryDirectory() as temp_dir:
         path = Path(temp_dir) / "candidate.py"
+        path.write_text(script, encoding="utf-8")
 
-        path.write_text(
-            script,
-            encoding="utf-8",
-        )
-
+        child_env = {
+            key: value
+            for key, value in os.environ.items()
+            if key.upper() in {"SYSTEMROOT", "WINDIR", "TEMP", "TMP", "PATH"}
+        }
         try:
             process = subprocess.run(
-                [
-                    sys.executable,
-                    "-I",
-                    str(path),
-                ],
+                [sys.executable, "-I", str(path)],
                 capture_output=True,
                 text=True,
                 timeout=5,
                 cwd=temp_dir,
-                env={k: v for k, v in os.environ.items() if k.upper() in
-                     {'SYSTEMROOT', 'WINDIR', 'TEMP', 'TMP', 'PATH'}},
-                encoding='utf-8',
-                errors='replace',
+                env=child_env,
+                encoding="utf-8",
+                errors="replace",
+                check=False,
             )
-
         except subprocess.TimeoutExpired:
             return {
                 "status": "fail",
@@ -118,7 +97,7 @@ def run_code_tests(
 
     result_line = next(
         (
-            line[len(marker):]
+            line[len(marker) :]
             for line in process.stdout.splitlines()
             if line.startswith(marker)
         ),
@@ -129,23 +108,13 @@ def run_code_tests(
         return {
             "status": "fail",
             "passed": False,
-            "reason": (
-                "Code test harness failed. "
-                f"stderr: {process.stderr.strip()}"
-            ),
+            "reason": f"Code test harness failed. stderr: {process.stderr.strip()}",
         }
 
     details = json.loads(result_line)
-
-    passed = all(
-        item["passed"]
-        for item in details
-    )
-
+    passed = all(item["passed"] for item in details)
     return {
         "status": "pass" if passed else "fail",
         "passed": passed,
         "tests": details,
     }
-
-

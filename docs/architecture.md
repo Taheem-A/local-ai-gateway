@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The gateway is a stable abstraction between personal applications and local model runtimes. Applications request capabilities such as free-form generation, extraction, or classification. They select a public profile (`fast`, `default`, or `deep`) rather than a raw model ID.
+The gateway is a stable abstraction between personal applications and local AI runtimes. Applications request capabilities such as generation, extraction, classification, embeddings, semantic retrieval, or grounded answering. They use public capabilities/profiles rather than raw provider model IDs.
 
 ## Request path
 
@@ -16,18 +16,23 @@ Python SDK or HTTP
 FastAPI gateway (:4812)
    |
    +-- API-key authentication
-   +-- profile + reasoning routing
+   +-- generation profile + reasoning routing
    +-- structured-output validation/retries
+   +-- embedding capability routing
+   +-- deterministic chunking + RAG retrieval
    +-- non-content operational metrics
    |
+   +-------------------------+
+   |                         |
+   v                         v
+LM Studio (:1234)         SQLite
+   |                      +-- data/gateway.db (metrics only)
+   |                      +-- data/rag.db (RAG source text + vectors)
    v
-LM Studio (:1234)
-   |
-   v
-Local model on GPU
+Local generation and embedding models
 ```
 
-## Profiles
+## Generation profiles
 
 - `fast`: current experimental Gemma 4 12B mapping. It is not yet the proven final fast-tier winner.
 - `balanced`: historical Gemma benchmark profile preserved only for reproducibility.
@@ -35,6 +40,8 @@ Local model on GPU
 - `deep`: GPT-OSS 20B with **high** reasoning. This is reserved for tasks that justify substantially more latency and reasoning tokens.
 
 The low/high decision comes from the frozen September 2026 reasoning benchmark. Medium reasoning remains available as an explicit per-request override rather than occupying a production profile.
+
+Embedding is a separate capability rather than another quality profile. `EMBEDDING_MODEL` selects the local embedding backend (BGE-M3 by default) because retrieval model choice should not alter application code or generation routing.
 
 ## Free-form generation
 
@@ -59,19 +66,91 @@ The caller's schema remains authoritative for local validation. The gateway neve
 
 Classification is implemented as structured generation with a caller-supplied enum. This guarantees that successful responses contain exactly one allowed label, while label meaning remains the caller's responsibility. Production callers should provide mutually exclusive labels or a system instruction that defines them.
 
-## Metrics
+## Embeddings
 
-Operational metadata is stored in SQLite under `data/gateway.db`. Records include project ID, endpoint, profile, model, reasoning level, token counts, latency, attempts, success/failure, and error code.
+`/v1/embeddings` calls LM Studio's OpenAI-compatible embedding endpoint through a provider adapter. The gateway owns:
+
+- the configured embedding model key;
+- optional model-specific query/document prefixes;
+- input-size limits;
+- batching;
+- vector-count and dimension validation.
+
+Applications may request `raw`, `query`, or `document` embedding purpose without knowing the embedding model. The purpose only controls configured task-prefix behavior; it does not expose provider-specific prompt strings.
+
+## RAG indexing and persistence
+
+The first RAG store is deliberately SQLite-based. It is optimized for deployment simplicity and inspectability rather than large-scale approximate nearest-neighbour search.
+
+Ingestion follows this path:
+
+```text
+Document text
+   |
+   v
+Deterministic chunker
+   |
+   v
+Embedding model
+   |
+   v
+Unit-normalize vectors
+   |
+   v
+SQLite rag_chunks table
+```
+
+The store persists source text, provenance, scalar metadata, content hashes, the embedding-model signature, and normalized float32 vectors. Reindexing an explicit document ID atomically replaces that document's old chunks.
+
+A collection must have one embedding model and dimension. If configuration changes, the gateway returns `RAG_INDEX_INCOMPATIBLE` instead of mixing vector spaces.
+
+## RAG retrieval
+
+`/v1/rag/search` embeds the query in the same vector space, optionally filters exact scalar metadata, and ranks compatible chunks by cosine similarity. Because stored and query vectors are normalized, similarity reduces to a dot product.
+
+The brute-force implementation is intentional for the expected initial personal collection sizes. The public service boundary permits a future ANN store without changing the HTTP/SDK contract.
+
+## RAG grounded answering
+
+`/v1/rag/answer` composes retrieval with the existing structured-generation pipeline:
+
+```text
+Question
+   |
+   v
+Dense retrieval
+   |
+   v
+Bounded retrieved context
+   |
+   +-- S1, S2, ... gateway source labels
+   v
+GPT-OSS generation
+   |
+   +-- schema: answer + citations enum[S1, S2, ...]
+   v
+Gateway resolves labels to document/chunk provenance
+```
+
+The model cannot successfully return an unknown citation label because citations are schema-constrained to the retrieved source IDs.
+
+Retrieved text is explicitly marked as **untrusted data** in the system instructions. Commands, prompt fragments, and policies inside documents are evidence text, not executable instructions. This is an important prompt-injection mitigation, but it is not an authorization mechanism; the later tool-calling milestone must maintain its own permission boundary.
+
+## Metrics and data boundaries
+
+Operational metadata is stored in `data/gateway.db`. Records include project ID, endpoint, profile/capability label, model, reasoning level, token counts, latency, attempts, success/failure, and error code.
 
 Prompt and response contents are intentionally not stored by the metrics layer.
 
+RAG is different: `data/rag.db` intentionally contains indexed source text, metadata, and vectors because retrieval cannot work without them. It must therefore be treated as private user data and remains git-ignored.
+
 ## Failure handling
 
-Gateway-owned failures use stable error codes such as `AUTH_FAILED`, `INVALID_REQUEST`, `LMSTUDIO_UNAVAILABLE`, and `OUTPUT_INVALID`. Provider failures are recorded in the metrics database before they are translated to gateway errors.
+Gateway-owned failures use stable error codes such as `AUTH_FAILED`, `INVALID_REQUEST`, `LMSTUDIO_UNAVAILABLE`, `OUTPUT_INVALID`, `EMBEDDING_DIMENSION_CHANGED`, and `RAG_INDEX_INCOMPATIBLE`. Provider failures are recorded in the metrics database before they are translated to gateway errors.
 
 ## Security boundary
 
-Both services bind only to loopback:
+Both network services bind only to loopback:
 
 - LM Studio: `127.0.0.1:1234`
 - Gateway: `127.0.0.1:4812`
@@ -80,10 +159,12 @@ Remote access, if added later, must use a private authenticated network rather t
 
 ## Benchmarks versus production safeguards
 
-Benchmark runs deliberately call `/v1/generate` so raw model formatting, instruction following, and reasoning behavior remain measurable. Production structured endpoints add schema constraints, normalization, and repair retries. A raw benchmark format score therefore should not be interpreted as the production structured-output success rate.
+Generation benchmark runs deliberately call `/v1/generate` so raw model formatting, instruction following, and reasoning behavior remain measurable. Production structured endpoints add schema constraints, normalization, and repair retries. A raw benchmark format score therefore should not be interpreted as the production structured-output success rate.
 
-Historical benchmark artifacts are immutable. The current suite is versioned separately from prior result directories.
+RAG has a separate fixed multilingual retrieval benchmark. It measures retrieval ranking and latency independently of answer generation, making it possible to evaluate embedding-model/index changes without conflating them with GPT-OSS quality.
+
+Historical benchmark artifacts are immutable. New benchmark results are saved in new directories.
 
 ## Future layers
 
-Later milestones can add embeddings/RAG, vision, tools, bounded agents, caching, queueing, private remote access, and explicit paid fallback without changing the core application contract.
+The next milestone is the tool-calling abstraction, but it does not begin automatically. Later stages can add streaming, a local playground, model lifecycle/smarter routing, vision, bounded agents, caching/queueing/concurrency, private remote access, and explicit optional cloud fallback without changing the core application contract.

@@ -1,3 +1,5 @@
+"""LM Studio provider adapters for free-form, structured, and model-list requests."""
+
 from __future__ import annotations
 
 from typing import Any
@@ -8,10 +10,12 @@ from app.config import settings
 
 
 class LMStudioError(RuntimeError):
-    pass
+    """Raised when LM Studio returns an unusable or unsuccessful response."""
 
 
 def _headers() -> dict[str, str]:
+    """Return the shared authorization headers for local LM Studio requests."""
+
     return {
         "Authorization": f"Bearer {settings.lm_api_token}",
         "Content-Type": "application/json",
@@ -19,6 +23,8 @@ def _headers() -> dict[str, str]:
 
 
 def _timeout() -> httpx.Timeout:
+    """Return the provider timeout configured for local inference."""
+
     return httpx.Timeout(settings.lm_timeout_seconds)
 
 
@@ -31,6 +37,8 @@ async def generate(
     temperature: float,
     max_output_tokens: int,
 ) -> dict[str, Any]:
+    """Generate free-form text through LM Studio's native chat endpoint."""
+
     body: dict[str, Any] = {
         "model": model,
         "input": prompt,
@@ -39,10 +47,8 @@ async def generate(
         "context_length": settings.default_context_length,
         "store": False,
     }
-
     if system:
         body["system_prompt"] = system
-
     if reasoning:
         body["reasoning"] = reasoning
 
@@ -54,12 +60,10 @@ async def generate(
         )
 
     if not response.is_success:
-        raise LMStudioError(
-            f"LM Studio returned {response.status_code}: {response.text}"
-        )
+        raise LMStudioError(f"LM Studio returned {response.status_code}: {response.text}")
 
     data = response.json()
-
+    # Reasoning and tool items are deliberately excluded from the user-visible answer.
     messages = [
         item["content"]
         for item in data.get("output", [])
@@ -91,7 +95,7 @@ async def generate_structured(
     schema: dict[str, Any],
     schema_name: str = "structured_output",
 ) -> dict[str, Any]:
-    """Generate schema-constrained JSON through LM Studio's OpenAI-compatible API."""
+    """Generate JSON constrained by a caller-provided schema."""
 
     messages: list[dict[str, str]] = []
     if system:
@@ -113,9 +117,7 @@ async def generate_structured(
             },
         },
     }
-
-    # LM Studio's OpenAI-compatible chat endpoint accepts reasoning_effort for
-    # reasoning-capable models such as gpt-oss. Non-reasoning profiles pass None.
+    # LM Studio's OpenAI-compatible endpoint uses reasoning_effort for gpt-oss.
     if reasoning:
         body["reasoning_effort"] = reasoning
 
@@ -128,7 +130,7 @@ async def generate_structured(
 
     if not response.is_success:
         raise LMStudioError(
-            f"LM Studio structured generation returned "
+            "LM Studio structured generation returned "
             f"{response.status_code}: {response.text}"
         )
 
@@ -145,7 +147,6 @@ async def generate_structured(
 
     usage = data.get("usage") or {}
     completion_details = usage.get("completion_tokens_details") or {}
-
     return {
         "text": content.strip(),
         "model": data.get("model", model),
@@ -157,6 +158,8 @@ async def generate_structured(
 
 
 async def list_models() -> list[dict[str, Any]]:
+    """Return LM Studio's current local model inventory."""
+
     async with httpx.AsyncClient(timeout=_timeout()) as client:
         response = await client.get(
             f"{settings.lm_base_url}/api/v1/models",
@@ -165,8 +168,7 @@ async def list_models() -> list[dict[str, Any]]:
 
     if not response.is_success:
         raise LMStudioError(
-            f"LM Studio model inventory returned "
-            f"{response.status_code}: {response.text}"
+            f"LM Studio model inventory returned {response.status_code}: {response.text}"
         )
 
     data = response.json()

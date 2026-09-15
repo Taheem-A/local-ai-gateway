@@ -141,7 +141,24 @@ The runner measures:
 
 It creates a temporary collection and deletes it after the benchmark unless `--keep-collection` is supplied. Generated benchmark artifacts are saved under `benchmarks/results/`.
 
-Unit/CI tests use deterministic fake embeddings and a temporary SQLite database; GitHub Actions does not require LM Studio or GPU access. The live retrieval benchmark on the actual Legion remains the production validation for a chosen embedding model.
+Unit/CI tests use deterministic fake embeddings and a temporary SQLite database; GitHub Actions does not require LM Studio or GPU access.
+
+### Production validation result
+
+Stage 1 was validated live with LM Studio model `text-embedding-bge-m3` (1024 dimensions) using the committed multilingual retrieval suite. The immutable result is stored at `benchmarks/results/20260914_213509_bge-m3-rag-v1_dedb85/` and summarized in `benchmarks/history/2026-09-14-bge-m3-rag/`.
+
+The run produced:
+
+- Recall@1: 100.0%;
+- Recall@3: 100.0%;
+- Recall@5: 100.0%;
+- MRR: 1.0000;
+- mean retrieval latency: 0.0467 seconds;
+- median retrieval latency: 0.0465 seconds.
+
+All ten expected documents ranked first, including the Bengali and Arabic cases. A separate live end-to-end smoke test also passed indexing, retrieval, GPT-OSS grounded generation, citation resolution, and cleanup.
+
+This result validates the Stage 1 pipeline and first production embedding configuration; it is **not** a claim of universal 100% retrieval quality. The benchmark contains only ten documents/ten chunks, so larger and more confusable real corpora must be measured separately.
 
 ## Scaling path
 

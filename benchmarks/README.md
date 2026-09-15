@@ -1,12 +1,12 @@
 # Benchmarks
 
-The benchmark system separates generation capability from retrieval capability. Generation benchmarks measure raw model behavior through `/v1/generate`; the RAG benchmark measures dense retrieval ranking through `/v1/rag/search`. Keeping these dimensions separate prevents a strong generation model from masking a weak retriever, or vice versa.
+The benchmark system separates generation capability, retrieval capability, and tool-calling behavior. Generation benchmarks measure raw model behavior through `/v1/generate`; the RAG benchmark measures dense retrieval ranking through `/v1/rag/search`; the tool benchmark measures whether the model selects and parameterizes advertised tools correctly through `/v1/tools/turn`. Keeping these dimensions separate prevents one strong subsystem from masking another weak one.
 
 ## Versioning policy
 
 A committed benchmark run is evidence and is treated as immutable.
 
-When a prompt, expected answer, grading rule, corpus, query, or runner behavior changes in a way that affects comparability:
+When a prompt, expected answer, grading rule, corpus, query, tool definition, or runner behavior changes in a way that affects comparability:
 
 1. bump the relevant benchmark version,
 2. update the current benchmark policy and tests,
@@ -23,17 +23,9 @@ Benchmark v3 addresses issues discovered during the September 2026 GPT-OSS reaso
 
 - classification explicitly asks for the referenced **course-item type**, not the grammatical form of the message;
 - `irrelevant` is defined relative to course instruction, assessment, scheduling, or administration;
-- university `event_type` uses a declared generic ontology, so `lecture` is no longer compared against an underspecified free-text field;
+- university `event_type` uses a declared generic ontology;
 - routing-policy cases use the production names `fast`, `default`, and `deep`;
 - label grading recognizes mathematically equivalent superscript exponents such as `O(n²)` and `O(n^2)` while still scoring strict formatting separately.
-
-The suite reports three independent dimensions:
-
-- `semantic_correct`: whether the answer conveys the expected information under explicit normalization rules;
-- `format_correct`: whether output is in the benchmark's canonical machine representation;
-- `instruction_following`: whether mechanically checkable output instructions were followed.
-
-`null` semantic results require manual review rather than being guessed as pass/fail.
 
 Run the current generation benchmark:
 
@@ -45,78 +37,71 @@ python benchmarks\run_benchmarks.py `
     --name gptoss-low-v3
 ```
 
-Useful options:
-
-- `--category structured_extraction` runs one category only;
-- `--reasoning low|medium|high` overrides the selected profile's configured reasoning level;
-- `--max-output-tokens` applies the same total generation ceiling to every selected case;
-- `--skip-code-tests` prevents generated Python from executing;
-- `--regrade <raw_results.json>` regrades stored responses without invoking a model.
-
 Requests run sequentially so GPU contention does not distort timing comparisons.
 
 ## RAG retrieval benchmark v1
 
-`rag_suite.json` contains a small fixed corpus plus queries with expected document IDs. It includes English, Bengali, and Arabic cases because the preferred BGE-M3 embedding model is being selected partly for multilingual retrieval.
-
-Run it after the configured embedding model is installed and available through LM Studio:
+`rag_suite.json` contains a small fixed corpus plus queries with expected document IDs. It includes English, Bengali, and Arabic cases.
 
 ```powershell
 python benchmarks\run_rag_benchmarks.py --name bge-m3-rag-v1
 ```
 
-The runner:
+Reported metrics are Recall@1/3/5, mean reciprocal rank, and mean/median retrieval latency. The runner exits non-zero if Recall@5 is below 100%.
 
-1. creates a unique temporary RAG collection;
-2. indexes the fixed corpus through `/v1/rag/index`;
-3. sends each query to `/v1/rag/search` sequentially;
-4. records the rank of the expected document and query latency;
-5. deletes the temporary collection unless `--keep-collection` is supplied;
-6. writes a new immutable result directory.
+The first production BGE-M3 validation is frozen under `history/2026-09-14-bge-m3-rag/`.
 
-Reported metrics are:
+## Tool-calling benchmark v1
 
-- **Recall@1** — expected document ranked first;
-- **Recall@3** and **Recall@5** — expected document appears in the first 3/5 hits;
-- **MRR** — mean reciprocal rank, rewarding higher placement;
-- mean and median search latency.
+`tool_suite.json` measures the Stage 2 abstraction independently from real side-effect execution. The suite covers:
 
-The runner exits non-zero if Recall@5 is below 100% so an obviously broken retrieval configuration is hard to overlook. Recall@1 and MRR remain the more useful metrics for comparing otherwise functional embedding configurations.
+- selecting the correct tool among distractors;
+- typed and enum argument extraction;
+- preserving caller-declared risk metadata;
+- `tool_choice=required`;
+- explicit and automatic no-tool behavior;
+- synthesis after a tool result;
+- ignoring a prompt-injection instruction embedded inside a tool result.
 
-This benchmark intentionally evaluates retrieval only. RAG answer generation should be assessed separately because answer quality also depends on GPT-OSS, the retrieved context budget, and structured generation.
+Run it against the production local generation profile:
+
+```powershell
+python benchmarks\run_tool_benchmarks.py `
+    --quality default `
+    --name gptoss-tool-calling-v1
+```
+
+The runner reports:
+
+- selection accuracy;
+- argument accuracy;
+- risk-annotation accuracy;
+- synthesis-constraint accuracy;
+- full-case success rate;
+- request errors;
+- mean and median latency.
+
+It also records the suite version/SHA-256, resolved model/profile/reasoning, and output-token budget. The benchmark only exercises model/gateway tool planning and synthesis; application handlers are tested separately by the SDK unit tests and live smoke test.
+
+A live result is not production evidence until its result directory is committed unchanged and summarized under `history/`.
 
 ## Saved artifacts
 
-Generation runs receive a unique directory under `benchmarks/results/` containing:
+Generation runs receive a unique directory under `benchmarks/results/` containing `raw_results.json`, `summary.json`, `results.csv`, `manual_review.json`, and `report.md`.
 
-- `raw_results.json` — source responses, request settings without credentials, grading details, and performance metrics;
-- `summary.json` — aggregate and per-category scores;
-- `results.csv` — spreadsheet-friendly case rows;
-- `manual_review.json` — the semantic-review queue;
-- `report.md` — a readable case/score summary.
+RAG and tool-calling runs save `raw_results.json`, `summary.json`, and `report.md` because their fixed suites are mechanically graded.
 
-RAG retrieval runs save `raw_results.json`, `summary.json`, and `report.md` because the expected-document rank is fully deterministic and requires no manual semantic review.
-
-Generation files are replaced atomically after each case, so an interrupted process preserves completed work. `raw_results.json` is the primary recovery artifact.
-
-Generation runs also record SHA-256 hashes of the benchmark policy, base cases, runner/grader modules, and gateway Python source used at execution time. Future RAG benchmark revisions should preserve the same immutable-evidence principle.
+Committed benchmark artifacts are immutable. Create a new run when a suite or implementation changes; do not rewrite a historical result to improve its score.
 
 ## Manual review
 
-Summary semantics and explicitly marked free-text generation fields remain manual. Mechanical constraints such as word limits, sentence counts, bullet counts, JSON structure, and canonical date/time formatting are checked deterministically.
-
-A review should evaluate:
-
-- factual accuracy,
-- coverage of required concepts,
-- unsupported claims,
-- whether a differently worded answer is genuinely equivalent.
+Summary semantics and explicitly marked free-text generation fields remain manual. Mechanical constraints such as word limits, sentence counts, bullet counts, JSON structure, canonical date/time formatting, tool names, and tool arguments are checked deterministically.
 
 Do not rewrite expected answers after seeing a model response merely to improve a score.
 
 ## Curated code execution
 
-The four fixed Python coding cases execute in a temporary directory with a separate `python -I` process, a five-second timeout, and a reduced child environment. This provides process isolation, **not** a security sandbox. Never use the helper to execute arbitrary external prompts or untrusted benchmark suites.
+The fixed Python coding cases execute in a temporary directory with a separate `python -I` process, a five-second timeout, and a reduced child environment. This provides process isolation, **not** a security sandbox. Never use the helper to execute arbitrary external prompts or untrusted benchmark suites.
 
 ## Regrade without model requests
 
@@ -126,7 +111,7 @@ python benchmarks\run_benchmarks.py `
     --name regrade-v3
 ```
 
-Regrading creates a new result directory and never mutates the source run. The metadata records whether the historical prompts match the current suite. A regrade cannot make a rewritten v3 prompt directly comparable to the old v2 prompt that generated a stored answer.
+Regrading creates a new result directory and never mutates the source run.
 
 ## Compare completed generation runs
 
@@ -145,8 +130,6 @@ See [`history/2026-09-13-gptoss-reasoning/README.md`](history/2026-09-13-gptoss-
 - `default` -> GPT-OSS 20B / low reasoning;
 - `deep` -> GPT-OSS 20B / high reasoning.
 
-The three original result directories remain unchanged.
-
 ## Validate benchmark code
 
 Benchmark regressions are included in the normal project test suite:
@@ -155,4 +138,4 @@ Benchmark regressions are included in the normal project test suite:
 pytest -q
 ```
 
-They use mock/deterministic local components and do not consume live LM Studio inference. The live RAG retrieval run must still be executed on the actual local embedding model before a model configuration is considered production-validated.
+They use mock/deterministic local components and do not consume live LM Studio inference. Live RAG and tool-calling runs must still be executed on the target local models before those configurations are considered production-validated.

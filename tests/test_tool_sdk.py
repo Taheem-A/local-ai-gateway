@@ -5,9 +5,13 @@ from __future__ import annotations
 import asyncio
 
 import pytest
-
 from taheem_ai import AI
-from taheem_ai.tools import ToolPermissionError, ToolRegistry, ToolRegistryError
+from taheem_ai.tools import (
+    ToolExecutionError,
+    ToolPermissionError,
+    ToolRegistry,
+    ToolRegistryError,
+)
 
 
 def _schema() -> dict:
@@ -34,7 +38,7 @@ def test_registry_validates_arguments_before_handler_runs():
     assert result["temperature_c"] == 20
     assert seen == ["Toronto"]
 
-    with pytest.raises(Exception, match="argument validation failed"):
+    with pytest.raises(ToolExecutionError, match="argument validation failed"):
         registry.execute({"name": "get_weather", "arguments": {"city": 42}})
     assert seen == ["Toronto"]
 

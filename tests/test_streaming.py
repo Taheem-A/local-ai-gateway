@@ -5,16 +5,16 @@ from __future__ import annotations
 import asyncio
 
 import pytest
+from taheem_ai import AI, AsyncAI
+from taheem_ai.errors import AIError
+from taheem_ai.streaming import SSEDecoder as ClientSSEDecoder
+from taheem_ai.streaming import raise_if_stream_error
 
 from app.lmstudio import LMStudioError
 from app.main import app
 from app.streaming.provider import SSEDecoder as ProviderSSEDecoder
 from app.streaming.provider import normalize_provider_event
 from app.streaming.sse import encode_sse
-from taheem_ai import AI, AsyncAI
-from taheem_ai.errors import AIError
-from taheem_ai.streaming import SSEDecoder as ClientSSEDecoder
-from taheem_ai.streaming import raise_if_stream_error
 
 
 def test_streaming_route_is_registered() -> None:

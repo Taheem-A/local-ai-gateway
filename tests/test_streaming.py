@@ -18,8 +18,7 @@ from app.streaming.sse import encode_sse
 
 
 def test_streaming_route_is_registered() -> None:
-    paths = {route.path for route in app.routes}
-    assert "/v1/generate/stream" in paths
+    assert str(app.url_path_for("generate_stream_endpoint")) == "/v1/generate/stream"
 
 
 def test_gateway_sse_encoder_uses_named_event_and_json_type() -> None:

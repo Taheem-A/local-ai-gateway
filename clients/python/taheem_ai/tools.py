@@ -6,7 +6,7 @@ import inspect
 import json
 import re
 from dataclasses import dataclass
-from typing import Any, Awaitable, Callable, Literal
+from typing import Any, Callable, Literal
 
 from jsonschema import Draft202012Validator, FormatChecker
 from jsonschema.exceptions import SchemaError
@@ -178,7 +178,7 @@ class ToolRegistry:
         spec, arguments = self._prepare_call(call, allowed_risks)
         try:
             result = spec.handler(**arguments)
-            if isinstance(result, Awaitable) or inspect.isawaitable(result):
+            if inspect.isawaitable(result):
                 result = await result
         except Exception as exc:
             raise ToolExecutionError(f"Tool '{spec.name}' failed: {exc}") from exc

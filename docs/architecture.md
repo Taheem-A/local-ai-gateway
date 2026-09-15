@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The gateway is a stable abstraction between personal applications and local AI runtimes. Applications request capabilities such as generation, extraction, classification, embeddings, semantic retrieval, or grounded answering. They use public capabilities/profiles rather than raw provider model IDs.
+The gateway is a stable abstraction between personal applications and local AI runtimes. Applications request capabilities such as generation, extraction, classification, embeddings, semantic retrieval, grounded answering, or tool-call planning. They use public capabilities/profiles rather than raw provider model IDs.
 
 ## Request path
 
@@ -20,6 +20,7 @@ FastAPI gateway (:4812)
    +-- structured-output validation/retries
    +-- embedding capability routing
    +-- deterministic chunking + RAG retrieval
+   +-- stateless tool-call protocol validation
    +-- non-content operational metrics
    |
    +-------------------------+
@@ -31,6 +32,8 @@ LM Studio (:1234)         SQLite
    v
 Local generation and embedding models
 ```
+
+Application tool handlers deliberately remain **outside** the gateway process. The gateway may validate a model-requested call, but the application decides whether executable code runs.
 
 ## Generation profiles
 
@@ -60,29 +63,21 @@ Embedding is a separate capability rather than another quality profile. `EMBEDDI
 
 The caller's schema remains authoritative for local validation. The gateway never changes a factual value merely because another value would make validation pass.
 
-`format: "time"` is intentionally narrower than standard RFC 3339 time inside this API: it means a local 24-hour `HH:MM` clock value. The model-facing schema and prompt are prepared accordingly so timezone conversions cannot be silently hidden.
+`format: "time"` is intentionally narrower than standard RFC 3339 time inside this API: it means a local 24-hour `HH:MM` clock value.
 
 ## Classification
 
-Classification is implemented as structured generation with a caller-supplied enum. This guarantees that successful responses contain exactly one allowed label, while label meaning remains the caller's responsibility. Production callers should provide mutually exclusive labels or a system instruction that defines them.
+Classification is implemented as structured generation with a caller-supplied enum. This guarantees that successful responses contain exactly one allowed label, while label meaning remains the caller's responsibility.
 
 ## Embeddings
 
-`/v1/embeddings` calls LM Studio's OpenAI-compatible embedding endpoint through a provider adapter. The gateway owns:
+`/v1/embeddings` calls LM Studio's OpenAI-compatible embedding endpoint through a provider adapter. The gateway owns the configured embedding model key, optional model-specific prefixes, input-size limits, batching, and vector-count/dimension validation.
 
-- the configured embedding model key;
-- optional model-specific query/document prefixes;
-- input-size limits;
-- batching;
-- vector-count and dimension validation.
-
-Applications may request `raw`, `query`, or `document` embedding purpose without knowing the embedding model. The purpose only controls configured task-prefix behavior; it does not expose provider-specific prompt strings.
+Applications may request `raw`, `query`, or `document` embedding purpose without knowing the concrete model.
 
 ## RAG indexing and persistence
 
 The first RAG store is deliberately SQLite-based. It is optimized for deployment simplicity and inspectability rather than large-scale approximate nearest-neighbour search.
-
-Ingestion follows this path:
 
 ```text
 Document text
@@ -106,13 +101,11 @@ A collection must have one embedding model and dimension. If configuration chang
 
 ## RAG retrieval
 
-`/v1/rag/search` embeds the query in the same vector space, optionally filters exact scalar metadata, and ranks compatible chunks by cosine similarity. Because stored and query vectors are normalized, similarity reduces to a dot product.
-
-The brute-force implementation is intentional for the expected initial personal collection sizes. The public service boundary permits a future ANN store without changing the HTTP/SDK contract.
+`/v1/rag/search` embeds the query in the same vector space, optionally filters exact scalar metadata, and ranks compatible chunks by cosine similarity. The brute-force implementation is intentional for the expected initial personal collection sizes.
 
 ## RAG grounded answering
 
-`/v1/rag/answer` composes retrieval with the existing structured-generation pipeline:
+`/v1/rag/answer` composes retrieval with structured generation:
 
 ```text
 Question
@@ -132,21 +125,93 @@ GPT-OSS generation
 Gateway resolves labels to document/chunk provenance
 ```
 
-The model cannot successfully return an unknown citation label because citations are schema-constrained to the retrieved source IDs.
+Retrieved text is explicitly marked as **untrusted data**. Commands or prompt fragments inside indexed content do not grant permissions.
 
-Retrieved text is explicitly marked as **untrusted data** in the system instructions. Commands, prompt fragments, and policies inside documents are evidence text, not executable instructions. This is an important prompt-injection mitigation, but it is not an authorization mechanism; the later tool-calling milestone must maintain its own permission boundary.
+## Tool-calling abstraction
+
+Stage 2 intentionally separates **planning/validation** from **execution authority**.
+
+The low-level flow is:
+
+```text
+Application
+   |
+   | messages + JSON-Schema tool definitions
+   v
+POST /v1/tools/turn
+   |
+   +-- validate definitions/history/limits
+   +-- route generation profile
+   v
+LM Studio /v1/chat/completions
+   |
+   | text OR provider tool_calls
+   v
+Gateway normalization
+   |
+   +-- reject unknown tool names
+   +-- parse arguments
+   +-- validate arguments against advertised schema
+   +-- normalize call IDs + risk metadata
+   v
+Application
+   |
+   +-- authorize locally
+   +-- execute trusted handler or refuse
+   +-- append matching tool result
+   v
+POST /v1/tools/turn (tool_choice=none for synthesis)
+```
+
+LM Studio's native `/api/v1/chat` endpoint is not used for custom application tools because custom tool definitions belong on the OpenAI-compatible tool-calling surface. Provider-specific objects are translated inside `app/lmstudio.py`; applications see the gateway's stable call shape.
+
+### Execution authority
+
+The gateway **never executes arbitrary caller application code**. This is deliberate:
+
+- accepting serialized Python/shell commands would create a remote-code-execution surface;
+- hard-coding every application tool in the gateway would couple unrelated projects to infrastructure releases;
+- LM Studio integrations/MCPs are useful capabilities, but they are not the application's authorization boundary.
+
+The Python SDK therefore owns `ToolRegistry`. A registry entry contains a trusted local callable, JSON Schema, description, and risk label. Registration is the local capability grant.
+
+The SDK validates arguments again immediately before execution. This duplication is intentional defense in depth; local execution does not depend solely on a remote response having been validated correctly.
+
+### Risk policy
+
+Tools are classified as `read`, `write`, or `destructive`.
+
+`run_tools_once()` defaults to `read` only. The complete requested batch is preflighted before the first handler runs, so an unauthorized later call cannot cause earlier handlers to execute. Applications must explicitly opt into write/destructive risks and remain responsible for domain-specific confirmation/transaction semantics.
+
+### Bounded orchestration
+
+`run_tools_once()` permits exactly one execution round:
+
+```text
+model turn (auto)
+   -> no calls: return text
+   -> calls: preflight -> execute -> append results
+             -> model turn with tools disabled
+             -> return text
+```
+
+It does not recursively call more tools after seeing results. Multi-round planning, loop detection, cancellation, budgets, approvals, and long-running state belong to Stage 7 (bounded agents).
+
+### Tool-result prompt injection
+
+Tool results are untrusted external data. Mandatory gateway instructions tell the model that tool-output content is evidence/data, not policy or authorization. The stronger security boundary remains architectural: the model can request a call but cannot directly invoke application handlers.
 
 ## Metrics and data boundaries
 
 Operational metadata is stored in `data/gateway.db`. Records include project ID, endpoint, profile/capability label, model, reasoning level, token counts, latency, attempts, success/failure, and error code.
 
-Prompt and response contents are intentionally not stored by the metrics layer.
+Prompt/response contents, tool definitions, tool arguments, conversation text, and tool results are not stored by the metrics layer.
 
 RAG is different: `data/rag.db` intentionally contains indexed source text, metadata, and vectors because retrieval cannot work without them. It must therefore be treated as private user data and remains git-ignored.
 
 ## Failure handling
 
-Gateway-owned failures use stable error codes such as `AUTH_FAILED`, `INVALID_REQUEST`, `LMSTUDIO_UNAVAILABLE`, `OUTPUT_INVALID`, `EMBEDDING_DIMENSION_CHANGED`, and `RAG_INDEX_INCOMPATIBLE`. Provider failures are recorded in the metrics database before they are translated to gateway errors.
+Gateway-owned failures use stable error codes including `AUTH_FAILED`, `INVALID_REQUEST`, `LMSTUDIO_UNAVAILABLE`, `OUTPUT_INVALID`, `TOOL_SCHEMA_INVALID`, `TOOL_HISTORY_INVALID`, `TOOL_CALL_INVALID`, `TOOL_CALL_REQUIRED`, `EMBEDDING_DIMENSION_CHANGED`, and `RAG_INDEX_INCOMPATIBLE`.
 
 ## Security boundary
 
@@ -159,12 +224,10 @@ Remote access, if added later, must use a private authenticated network rather t
 
 ## Benchmarks versus production safeguards
 
-Generation benchmark runs deliberately call `/v1/generate` so raw model formatting, instruction following, and reasoning behavior remain measurable. Production structured endpoints add schema constraints, normalization, and repair retries. A raw benchmark format score therefore should not be interpreted as the production structured-output success rate.
-
-RAG has a separate fixed multilingual retrieval benchmark. It measures retrieval ranking and latency independently of answer generation, making it possible to evaluate embedding-model/index changes without conflating them with GPT-OSS quality.
+Generation, RAG retrieval, and tool calling have separate fixed benchmark suites. Tool-calling benchmarks measure selection/arguments/synthesis without executing real side effects. Real handler execution is separately covered by SDK tests and live smoke tests.
 
 Historical benchmark artifacts are immutable. New benchmark results are saved in new directories.
 
 ## Future layers
 
-The next milestone is the tool-calling abstraction, but it does not begin automatically. Later stages can add streaming, a local playground, model lifecycle/smarter routing, vision, bounded agents, caching/queueing/concurrency, private remote access, and explicit optional cloud fallback without changing the core application contract.
+The next roadmap stage is streaming, but it does not begin automatically. Later stages can add a local playground, model lifecycle/smarter routing, vision, bounded agents, caching/queueing/concurrency, private remote access, and explicit optional cloud fallback without changing the core application contract.

@@ -141,7 +141,7 @@ The gateway constructs a JSON schema whose `label` property is an enum of the su
 
 The gateway does **not** invent definitions for ambiguous labels. If labels can overlap, callers should choose mutually exclusive labels or supply a system instruction that defines the classification target.
 
-`max_output_tokens` defaults to `512`. The original 128-token ceiling was too small for a reasoning model because hidden reasoning could consume the generation budget before the tiny final JSON result was emitted.
+`max_output_tokens` defaults to `512`. Hidden reasoning can consume a much larger generation budget than the final label itself.
 
 ## `POST /v1/embeddings`
 
@@ -151,21 +151,12 @@ Request:
 
 ```json
 {
-  "input": [
-    "turnbuckles adjust cable tension",
-    "inverse functions"
-  ],
+  "input": ["turnbuckles adjust cable tension", "inverse functions"],
   "purpose": "raw"
 }
 ```
 
-`purpose` is one of:
-
-- `raw` — no task prefix; useful for general embedding consumers;
-- `query` — applies `EMBEDDING_QUERY_PREFIX` before embedding;
-- `document` — applies `EMBEDDING_DOCUMENT_PREFIX` before embedding.
-
-BGE-M3 uses blank prefixes in the default configuration. These prefix settings exist so a different embedding family can be used without leaking model-specific prompt conventions into applications.
+`purpose` is one of `raw`, `query`, or `document`. BGE-M3 uses blank prefixes in the default configuration; configurable prefixes allow other embedding families without leaking model-specific conventions into applications.
 
 Example response:
 
@@ -179,135 +170,17 @@ Example response:
 }
 ```
 
-The concrete dimension is whatever the configured LM Studio embedding model returns; clients should not hard-code it.
-
 ## `POST /v1/rag/index`
 
-Chunk and index one or more logical documents into a named persistent collection.
-
-Request:
-
-```json
-{
-  "collection": "university",
-  "documents": [
-    {
-      "id": "civ100-turnbuckles",
-      "source": "CIV100 notes",
-      "text": "A turnbuckle is an adjustable connector used to change tension...",
-      "metadata": {
-        "course": "CIV100",
-        "week": 2
-      }
-    }
-  ],
-  "chunk_size_chars": 1200,
-  "chunk_overlap_chars": 180
-}
-```
-
-`id` is optional. If present, reindexing the same `(collection, id)` atomically replaces its old chunks. If omitted, a deterministic ID is derived from source + text.
-
-Metadata values are intentionally scalar (`string`, `number`, `boolean`, or `null`) in this milestone so filtering semantics remain deterministic.
-
-Example response:
-
-```json
-{
-  "collection": "university",
-  "documents": 1,
-  "chunks": 3,
-  "embedding_model": "text-embedding-bge-m3",
-  "embedding_dimensions": 1024,
-  "request_id": "..."
-}
-```
-
-A collection cannot silently mix embedding models or dimensions. After changing the embedding model, delete/reindex incompatible collections.
+Chunk and index one or more logical documents into a named persistent collection. Reindexing an explicit `(collection, document_id)` replaces that document atomically. A collection cannot silently mix embedding models or dimensions.
 
 ## `POST /v1/rag/search`
 
-Run semantic retrieval without generation.
-
-Request:
-
-```json
-{
-  "collection": "university",
-  "query": "How do I adjust cable tension?",
-  "top_k": 5,
-  "min_score": 0.0,
-  "metadata_filter": {
-    "course": "CIV100"
-  }
-}
-```
-
-Example hit:
-
-```json
-{
-  "rank": 1,
-  "score": 0.812345,
-  "document_id": "civ100-turnbuckles",
-  "chunk_index": 0,
-  "source": "CIV100 notes",
-  "text": "A turnbuckle is an adjustable connector...",
-  "metadata": {
-    "course": "CIV100",
-    "week": 2
-  }
-}
-```
-
-Scores are cosine similarities. There is deliberately no universal default relevance cutoff: score distributions depend on the embedding model and corpus. Tune `min_score` from measured application data.
+Run semantic retrieval without generation. Supports `top_k`, `min_score`, and exact scalar metadata filters. Scores are cosine similarities and callers should tune relevance thresholds from measured corpus behavior.
 
 ## `POST /v1/rag/answer`
 
-Retrieve local evidence, then answer using only those sources.
-
-Request:
-
-```json
-{
-  "collection": "university",
-  "query": "What does a turnbuckle do?",
-  "top_k": 5,
-  "quality": "default",
-  "reasoning": null,
-  "max_output_tokens": 2048
-}
-```
-
-The answer step uses structured generation. Retrieved chunks are assigned gateway-generated labels such as `S1`, `S2`, and `S3`; the model's citation array is constrained to an enum containing only the labels actually supplied to it. The gateway then resolves those labels back to source metadata.
-
-Example response shape:
-
-```json
-{
-  "answer": "A turnbuckle lets you adjust the tension or effective length of a cable or tie.",
-  "citations": [
-    {
-      "label": "S1",
-      "document_id": "civ100-turnbuckles",
-      "chunk_index": 0,
-      "source": "CIV100 notes",
-      "score": 0.812345,
-      "metadata": {"course": "CIV100"}
-    }
-  ],
-  "retrieved": [],
-  "model": "openai/gpt-oss-20b",
-  "profile": "default",
-  "reasoning": "low",
-  "attempts": 1,
-  "request_id": "..."
-}
-```
-
-If no chunks pass retrieval, the endpoint returns an explicit insufficient-information answer and does not invoke the generation model.
-
-Retrieved source text is treated as **untrusted data**. A dedicated system rule instructs the generation model not to follow prompts, commands, or policies embedded inside retrieved sources. This reduces prompt-injection risk but should not be treated as an authorization boundary for future tools.
+Retrieve local evidence, then answer using only those sources. Retrieved chunks receive gateway-generated source labels and the model's citation array is schema-constrained to labels actually supplied to it. Retrieved text is treated as untrusted evidence, not as authorization or model instructions.
 
 ## `GET /v1/rag/collections`
 
@@ -315,19 +188,130 @@ Return indexed collection names, document/chunk counts, and embedding signatures
 
 ## `DELETE /v1/rag/collections/{collection}`
 
-Delete all chunks in one collection. Returns:
-
-```json
-{"deleted_chunks": 42}
-```
+Delete all chunks in one collection.
 
 ## `DELETE /v1/rag/collections/{collection}/documents/{document_id}`
 
 Delete one logical document and all of its chunks.
 
+## `POST /v1/tools/turn`
+
+Run exactly **one** stateless tool-capable model turn. The gateway validates and normalizes tool requests; it never executes application handlers.
+
+Request:
+
+```json
+{
+  "messages": [
+    {
+      "role": "user",
+      "content": "Find the room for CIV100 section L0101."
+    }
+  ],
+  "tools": [
+    {
+      "name": "lookup_course_room",
+      "description": "Look up the room for a university course section.",
+      "risk": "read",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "course": {"type": "string"},
+          "section": {"type": "string"}
+        },
+        "required": ["course", "section"],
+        "additionalProperties": false
+      }
+    }
+  ],
+  "tool_choice": "auto",
+  "quality": "default",
+  "reasoning": null,
+  "temperature": 0.0,
+  "max_output_tokens": 2048
+}
+```
+
+`tool_choice` is:
+
+- `auto` — model may answer normally or request one or more advertised tools;
+- `required` — the turn must produce at least one valid tool call;
+- `none` — tools are not sent to LM Studio and the turn must produce text only.
+
+A requested call response has this shape:
+
+```json
+{
+  "status": "tool_calls",
+  "text": null,
+  "tool_calls": [
+    {
+      "id": "call_...",
+      "name": "lookup_course_room",
+      "arguments": {
+        "course": "CIV100",
+        "section": "L0101"
+      },
+      "risk": "read"
+    }
+  ],
+  "assistant_message": {
+    "role": "assistant",
+    "content": null,
+    "tool_calls": [
+      {
+        "id": "call_...",
+        "name": "lookup_course_room",
+        "arguments": {
+          "course": "CIV100",
+          "section": "L0101"
+        }
+      }
+    ]
+  },
+  "model": "openai/gpt-oss-20b",
+  "profile": "default",
+  "reasoning": "low",
+  "request_id": "..."
+}
+```
+
+The application executes or refuses the call. To continue the conversation it appends the returned `assistant_message` followed by a matching tool-result message:
+
+```json
+{
+  "role": "tool",
+  "tool_call_id": "call_...",
+  "name": "lookup_course_room",
+  "content": {
+    "room": "GB 248"
+  }
+}
+```
+
+and sends the full message list back to `/v1/tools/turn`, normally with `tool_choice: "none"` for final synthesis.
+
+### Tool-call validation
+
+Before returning a requested call, the gateway verifies that:
+
+- the tool was advertised;
+- the tool schema is valid, self-contained Draft 2020-12 JSON Schema with an object root;
+- arguments decode to an object and validate against that schema;
+- call IDs are unique;
+- the model stays within the configured per-turn call limit;
+- stateless history has correctly paired assistant calls and tool results;
+- definition/history/result size limits are respected.
+
+`risk` is caller-declared metadata. The HTTP gateway does not treat it as authorization. The Python SDK's `ToolRegistry` performs local authorization against the locally registered tool definition immediately before executing a handler.
+
+Tool results are untrusted data. The gateway injects mandatory safety instructions telling the model not to treat content inside a tool result as policy, authorization, or higher-priority instructions.
+
+See [`tools.md`](tools.md) for the full security model, SDK registry, risk levels, and why Stage 2 intentionally stops after one execution round.
+
 ## Structured failure diagnostics
 
-Structured-generation failures retain the final validation errors and, when available, LM Studio's `finish_reason`, output-token count, and reasoning-token count. A length-limited empty response is therefore reported explicitly rather than appearing as a generic JSON parse failure.
+Structured-generation failures retain final validation errors and, when available, LM Studio's `finish_reason`, output-token count, and reasoning-token count.
 
 ## Errors
 
@@ -349,7 +333,11 @@ Current codes include:
 - `INVALID_REQUEST`
 - `LMSTUDIO_UNAVAILABLE`
 - `OUTPUT_INVALID`
+- `TOOL_SCHEMA_INVALID`
+- `TOOL_HISTORY_INVALID`
+- `TOOL_CALL_INVALID`
+- `TOOL_CALL_REQUIRED`
 - `EMBEDDING_DIMENSION_CHANGED`
 - `RAG_INDEX_INCOMPATIBLE`
 
-Provider and validation failures are recorded as operational metrics without storing prompt/response content. RAG source text is stored separately in `data/rag.db` by design and should be treated as private local application data.
+Provider and validation failures are recorded as operational metrics without storing prompt/response content. Tool definitions, arguments, conversation text, and results are not stored in operational metrics. RAG source text is stored separately in `data/rag.db` by design and should be treated as private local application data.

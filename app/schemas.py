@@ -1,6 +1,6 @@
 """Pydantic request and response models for the public gateway API."""
 
-from typing import Any, Literal
+from typing import Annotated, Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
@@ -9,6 +9,8 @@ from app.routing import Quality, ReasoningEffort
 
 JsonScalar = str | int | float | bool | None
 EmbeddingPurpose = Literal["raw", "query", "document"]
+ToolChoice = Literal["auto", "none", "required"]
+ToolRisk = Literal["read", "write", "destructive"]
 
 
 class GenerateRequest(BaseModel):
@@ -99,6 +101,115 @@ class ClassifyResponse(BaseModel):
     profile: str
     reasoning: ReasoningEffort | None = None
     attempts: int
+    request_id: str
+
+
+class ToolDefinition(BaseModel):
+    """Caller-advertised function signature plus local execution-risk metadata."""
+
+    name: str = Field(pattern=r"^[a-z][a-z0-9_]{0,63}$")
+    description: str = Field(min_length=1, max_length=2000)
+    parameters: dict[str, Any]
+    risk: ToolRisk = "read"
+
+
+class ToolHistoryCall(BaseModel):
+    """Normalized tool call stored in stateless conversation history."""
+
+    id: str = Field(min_length=1, max_length=128)
+    name: str = Field(pattern=r"^[a-z][a-z0-9_]{0,63}$")
+    arguments: dict[str, Any]
+
+
+class ToolUserMessage(BaseModel):
+    """User-authored message in a tool-capable stateless conversation."""
+
+    role: Literal["user"] = "user"
+    content: str = Field(min_length=1, max_length=50000)
+
+
+class ToolAssistantMessage(BaseModel):
+    """Assistant text and/or tool calls that can be appended to the next turn."""
+
+    role: Literal["assistant"] = "assistant"
+    content: str | None = Field(default=None, max_length=50000)
+    tool_calls: list[ToolHistoryCall] = Field(
+        default_factory=list,
+        max_length=settings.tool_max_calls_per_turn,
+    )
+
+    @model_validator(mode="after")
+    def require_content_or_calls(self) -> "ToolAssistantMessage":
+        """Reject empty assistant messages that cannot advance a conversation."""
+
+        if not self.tool_calls and not (self.content and self.content.strip()):
+            raise ValueError("assistant message must contain text or at least one tool call")
+        return self
+
+
+class ToolResultMessage(BaseModel):
+    """Application-provided result for one previously requested tool call."""
+
+    role: Literal["tool"] = "tool"
+    tool_call_id: str = Field(min_length=1, max_length=128)
+    name: str = Field(pattern=r"^[a-z][a-z0-9_]{0,63}$")
+    content: Any
+
+
+ToolConversationMessage = Annotated[
+    ToolUserMessage | ToolAssistantMessage | ToolResultMessage,
+    Field(discriminator="role"),
+]
+
+
+class ToolTurnRequest(BaseModel):
+    """One stateless model turn with caller-owned tool definitions."""
+
+    messages: list[ToolConversationMessage] = Field(
+        min_length=1,
+        max_length=settings.tool_max_history_messages,
+    )
+    tools: list[ToolDefinition] = Field(
+        min_length=1,
+        max_length=settings.tool_max_definitions,
+    )
+    system: str | None = Field(default=None, max_length=20000)
+    quality: Quality = "default"
+    reasoning: ReasoningEffort | None = None
+    tool_choice: ToolChoice = "auto"
+    temperature: float = Field(default=0.0, ge=0.0, le=1.0)
+    max_output_tokens: int = Field(default=2048, ge=128, le=8192)
+
+    @model_validator(mode="after")
+    def unique_tool_names(self) -> "ToolTurnRequest":
+        """Keep provider name normalization from creating ambiguous dispatch."""
+
+        names = [tool.name for tool in self.tools]
+        if len(names) != len(set(names)):
+            raise ValueError("tool names must be unique")
+        return self
+
+
+class RequestedToolCall(ToolHistoryCall):
+    """Validated model request annotated with the caller-declared risk level."""
+
+    risk: ToolRisk
+
+
+class ToolTurnResponse(BaseModel):
+    """Normalized result of exactly one model tool-planning/synthesis turn."""
+
+    status: Literal["completed", "tool_calls"]
+    text: str | None = None
+    tool_calls: list[RequestedToolCall]
+    assistant_message: ToolAssistantMessage
+    model: str
+    profile: str
+    reasoning: ReasoningEffort | None = None
+    input_tokens: int | None = None
+    output_tokens: int | None = None
+    reasoning_output_tokens: int | None = None
+    finish_reason: str | None = None
     request_id: str
 
 

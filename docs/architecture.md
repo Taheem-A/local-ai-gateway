@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The gateway is a stable abstraction between personal applications and local AI runtimes. Applications request capabilities such as generation, extraction, classification, embeddings, semantic retrieval, grounded answering, or tool-call planning. They use public capabilities/profiles rather than raw provider model IDs.
+The gateway is a stable abstraction between personal applications and local AI runtimes. Applications request capabilities such as generation, streaming generation, extraction, classification, embeddings, semantic retrieval, grounded answering, or tool-call planning. They use public capabilities/profiles rather than raw provider model IDs.
 
 ## Request path
 
@@ -17,6 +17,7 @@ FastAPI gateway (:4812)
    |
    +-- API-key authentication
    +-- generation profile + reasoning routing
+   +-- provider-independent SSE normalization
    +-- structured-output validation/retries
    +-- embedding capability routing
    +-- deterministic chunking + RAG retrieval
@@ -49,6 +50,39 @@ Embedding is a separate capability rather than another quality profile. `EMBEDDI
 ## Free-form generation
 
 `/v1/generate` resolves the public profile, calls LM Studio's native local chat endpoint, and returns only `message` output items. Reasoning and tool items are excluded from the visible answer but reasoning-token counts are retained when LM Studio reports them.
+
+## Streaming generation
+
+`/v1/generate/stream` deliberately uses the **same** `GenerateRequest`, profile routing, native LM Studio chat semantics, and metrics boundary as `/v1/generate`. Streaming is a transport variation of free-form generation rather than a separate model stack.
+
+Internally, LM Studio's native `/api/v1/chat` SSE stream may contain provider-specific model-loading, prompt-processing, reasoning, message, and error events. The gateway does not pass those events through directly.
+
+```text
+LM Studio native SSE
+   |
+   +-- model-load/prompt lifecycle ----> optional normalized progress
+   +-- reasoning.* --------------------> DROP
+   +-- message.delta ------------------> gateway delta
+   +-- chat.end -----------------------> gateway completed
+   +-- error --------------------------> stable gateway error event
+   v
+Gateway-owned SSE contract
+   |
+   +-- start
+   +-- progress (optional)
+   +-- delta (visible text only)
+   +-- completed OR error
+   v
+Application / SDK
+```
+
+This normalization serves two purposes: applications remain independent of LM Studio's event vocabulary, and hidden reasoning cannot leak merely because streaming was enabled.
+
+The final provider `chat.end` aggregate supplies the complete visible message and token/timing statistics. The gateway separately measures `time_to_first_text_seconds` at the first public `delta`; this differs from a provider first-token metric when hidden reasoning is generated before visible text.
+
+A client disconnect closes the upstream async generator and is recorded as `CLIENT_DISCONNECTED`. Streaming failures after HTTP headers have already been committed are represented as terminal in-band SSE `error` events because the status code can no longer be changed.
+
+Stage 3 intentionally applies only to free-form visible text. Partial constrained JSON, partial tool-call arguments, citation structures, and recursive agent event streams have different correctness/security semantics and are not exposed as streaming contracts here.
 
 ## Structured output
 
@@ -205,13 +239,17 @@ Tool results are untrusted external data. Mandatory gateway instructions tell th
 
 Operational metadata is stored in `data/gateway.db`. Records include project ID, endpoint, profile/capability label, model, reasoning level, token counts, latency, attempts, success/failure, and error code.
 
-Prompt/response contents, tool definitions, tool arguments, conversation text, and tool results are not stored by the metrics layer.
+Prompt/response contents, streamed text, tool definitions, tool arguments, conversation text, and tool results are not stored by the metrics layer.
+
+Streaming requests are recorded exactly once: successful streams at their `completed` event and failed/disconnected streams with a terminal error code. Provider first-token timing remains available for diagnostics, while public first-visible-text timing is returned to the caller and benchmarked separately.
 
 RAG is different: `data/rag.db` intentionally contains indexed source text, metadata, and vectors because retrieval cannot work without them. It must therefore be treated as private user data and remains git-ignored.
 
 ## Failure handling
 
 Gateway-owned failures use stable error codes including `AUTH_FAILED`, `INVALID_REQUEST`, `LMSTUDIO_UNAVAILABLE`, `OUTPUT_INVALID`, `TOOL_SCHEMA_INVALID`, `TOOL_HISTORY_INVALID`, `TOOL_CALL_INVALID`, `TOOL_CALL_REQUIRED`, `EMBEDDING_DIMENSION_CHANGED`, and `RAG_INDEX_INCOMPATIBLE`.
+
+For an active stream, `STREAM_FAILED` and provider-unavailable conditions are sent as in-band terminal error events after streaming headers have been committed. Client disconnects are recorded internally as `CLIENT_DISCONNECTED`.
 
 ## Security boundary
 
@@ -224,10 +262,10 @@ Remote access, if added later, must use a private authenticated network rather t
 
 ## Benchmarks versus production safeguards
 
-Generation, RAG retrieval, and tool calling have separate fixed benchmark suites. Tool-calling benchmarks measure selection/arguments/synthesis without executing real side effects. Real handler execution is separately covered by SDK tests and live smoke tests.
+Generation, RAG retrieval, tool calling, and streaming transport have separate fixed benchmark suites. Tool-calling benchmarks measure selection/arguments/synthesis without executing real side effects. Streaming benchmarks grade delivery/protocol correctness rather than prose quality. Real handler execution and SDK streaming are separately covered by tests and live smoke tests.
 
 Historical benchmark artifacts are immutable. New benchmark results are saved in new directories.
 
 ## Future layers
 
-The next roadmap stage is streaming, but it does not begin automatically. Later stages can add a local playground, model lifecycle/smarter routing, vision, bounded agents, caching/queueing/concurrency, private remote access, and explicit optional cloud fallback without changing the core application contract.
+The next roadmap stage after Stage 3 is a local playground/debug UI, but it does not begin automatically. Later stages can add model lifecycle/smarter routing, vision, bounded agents, caching/queueing/concurrency, private remote access, and explicit optional cloud fallback without changing the core application contract.

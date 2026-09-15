@@ -15,6 +15,7 @@ ToolRisk = Literal["read", "write", "destructive"]
 ToolHandler = Callable[..., Any]
 _TOOL_NAME = re.compile(r"^[a-z][a-z0-9_]{0,63}$")
 _FORMAT_CHECKER = FormatChecker()
+_VALID_RISKS = frozenset({"read", "write", "destructive"})
 
 
 class ToolRegistryError(RuntimeError):
@@ -68,6 +69,12 @@ def _validate_spec(spec: ToolSpec) -> Draft202012Validator:
         )
     if not spec.description.strip():
         raise ToolRegistryError("Tool descriptions cannot be blank.")
+    if spec.risk not in _VALID_RISKS:
+        raise ToolRegistryError(
+            "Tool risk must be one of: read, write, destructive."
+        )
+    if not callable(spec.handler):
+        raise ToolRegistryError(f"Handler for tool '{spec.name}' must be callable.")
     if spec.parameters.get("type") != "object":
         raise ToolRegistryError("Tool parameter schemas must have type='object'.")
     try:
@@ -78,13 +85,13 @@ def _validate_spec(spec: ToolSpec) -> Draft202012Validator:
 
 
 def _ensure_jsonable(value: Any, *, tool_name: str) -> Any:
-    """Require explicit JSON-safe tool results before they are returned to the model."""
+    """Require standards-valid JSON tool results before returning them to the model."""
 
     try:
-        json.dumps(value, ensure_ascii=False)
+        json.dumps(value, ensure_ascii=False, allow_nan=False)
     except (TypeError, ValueError) as exc:
         raise ToolExecutionError(
-            f"Tool '{tool_name}' returned a value that is not JSON serializable."
+            f"Tool '{tool_name}' returned a value that is not valid JSON."
         ) from exc
     return value
 

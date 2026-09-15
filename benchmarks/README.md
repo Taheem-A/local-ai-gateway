@@ -83,6 +83,8 @@ The runner reports:
 
 It also records the suite version/SHA-256, resolved model/profile/reasoning, and output-token budget. The benchmark only exercises model/gateway tool planning and synthesis; application handlers are tested separately by the SDK unit tests and live smoke test.
 
+The first production GPT-OSS validation is frozen under `history/2026-09-15-gptoss-tool-calling/`. The immutable source run achieved 100% selection, argument, risk-annotation, synthesis-constraint, and full-case success across all eight fixed cases with zero request errors on GPT-OSS 20B / `default` / low reasoning. Its overall mean latency was 4.8203 s because the first request took 24.8698 s; the remaining seven requests averaged about 1.99 s and the run median was 2.0042 s.
+
 A live result is not production evidence until its result directory is committed unchanged and summarized under `history/`.
 
 ## Saved artifacts

@@ -52,3 +52,51 @@ class StructuredOutputError(GatewayError):
             status_code=422,
             details=details,
         )
+
+
+class ToolSchemaError(GatewayError):
+    """Raised when a caller advertises an invalid or unsupported tool schema."""
+
+    def __init__(self, message: str, details: Any | None = None) -> None:
+        super().__init__(
+            code="TOOL_SCHEMA_INVALID",
+            message=message,
+            status_code=422,
+            details=details,
+        )
+
+
+class ToolHistoryError(GatewayError):
+    """Raised when tool-call/result history is internally inconsistent."""
+
+    def __init__(self, message: str, details: Any | None = None) -> None:
+        super().__init__(
+            code="TOOL_HISTORY_INVALID",
+            message=message,
+            status_code=422,
+            details=details,
+        )
+
+
+class ToolCallError(GatewayError):
+    """Raised when a model requests an unknown tool or invalid arguments."""
+
+    def __init__(self, message: str, details: Any | None = None) -> None:
+        super().__init__(
+            code="TOOL_CALL_INVALID",
+            message=message,
+            status_code=422,
+            details=details,
+        )
+
+
+class ToolCallRequiredError(GatewayError):
+    """Raised when `tool_choice=required` produces no parseable tool call."""
+
+    def __init__(self, message: str, details: Any | None = None) -> None:
+        super().__init__(
+            code="TOOL_CALL_REQUIRED",
+            message=message,
+            status_code=422,
+            details=details,
+        )

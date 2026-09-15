@@ -9,6 +9,7 @@ import httpx
 from pydantic import BaseModel
 
 from taheem_ai.errors import AIError
+from taheem_ai.tools import ToolExecutionError, ToolRegistry, ToolRisk, ToolRunResult
 
 T = TypeVar("T", bound=BaseModel)
 DEFAULT_GATEWAY_URL = "http://127.0.0.1:4812"
@@ -160,6 +161,108 @@ class AI:
             },
         )
         return payload["label"]
+
+    def tool_turn(
+        self,
+        messages: list[dict[str, Any]],
+        tools: ToolRegistry | list[dict[str, Any]],
+        *,
+        quality: str = "default",
+        reasoning: str | None = None,
+        system: str | None = None,
+        tool_choice: str = "auto",
+        temperature: float = 0.0,
+        max_output_tokens: int = 2048,
+    ) -> dict[str, Any]:
+        """Run one tool-capable model turn; no tool is executed by this method."""
+
+        definitions = tools.definitions() if isinstance(tools, ToolRegistry) else tools
+        return self._request(
+            "POST",
+            "/v1/tools/turn",
+            json={
+                "messages": messages,
+                "tools": definitions,
+                "quality": quality,
+                "reasoning": reasoning,
+                "system": system,
+                "tool_choice": tool_choice,
+                "temperature": temperature,
+                "max_output_tokens": max_output_tokens,
+            },
+        )
+
+    def run_tools_once(
+        self,
+        prompt: str,
+        registry: ToolRegistry,
+        *,
+        allowed_risks: set[ToolRisk] | frozenset[ToolRisk] = frozenset({"read"}),
+        quality: str = "default",
+        reasoning: str | None = None,
+        system: str | None = None,
+        temperature: float = 0.0,
+        max_output_tokens: int = 2048,
+    ) -> ToolRunResult:
+        """Execute at most one authorized tool round, then force a text-only synthesis turn."""
+
+        messages: list[dict[str, Any]] = [{"role": "user", "content": prompt}]
+        first = self.tool_turn(
+            messages,
+            registry,
+            quality=quality,
+            reasoning=reasoning,
+            system=system,
+            tool_choice="auto",
+            temperature=temperature,
+            max_output_tokens=max_output_tokens,
+        )
+
+        if first["status"] == "completed":
+            return ToolRunResult(
+                text=first.get("text") or "",
+                tool_calls=[],
+                tool_results=[],
+                first_turn=first,
+                final_turn=first,
+            )
+
+        registry.preflight(first["tool_calls"], allowed_risks=allowed_risks)
+        messages.append(first["assistant_message"])
+        tool_results: list[dict[str, Any]] = []
+        for call in first["tool_calls"]:
+            result = registry.execute(call, allowed_risks=allowed_risks)
+            result_message = {
+                "role": "tool",
+                "tool_call_id": call["id"],
+                "name": call["name"],
+                "content": result,
+            }
+            tool_results.append(result_message)
+            messages.append(result_message)
+
+        final = self.tool_turn(
+            messages,
+            registry,
+            quality=quality,
+            reasoning=reasoning,
+            system=system,
+            tool_choice="none",
+            temperature=temperature,
+            max_output_tokens=max_output_tokens,
+        )
+        if final["status"] != "completed":
+            raise ToolExecutionError(
+                "The forced synthesis turn unexpectedly returned another tool call."
+            )
+
+        return ToolRunResult(
+            text=final.get("text") or "",
+            tool_calls=first["tool_calls"],
+            tool_results=tool_results,
+            first_turn=first,
+            final_turn=final,
+        )
 
     def embed(
         self,

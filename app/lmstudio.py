@@ -1,4 +1,4 @@
-"""LM Studio provider adapters for generation, embeddings, and model discovery."""
+"""LM Studio provider adapters for generation, tools, embeddings, and model discovery."""
 
 from __future__ import annotations
 
@@ -149,6 +149,77 @@ async def generate_structured(
     completion_details = usage.get("completion_tokens_details") or {}
     return {
         "text": content.strip(),
+        "model": data.get("model", model),
+        "input_tokens": usage.get("prompt_tokens"),
+        "output_tokens": usage.get("completion_tokens"),
+        "reasoning_output_tokens": completion_details.get("reasoning_tokens"),
+        "finish_reason": choice.get("finish_reason"),
+    }
+
+
+async def generate_tool_turn(
+    *,
+    model: str,
+    messages: list[dict[str, Any]],
+    tools: list[dict[str, Any]],
+    tool_choice: str,
+    reasoning: str | None,
+    temperature: float,
+    max_output_tokens: int,
+) -> dict[str, Any]:
+    """Request one OpenAI-compatible tool-planning or synthesis chat turn."""
+
+    body: dict[str, Any] = {
+        "model": model,
+        "messages": messages,
+        "temperature": temperature,
+        "max_tokens": max_output_tokens,
+        "stream": False,
+    }
+    # LM Studio's documented post-tool flow omits tools entirely for the final
+    # synthesis turn. This is a stronger boundary and uses less prompt context
+    # than re-advertising the tools with `tool_choice=none`.
+    if tool_choice != "none":
+        body["tools"] = tools
+        body["tool_choice"] = tool_choice
+    if reasoning:
+        body["reasoning_effort"] = reasoning
+
+    async with httpx.AsyncClient(timeout=_timeout()) as client:
+        response = await client.post(
+            f"{settings.lm_base_url}/v1/chat/completions",
+            headers=_headers(),
+            json=body,
+        )
+
+    if not response.is_success:
+        raise LMStudioError(
+            f"LM Studio tool generation returned {response.status_code}: {response.text}"
+        )
+
+    try:
+        data = response.json()
+    except ValueError as exc:
+        raise LMStudioError("LM Studio tool generation returned invalid JSON.") from exc
+
+    choices = data.get("choices") or []
+    if not choices:
+        raise LMStudioError("LM Studio returned no tool-generation completion choices.")
+
+    choice = choices[0]
+    message = choice.get("message") or {}
+    raw_tool_calls = message.get("tool_calls") or []
+    if not isinstance(raw_tool_calls, list):
+        raise LMStudioError("LM Studio returned an invalid tool_calls field.")
+
+    content = message.get("content")
+    text = content if isinstance(content, str) else None
+    usage = data.get("usage") or {}
+    completion_details = usage.get("completion_tokens_details") or {}
+
+    return {
+        "text": text,
+        "tool_calls": raw_tool_calls,
         "model": data.get("model", model),
         "input_tokens": usage.get("prompt_tokens"),
         "output_tokens": usage.get("completion_tokens"),

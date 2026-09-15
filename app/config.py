@@ -7,7 +7,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    """Runtime settings for generation, embeddings, retrieval, and persistence."""
+    """Runtime settings for generation, embeddings, retrieval, tools, and persistence."""
 
     lm_base_url: str = "http://127.0.0.1:1234"
     lm_api_token: str
@@ -44,6 +44,16 @@ class Settings(BaseSettings):
     default_max_output_tokens: int = 2048
     structured_max_attempts: int = 2
     lm_timeout_seconds: int = 300
+
+    # Tool calls are deliberately bounded at the gateway boundary. The gateway
+    # only validates/model-plans calls; real execution stays in the application.
+    tool_max_definitions: int = 32
+    tool_max_schema_chars: int = 30000
+    tool_max_definitions_chars: int = 100000
+    tool_max_calls_per_turn: int = 8
+    tool_max_history_messages: int = 100
+    tool_max_history_chars: int = 120000
+    tool_max_result_chars: int = 50000
 
     metrics_db_path: Path = Path("data/gateway.db")
     rag_db_path: Path = Path("data/rag.db")

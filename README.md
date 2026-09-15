@@ -1,6 +1,6 @@
 # Local AI Gateway
 
-A localhost-only AI service for personal projects. Applications call one stable API while the gateway owns model selection, reasoning effort, embeddings, retrieval-augmented generation (RAG), structured-output validation, retries, and operational metrics.
+A localhost-only AI service for personal projects. Applications call one stable API while the gateway owns model selection, reasoning effort, embeddings, retrieval-augmented generation (RAG), structured-output validation, safe tool-call planning, retries, and operational metrics.
 
 ## Current production profiles
 
@@ -20,6 +20,9 @@ Local AI Gateway :4812
         |   +-- deep      -> GPT-OSS 20B / high reasoning
         |
         +-- embeddings/RAG -> BGE-M3 -> data/rag.db
+        |
+        +-- tool planning -> GPT-OSS -> validated call request
+                                      -> application-owned handler
 ```
 
 New applications should normally use `default`. Use `deep` when a task justifies substantially more reasoning time. `medium` reasoning remains available as an explicit override. `balanced` intentionally preserves the original Gemma benchmark mapping so old experiments stay reproducible.
@@ -104,7 +107,7 @@ python -m compileall -q app benchmarks clients/python/taheem_ai scripts tests wo
 pytest -q
 ```
 
-GitHub Actions runs the same checks. CI uses fake deterministic embeddings for RAG tests and therefore does not require LM Studio or GPU access.
+GitHub Actions runs the same checks. CI uses fake deterministic embeddings and mocked tool-provider responses, so it does not require LM Studio or GPU access.
 
 ## 5. Free-form generation
 
@@ -134,102 +137,72 @@ Invoke-RestMethod `
 
 `/v1/extract` combines LM Studio JSON-schema constrained generation with gateway-side normalization, Draft 2020-12 validation, and bounded repair retries.
 
-```powershell
-$body = @{
-    prompt = "MAT186 Problem Set 2 is due September 18, 2026 at 11:59 PM."
-    quality = "default"
-    schema = @{
-        type = "object"
-        properties = @{
-            course = @{ type = "string"; "x-normalize" = "upper" }
-            assignment = @{ type = "string" }
-            due_date = @{ type = "string"; format = "date" }
-            due_time = @{ type = "string"; format = "time" }
-        }
-        required = @("course", "assignment", "due_date", "due_time")
-        additionalProperties = $false
-    }
-} | ConvertTo-Json -Depth 10
+For this gateway, `format = "time"` means an exact local `HH:MM` clock value. The gateway translates that convenience contract to a model-facing pattern and deliberately refuses to hide timezone conversions.
 
-Invoke-RestMethod `
-    -Uri "http://127.0.0.1:4812/v1/extract" `
-    -Method Post `
-    -Headers $headers `
-    -Body $body
-```
-
-For this gateway, `format = "time"` means an exact local `HH:MM` clock value. The gateway translates that convenience contract to a model-facing pattern and deliberately refuses to hide timezone conversions. A source value of `11:59 PM` therefore canonicalizes to `23:59`.
+See [`docs/structured-output.md`](docs/structured-output.md) for the complete contract.
 
 ## 7. Classification
 
-```powershell
-$body = @{
-    text = "Homework 4. Due Sunday at 11:59 PM."
-    labels = @("assignment", "exam", "announcement", "irrelevant")
-    quality = "default"
-} | ConvertTo-Json
-
-Invoke-RestMethod `
-    -Uri "http://127.0.0.1:4812/v1/classify" `
-    -Method Post `
-    -Headers $headers `
-    -Body $body
-```
-
-The gateway converts the supplied labels into an enum-constrained JSON schema. Classification keeps a 512-token default generation budget because hidden reasoning can consume far more tokens than the tiny visible label.
+`/v1/classify` performs enum-constrained closed-label classification. The caller owns the label semantics; overlapping labels should be clarified through mutually exclusive names or a system instruction.
 
 ## 8. Embeddings and RAG
 
-Raw embeddings are available independently:
-
-```powershell
-$body = @{
-    input = @("turnbuckles adjust cable tension", "inverse functions")
-    purpose = "raw"
-} | ConvertTo-Json
-
-Invoke-RestMethod `
-    -Uri "http://127.0.0.1:4812/v1/embeddings" `
-    -Method Post `
-    -Headers $headers `
-    -Body $body
-```
-
-Index text directly:
-
-```powershell
-$body = @{
-    collection = "university"
-    documents = @(
-        @{
-            id = "civ100-turnbuckles"
-            source = "CIV100 notes"
-            text = "A turnbuckle is an adjustable connector used to change tension..."
-            metadata = @{ course = "CIV100" }
-        }
-    )
-} | ConvertTo-Json -Depth 10
-
-Invoke-RestMethod `
-    -Uri "http://127.0.0.1:4812/v1/rag/index" `
-    -Method Post `
-    -Headers $headers `
-    -Body $body
-```
-
-Retrieve without generation through `/v1/rag/search`, or ask a grounded question through `/v1/rag/answer`. Grounded answers use schema-constrained source labels and map citations back to the retrieved document/chunk metadata. Retrieved text is explicitly treated as untrusted data rather than model instructions.
-
-For local files and PDFs:
+Raw embeddings are available through `/v1/embeddings`. Persistent RAG adds `/v1/rag/index`, `/v1/rag/search`, `/v1/rag/answer`, collection inspection, document deletion, and local file/PDF ingestion.
 
 ```powershell
 python scripts\rag_ingest.py university C:\path\to\notes --recursive --project university
 ```
 
-The ingestion helper supports text/Markdown/code/JSON/YAML/CSV plus text-based PDFs. Each PDF page is kept as a separate logical source so citations retain page provenance. Scanned/image-only PDFs are not OCR'd in this milestone.
+Retrieved text is explicitly treated as untrusted evidence rather than model instructions. See [`docs/rag.md`](docs/rag.md) for architecture, persistence, prompt-injection handling, reindex rules, and scaling strategy.
 
-See [`docs/rag.md`](docs/rag.md) for architecture, model choice, persistence, prompt-injection handling, reindex rules, and scaling strategy.
+## 9. Tool calling
 
-## 9. Python SDK
+Stage 2 provides a provider-independent tool-call abstraction without making the gateway an arbitrary-code execution service.
+
+The low-level endpoint:
+
+```text
+POST /v1/tools/turn
+```
+
+runs exactly one model turn. The caller supplies self-contained JSON-Schema tool definitions and conversation history; the gateway validates schemas/history and returns either normal text or validated tool-call requests.
+
+The gateway **never executes caller application code**. Execution authority stays in the application. The Python SDK v0.3 provides `ToolRegistry` for trusted local handlers:
+
+```python
+from taheem_ai import AI, ToolRegistry
+
+
+def lookup_course_room(course: str, section: str) -> dict:
+    return {"course": course, "section": section, "room": "GB 248"}
+
+
+registry = ToolRegistry().register(
+    name="lookup_course_room",
+    description="Look up the room for a university course section.",
+    parameters={
+        "type": "object",
+        "properties": {
+            "course": {"type": "string"},
+            "section": {"type": "string"},
+        },
+        "required": ["course", "section"],
+        "additionalProperties": False,
+    },
+    handler=lookup_course_room,
+    risk="read",
+)
+
+ai = AI(project="university")
+result = ai.run_tools_once("Where is CIV100 section L0101?", registry)
+print(result.text)
+```
+
+`run_tools_once()` defaults to `read` tools only, preflights the entire requested batch before executing anything, performs at most one execution round, then forces text-only synthesis. `write` and `destructive` tools require explicit opt-in. Recursive multi-step autonomy is intentionally deferred to Stage 7.
+
+Tool outputs are treated as untrusted data and cannot grant permission or add tools. See [`docs/tools.md`](docs/tools.md) for the complete security and execution model.
+
+## 10. Python SDK
 
 Install the local client in editable mode:
 
@@ -246,72 +219,23 @@ ai = AI(project="itqaan")
 print(ai.ask("Explain this error."))
 ```
 
-Typed extraction:
+The SDK also provides typed extraction, classification, embeddings, RAG indexing/search/answers, low-level `tool_turn()`, bounded `run_tools_once()`, and matching async APIs.
 
-```python
-from datetime import date
+## 11. Metrics and benchmarks
 
-from pydantic import BaseModel
-from taheem_ai import AI
-
-
-class Assignment(BaseModel):
-    course: str
-    title: str
-    due_date: date
-
-
-ai = AI(project="university")
-assignment = ai.extract(
-    "MAT186 Problem Set 2 is due September 18, 2026.",
-    Assignment,
-)
-print(assignment)
-```
-
-RAG through SDK v0.2:
-
-```python
-from taheem_ai import AI
-
-ai = AI(project="university")
-ai.index_documents(
-    "notes",
-    [
-        {
-            "id": "mat186-ps2",
-            "source": "MAT186 notes",
-            "text": "Problem Set 2 is due September 18, 2026.",
-            "metadata": {"course": "MAT186"},
-        }
-    ],
-)
-
-print(ai.search("notes", "When is Problem Set 2 due?"))
-result = ai.answer_with_sources("notes", "When is Problem Set 2 due?")
-print(result["answer"])
-print(result["citations"])
-```
-
-`AsyncAI` provides matching generation, extraction, classification, embedding, indexing, retrieval, and grounded-answer methods for async applications.
-
-## 10. Metrics and benchmarks
-
-Operational requests are recorded in `data/gateway.db`; prompt and response content are not stored there. RAG source text and vectors live separately in `data/rag.db` and are private application data by design.
+Operational requests are recorded in `data/gateway.db`; prompt, response, tool-definition, tool-argument, and tool-result content are not stored there. RAG source text and vectors live separately in `data/rag.db` and are private application data by design.
 
 ```powershell
 python scripts\gateway_stats.py --days 30
 ```
 
-The committed low/medium/high reasoning experiment remains immutable historical evidence. Current generation benchmarks use benchmark v3.
-
-The RAG retrieval benchmark measures Recall@1/3/5, mean reciprocal rank, and retrieval latency on a fixed multilingual corpus:
+Generation, retrieval, and tool calling have separate benchmark suites. Tool calling can be tested with:
 
 ```powershell
-python benchmarks\run_rag_benchmarks.py --name bge-m3-rag-v1
+python benchmarks\run_tool_benchmarks.py --quality default --name gptoss-tool-calling-v1
 ```
 
-See [`benchmarks/README.md`](benchmarks/README.md) and [`docs/rag.md`](docs/rag.md).
+See [`benchmarks/README.md`](benchmarks/README.md).
 
 ## Security rules
 
@@ -319,9 +243,10 @@ See [`benchmarks/README.md`](benchmarks/README.md) and [`docs/rag.md`](docs/rag.
 - The gateway stays on `127.0.0.1:4812`.
 - Never port-forward either service directly to the public internet.
 - Keep `.env`, `data/gateway.db`, and `data/rag.db` private.
-- Prompt content is not logged by operational metrics by default.
-- Retrieved RAG content is untrusted evidence and must never grant instructions or permissions.
-- Cloud fallback is not implemented in this milestone, so a local failure cannot silently create API charges.
+- Prompt/tool content is not logged by operational metrics by default.
+- Retrieved RAG content and tool results are untrusted data, never authorization.
+- A model-requested tool call is only a request; application policy decides whether code executes.
+- Cloud fallback is not implemented, so a local failure cannot silently create API charges.
 
 ## Documentation
 
@@ -330,5 +255,6 @@ See [`benchmarks/README.md`](benchmarks/README.md) and [`docs/rag.md`](docs/rag.
 - [`docs/current-models.md`](docs/current-models.md) — current routing decision and benchmark basis
 - [`docs/structured-output.md`](docs/structured-output.md) — structured generation/validation rules
 - [`docs/rag.md`](docs/rag.md) — embeddings, retrieval, indexing, citations, and RAG security
+- [`docs/tools.md`](docs/tools.md) — tool protocol, local registry, risk policy, and security boundaries
 - [`docs/benchmarking.md`](docs/benchmarking.md) — benchmark history and methodology
 - [`docs/development.md`](docs/development.md) — coding conventions and release checks

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import math
 
 import pytest
 from taheem_ai import AI
@@ -63,6 +64,53 @@ def test_registry_blocks_write_and_destructive_tools_by_default():
     assert registry.execute(call, allowed_risks={"read", "write"}) == {"created": "Study"}
 
 
+def test_batch_preflight_prevents_partial_execution_before_unauthorized_call():
+    executions: list[str] = []
+    registry = ToolRegistry()
+    registry.register(
+        name="lookup",
+        description="Look up a value.",
+        parameters={"type": "object", "properties": {}, "additionalProperties": False},
+        handler=lambda: executions.append("lookup") or {"ok": True},
+        risk="read",
+    )
+    registry.register(
+        name="create_item",
+        description="Create an item.",
+        parameters={"type": "object", "properties": {}, "additionalProperties": False},
+        handler=lambda: executions.append("create") or {"created": True},
+        risk="write",
+    )
+
+    calls = [
+        {"name": "lookup", "arguments": {}},
+        {"name": "create_item", "arguments": {}},
+    ]
+    with pytest.raises(ToolPermissionError):
+        registry.preflight(calls)
+
+    assert executions == []
+
+
+def test_registry_rejects_invalid_risk_and_noncallable_handler():
+    with pytest.raises(ToolRegistryError, match="risk"):
+        ToolRegistry().register(
+            name="lookup",
+            description="Look up a value.",
+            parameters={"type": "object", "properties": {}},
+            handler=lambda: {},
+            risk="unknown",  # type: ignore[arg-type]
+        )
+
+    with pytest.raises(ToolRegistryError, match="callable"):
+        ToolRegistry().register(
+            name="lookup",
+            description="Look up a value.",
+            parameters={"type": "object", "properties": {}},
+            handler=None,  # type: ignore[arg-type]
+        )
+
+
 def test_registry_rejects_duplicate_names():
     registry = ToolRegistry().register(
         name="lookup",
@@ -77,6 +125,18 @@ def test_registry_rejects_duplicate_names():
             parameters={"type": "object", "properties": {}},
             handler=lambda: {},
         )
+
+
+def test_registry_rejects_nonfinite_json_results():
+    registry = ToolRegistry().register(
+        name="measure",
+        description="Return a measurement.",
+        parameters={"type": "object", "properties": {}, "additionalProperties": False},
+        handler=lambda: {"value": math.nan},
+    )
+
+    with pytest.raises(ToolExecutionError, match="valid JSON"):
+        registry.execute({"name": "measure", "arguments": {}})
 
 
 def test_async_registry_awaits_async_handlers():

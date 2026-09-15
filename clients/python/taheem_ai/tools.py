@@ -148,6 +148,17 @@ class ToolRegistry:
             raise ToolExecutionError(f"Tool '{name}' argument validation failed: {details}")
         return spec, arguments
 
+    def preflight(
+        self,
+        calls: list[dict[str, Any]],
+        *,
+        allowed_risks: set[ToolRisk] | frozenset[ToolRisk] = frozenset({"read"}),
+    ) -> None:
+        """Authorize and validate every requested call before any handler is invoked."""
+
+        for call in calls:
+            self._prepare_call(call, allowed_risks)
+
     def execute(
         self,
         call: dict[str, Any],
@@ -162,6 +173,9 @@ class ToolRegistry:
         except Exception as exc:
             raise ToolExecutionError(f"Tool '{spec.name}' failed: {exc}") from exc
         if inspect.isawaitable(result):
+            close = getattr(result, "close", None)
+            if callable(close):
+                close()
             raise ToolExecutionError(
                 f"Tool '{spec.name}' returned an awaitable; use AsyncAI/run_tools_once instead."
             )

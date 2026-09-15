@@ -46,6 +46,7 @@ from app.schemas import (
     StatusResponse,
 )
 from app.structured import run_structured
+from app.tools.router import router as tools_router
 
 
 @asynccontextmanager
@@ -59,9 +60,10 @@ async def lifespan(_: FastAPI):
 
 app = FastAPI(
     title="Local AI Gateway",
-    version="3.0.0",
+    version="4.0.0",
     lifespan=lifespan,
 )
+app.include_router(tools_router)
 
 
 def authenticate(x_local_ai_key: str | None) -> None:
@@ -186,12 +188,13 @@ async def health() -> dict[str, str]:
 async def models_endpoint(
     x_local_ai_key: str | None = Header(default=None),
 ) -> dict[str, Any]:
-    """Expose public generation profiles and the configured embedding model."""
+    """Expose public model profiles and capability-level provider configuration."""
 
     authenticate(x_local_ai_key)
     return {
         "profiles": public_profiles(),
         "embedding": {"model": settings.embedding_model},
+        "tools": {"endpoint": "/v1/tools/turn", "execution": "caller"},
     }
 
 

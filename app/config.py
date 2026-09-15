@@ -48,6 +48,8 @@ class Settings(BaseSettings):
     # Tool calls are deliberately bounded at the gateway boundary. The gateway
     # only validates/model-plans calls; real execution stays in the application.
     tool_max_definitions: int = 32
+    tool_max_schema_chars: int = 30000
+    tool_max_definitions_chars: int = 100000
     tool_max_calls_per_turn: int = 8
     tool_max_history_messages: int = 100
     tool_max_history_chars: int = 120000

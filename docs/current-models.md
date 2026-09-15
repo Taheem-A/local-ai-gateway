@@ -23,7 +23,7 @@ EMBEDDING_QUERY_PREFIX=
 EMBEDDING_DOCUMENT_PREFIX=
 ```
 
-BGE-M3 is preferred for the first RAG milestone because the gateway is expected to index multilingual as well as English personal material. The raw LM Studio model key is an environment setting because locally downloaded revisions may expose a different key; verify it with `lms ls --embedding`.
+BGE-M3 is the Stage 1 production embedding model because the gateway is expected to index multilingual as well as English personal material, and it passed the live multilingual retrieval validation on the target machine. The raw LM Studio model key is an environment setting because locally downloaded revisions may expose a different key; verify it with `lms ls --embedding`.
 
 Applications call `/v1/embeddings` or the RAG endpoints and never need to know that key. If the embedding model or dimension changes, existing RAG collections are considered incompatible and must be reindexed rather than mixing vector spaces.
 
@@ -53,7 +53,21 @@ The full immutable record is in [`benchmarks/history/2026-09-13-gptoss-reasoning
 
 ## RAG retrieval validation
 
-The chosen embedding model is validated separately with `benchmarks/run_rag_benchmarks.py`. That benchmark measures Recall@1/3/5, mean reciprocal rank, and retrieval latency on a fixed multilingual corpus. Retrieval-model changes should be compared with that benchmark rather than with the generation benchmark.
+BGE-M3 was validated live with `benchmarks/run_rag_benchmarks.py` using the fixed multilingual v1 suite. The committed run is `benchmarks/results/20260914_213509_bge-m3-rag-v1_dedb85/`:
+
+| Metric | Result |
+|---|---:|
+| Embedding dimensions | 1024 |
+| Recall@1 | 100.0% |
+| Recall@3 | 100.0% |
+| Recall@5 | 100.0% |
+| Mean reciprocal rank | 1.0000 |
+| Mean retrieval latency | 0.0467 s |
+| Median retrieval latency | 0.0465 s |
+
+All ten expected documents ranked first, including Bengali and Arabic cases. The validation record is frozen under [`benchmarks/history/2026-09-14-bge-m3-rag/`](../benchmarks/history/2026-09-14-bge-m3-rag/).
+
+This establishes BGE-M3 as the initial production retriever and validates the local embedding/storage/search path. It does not imply that larger real-world corpora will maintain perfect retrieval; future model/chunking/store changes must be measured with new immutable runs.
 
 ## Older model comparison
 

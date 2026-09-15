@@ -167,17 +167,21 @@ async def generate_tool_turn(
     temperature: float,
     max_output_tokens: int,
 ) -> dict[str, Any]:
-    """Request one OpenAI-compatible tool-capable chat-completion turn."""
+    """Request one OpenAI-compatible tool-planning or synthesis chat turn."""
 
     body: dict[str, Any] = {
         "model": model,
         "messages": messages,
-        "tools": tools,
-        "tool_choice": tool_choice,
         "temperature": temperature,
         "max_tokens": max_output_tokens,
         "stream": False,
     }
+    # LM Studio's documented post-tool flow omits tools entirely for the final
+    # synthesis turn. This is a stronger boundary and uses less prompt context
+    # than re-advertising the tools with `tool_choice=none`.
+    if tool_choice != "none":
+        body["tools"] = tools
+        body["tool_choice"] = tool_choice
     if reasoning:
         body["reasoning_effort"] = reasoning
 

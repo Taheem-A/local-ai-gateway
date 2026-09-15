@@ -1,0 +1,22 @@
+{
+  "suite_version": 1,
+  "suite_sha256": "1784465e7782ca37aceaa87b89be255d8230845ec58e8a0df1cb891764588680",
+  "quality": "default",
+  "requested_reasoning": null,
+  "resolved_profile": "default",
+  "resolved_reasoning": "low",
+  "model": "openai/gpt-oss-20b",
+  "max_output_tokens": 2048,
+  "cases": 8,
+  "tool_request_cases": 5,
+  "synthesis_cases": 2,
+  "selection_accuracy_percent": 100.0,
+  "argument_accuracy_percent": 100.0,
+  "risk_annotation_accuracy_percent": 100.0,
+  "synthesis_constraint_accuracy_percent": 100.0,
+  "case_success_percent": 100.0,
+  "request_errors": 0,
+  "mean_latency_seconds": 4.8203,
+  "median_latency_seconds": 2.0042,
+  "total_seconds": 38.787
+}

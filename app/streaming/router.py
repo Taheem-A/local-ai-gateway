@@ -102,6 +102,7 @@ async def generate_stream_endpoint(
         )
         metric_recorded = False
         first_text_seconds: float | None = None
+        observed_model_load_seconds: float | None = None
 
         yield encode_sse(
             "start",
@@ -129,6 +130,9 @@ async def generate_stream_endpoint(
 
                 event_type = event["type"]
                 if event_type == "progress":
+                    load_time = event.get("model_load_time_seconds")
+                    if isinstance(load_time, (int, float)):
+                        observed_model_load_seconds = float(load_time)
                     public_event = dict(event)
                     public_event["request_id"] = request_id
                     yield encode_sse("progress", public_event)
@@ -151,6 +155,10 @@ async def generate_stream_endpoint(
 
                 total_latency = time.perf_counter() - started
                 provider_first_token = event.get("time_to_first_token_seconds")
+                model_load_seconds = event.get("model_load_time_seconds")
+                if model_load_seconds is None:
+                    model_load_seconds = observed_model_load_seconds
+
                 record_metric(
                     RequestMetric(
                         request_id=request_id,
@@ -162,7 +170,7 @@ async def generate_stream_endpoint(
                         input_tokens=event.get("input_tokens"),
                         reasoning_tokens=event.get("reasoning_output_tokens"),
                         output_tokens=event.get("output_tokens"),
-                        model_load_seconds=event.get("model_load_time_seconds"),
+                        model_load_seconds=model_load_seconds,
                         first_token_seconds=provider_first_token,
                         total_latency_seconds=total_latency,
                         attempts=1,
@@ -178,6 +186,7 @@ async def generate_stream_endpoint(
                         "profile": profile.name,
                         "quality": payload.quality,
                         "reasoning": profile.reasoning,
+                        "model_load_time_seconds": model_load_seconds,
                         "time_to_first_text_seconds": first_text_seconds,
                         "total_latency_seconds": total_latency,
                     }
@@ -193,7 +202,6 @@ async def generate_stream_endpoint(
                     started=started,
                     error_code="CLIENT_DISCONNECTED",
                 )
-                metric_recorded = True
             raise
         except LMStudioError:
             if not metric_recorded:
@@ -204,7 +212,6 @@ async def generate_stream_endpoint(
                     started=started,
                     error_code="LMSTUDIO_UNAVAILABLE",
                 )
-                metric_recorded = True
             yield _public_error(
                 request_id,
                 "LMSTUDIO_UNAVAILABLE",
@@ -219,7 +226,6 @@ async def generate_stream_endpoint(
                     started=started,
                     error_code="STREAM_FAILED",
                 )
-                metric_recorded = True
             yield _public_error(
                 request_id,
                 "STREAM_FAILED",

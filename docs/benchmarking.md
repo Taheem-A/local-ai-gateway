@@ -2,35 +2,41 @@
 
 ## Purpose
 
-Benchmarks answer two different questions:
+The gateway now has several benchmark families because they answer different questions:
 
-1. **What can the raw local model do?**
-2. **Which model/reasoning profile should the gateway use in production?**
+1. **Generation:** what can the raw local generation model do, and which reasoning profile should production use?
+2. **RAG:** does the configured embedding/retrieval stack rank the expected evidence highly enough?
+3. **Tool calling:** does the model choose and parameterize advertised tools correctly and synthesize safely from results?
+4. **Streaming:** does incremental delivery obey the public SSE contract, reconstruct exactly, and improve perceived latency?
 
-The runner therefore calls `/v1/generate`, not the production structured endpoints. Schema-constrained decoding, local normalization, and repair retries are deliberately excluded so natural model formatting and instruction following remain measurable.
+Those questions must stay separate. A strong model-quality score cannot prove that retrieval works, and a perfect streaming transport cannot prove that the model's answer is correct.
 
 ## Historical evidence policy
 
-Committed benchmark result directories are immutable experiment records. Do not edit responses, scores, or metadata in place after a run has been used for a decision.
+Committed benchmark result directories are immutable experiment records. Do not edit responses, scores, events, or metadata in place after a run has been used for a decision.
 
-If grading improves, use `--regrade` to create a new result directory. If a prompt or expected answer changes, bump the benchmark version and run the updated case again.
+If grading improves, create a new result. If a prompt, expected answer, retrieval corpus, tool definition, stream contract, or grading rule changes, bump that benchmark's version and run it again.
 
-The September 13, 2026 GPT-OSS low/medium/high experiment is frozen under [`benchmarks/history/2026-09-13-gptoss-reasoning/`](../benchmarks/history/2026-09-13-gptoss-reasoning/).
+Frozen experiment summaries live under `benchmarks/history/`.
 
-## Current benchmark version
+## Generation benchmark
 
-The current suite is **v3**.
+The generation runner calls `/v1/generate`, not the production structured endpoints. Schema-constrained decoding, local normalization, and repair retries are deliberately excluded so natural model formatting and instruction following remain measurable.
+
+### Current generation version
+
+The current generation suite is **v3**.
 
 The physical `cases_*.json` files remain the v2 base definitions so historical prompts are still available. `benchmarks/current_suite.json` applies explicit v3 policy overrides. This design makes prompt changes visible and keeps the original benchmark evidence reproducible.
 
-V3 fixes known ambiguities discovered in the reasoning experiment:
+V3 fixes known ambiguities discovered in the September 13 reasoning experiment:
 
-- course classification now defines whether the target is an assignment, exam, administrative announcement, or coursework-irrelevant item;
+- course classification defines whether the target is an assignment, exam, administrative announcement, or coursework-irrelevant item;
 - `project_005` declares the allowed generic event-type ontology;
 - routing-policy cases use `fast`, `default`, and `deep` rather than the historical `balanced` terminology;
 - deterministic label grading recognizes superscript exponent notation such as `O(n²)` as semantically equivalent to `O(n^2)`.
 
-## Scores
+### Generation scores
 
 The grader intentionally separates:
 
@@ -40,7 +46,7 @@ The grader intentionally separates:
 
 A response can therefore be semantically correct while failing strict formatting. Subjective summaries and explicitly marked free-text fields remain manual rather than being awarded points through keyword matching.
 
-## Standard run protocol
+### Standard generation protocol
 
 For model/reasoning comparisons:
 
@@ -61,9 +67,9 @@ python benchmarks\run_benchmarks.py `
     --name gptoss-low-v3
 ```
 
-## Result artifacts
+### Generation artifacts
 
-Each run writes:
+Generation runs write:
 
 - `raw_results.json`
 - `summary.json`
@@ -73,7 +79,7 @@ Each run writes:
 
 The runner checkpoints after every case using atomic per-file replacement. It also records source SHA-256 hashes so the code and case policy behind a result can be identified later.
 
-## Regrading
+### Regrading
 
 ```powershell
 python benchmarks\run_benchmarks.py `
@@ -83,7 +89,7 @@ python benchmarks\run_benchmarks.py `
 
 Regrading never performs inference and never mutates the original run. If the current prompt differs from the historical prompt, metadata marks that fact; a new grader cannot retroactively make the old prompt unambiguous.
 
-## Comparing runs
+### Comparing generation runs
 
 ```powershell
 python benchmarks\compare_runs.py `
@@ -93,6 +99,42 @@ python benchmarks\compare_runs.py `
 ```
 
 The comparison helper prints semantic/format/instruction scores alongside latency, token usage, errors, and code-test totals.
+
+## RAG benchmark
+
+`benchmarks/rag_suite.json` uses a fixed corpus and expected document IDs. It measures retrieval ranking independently of answer generation.
+
+Primary metrics are Recall@1/3/5, mean reciprocal rank, and query latency. A successful small-corpus validation proves that the embedding/storage/search path works on that controlled suite; it does not promise identical accuracy at much larger real-world corpus sizes.
+
+The first production BGE-M3 run is frozen under `benchmarks/history/2026-09-14-bge-m3-rag/`.
+
+## Tool-calling benchmark
+
+`benchmarks/tool_suite.json` measures tool selection, argument extraction, caller-declared risk metadata, explicit/automatic no-tool behavior, final synthesis, and resistance to an instruction embedded inside tool-result data.
+
+The benchmark never executes real application side effects. Execution authority is a separate SDK/application boundary and is validated by unit tests plus a live read-only handler smoke test.
+
+The first production GPT-OSS tool-calling run is frozen under `benchmarks/history/2026-09-15-gptoss-tool-calling/`.
+
+## Streaming benchmark
+
+`benchmarks/stream_suite.json` and `run_stream_benchmarks.py` test the Stage 3 delivery contract through the **public gateway endpoint**, not LM Studio directly.
+
+The suite validates:
+
+- allowed event types and terminal ordering;
+- multiple incremental text deltas where appropriate;
+- exact concatenation of deltas to the final aggregate text;
+- one consistent request ID throughout the stream;
+- model/profile/final timing metadata;
+- time to first **visible text**, measured at the first public `delta`;
+- total request latency.
+
+This distinction matters for reasoning models. A provider may report a first generated token before the user sees text because hidden reasoning can occur first. The Stage 3 benchmark therefore treats `time_to_first_text_seconds` as the primary perceived-latency measurement.
+
+Streaming runs save `raw_results.json`, `summary.json`, and `report.md`. They exit non-zero unless every fixed transport case passes.
+
+The stream suite includes English and Bengali output paths, but it does not grade the quality of the prose. Content capability remains the responsibility of the generation benchmark.
 
 ## Routing decision from the 2026-09-13 experiment
 

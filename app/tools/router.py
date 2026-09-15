@@ -1,4 +1,4 @@
-"""FastAPI router for caller-owned, gateway-validated tool calling."""
+"""FastAPI router for caller-owned tool calling plus mounted extension routes."""
 
 from __future__ import annotations
 
@@ -13,9 +13,13 @@ from app.lmstudio import LMStudioError
 from app.observability import RequestMetric, record_metric
 from app.routing import choose_profile
 from app.schemas import ToolTurnRequest, ToolTurnResponse
+from app.streaming.router import router as streaming_router
 from app.tools.service import run_tool_turn
 
 router = APIRouter()
+# `app.main` already mounts this router as the gateway's extension router. Keep
+# streaming in its own module while composing it here to avoid duplicating app setup.
+router.include_router(streaming_router)
 
 
 def _authenticate(key: str | None) -> None:

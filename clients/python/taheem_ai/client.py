@@ -3,12 +3,14 @@
 from __future__ import annotations
 
 import os
+from collections.abc import Iterator
 from typing import Any, TypeVar
 
 import httpx
 from pydantic import BaseModel
 
 from taheem_ai.errors import AIError
+from taheem_ai.streaming import SSEDecoder, raise_if_stream_error, response_error
 from taheem_ai.tools import ToolExecutionError, ToolRegistry, ToolRisk, ToolRunResult
 
 T = TypeVar("T", bound=BaseModel)
@@ -61,16 +63,7 @@ class AI:
             )
 
         if not response.is_success:
-            try:
-                payload = response.json()
-                error = payload.get("error", {})
-            except (ValueError, TypeError):
-                error = {}
-            raise AIError(
-                error.get("code", f"HTTP_{response.status_code}"),
-                error.get("message", response.text or "Gateway request failed."),
-                error.get("details"),
-            )
+            raise response_error(response)
         return response.json()
 
     def health(self) -> dict[str, Any]:
@@ -111,6 +104,87 @@ class AI:
             },
         )
         return payload["text"]
+
+    def stream_events(
+        self,
+        prompt: str,
+        *,
+        quality: str = "default",
+        reasoning: str | None = None,
+        system: str | None = None,
+        temperature: float = 0.2,
+        max_output_tokens: int = 2048,
+    ) -> Iterator[dict[str, Any]]:
+        """Yield normalized start/progress/delta/completed events from one generation."""
+
+        body = {
+            "prompt": prompt,
+            "quality": quality,
+            "reasoning": reasoning,
+            "system": system,
+            "temperature": temperature,
+            "max_output_tokens": max_output_tokens,
+        }
+        decoder = SSEDecoder()
+        completed = False
+
+        with httpx.Client(timeout=self.timeout) as client:
+            with client.stream(
+                "POST",
+                f"{self.base_url}/v1/generate/stream",
+                headers=self._headers(),
+                json=body,
+            ) as response:
+                if not response.is_success:
+                    response.read()
+                    raise response_error(response)
+
+                for line in response.iter_lines():
+                    event = decoder.feed_line(line)
+                    if event is None:
+                        continue
+                    raise_if_stream_error(event)
+                    if event.get("type") == "completed":
+                        completed = True
+                    yield event
+
+                trailing = decoder.finish()
+                if trailing is not None:
+                    raise_if_stream_error(trailing)
+                    if trailing.get("type") == "completed":
+                        completed = True
+                    yield trailing
+
+        if not completed:
+            raise AIError(
+                "STREAM_PROTOCOL_ERROR",
+                "Gateway stream ended without a completed event.",
+            )
+
+    def stream(
+        self,
+        prompt: str,
+        *,
+        quality: str = "default",
+        reasoning: str | None = None,
+        system: str | None = None,
+        temperature: float = 0.2,
+        max_output_tokens: int = 2048,
+    ) -> Iterator[str]:
+        """Yield only user-visible text fragments from a generation stream."""
+
+        for event in self.stream_events(
+            prompt,
+            quality=quality,
+            reasoning=reasoning,
+            system=system,
+            temperature=temperature,
+            max_output_tokens=max_output_tokens,
+        ):
+            if event.get("type") == "delta":
+                text = event.get("text")
+                if isinstance(text, str) and text:
+                    yield text
 
     def extract(
         self,

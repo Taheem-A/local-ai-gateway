@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "description": "End-to-end SSE streaming transport validation through the public gateway.",
+  "cases": [
+    {
+      "id": "stream-short",
+      "prompt": "Reply with one short sentence saying that streaming is working.",
+      "min_delta_count": 1
+    },
+    {
+      "id": "stream-long",
+      "prompt": "In exactly six short numbered steps, explain how a DNS lookup resolves a domain name to an IP address.",
+      "min_delta_count": 2
+    },
+    {
+      "id": "stream-bangla",
+      "prompt": "বাংলায় তিনটি ছোট বাক্যে বলো কেন বিশ্ববিদ্যালয়ে নিয়মিত পড়াশোনা করা উপকারী।",
+      "min_delta_count": 2
+    }
+  ]
+}

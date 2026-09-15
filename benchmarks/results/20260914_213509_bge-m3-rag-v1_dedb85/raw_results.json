@@ -1,0 +1,561 @@
+{
+  "summary": {
+    "suite_version": 1,
+    "suite_sha256": "26dc2cc75c23f6b4f7ea168344638e83b8d3db1f07efb5bf8847da03e3de3189",
+    "embedding_model": "text-embedding-bge-m3",
+    "embedding_dimensions": 1024,
+    "top_k": 5,
+    "cases": 10,
+    "corpus_documents": 10,
+    "indexed_chunks": 10,
+    "recall_at_1_percent": 100.0,
+    "recall_at_3_percent": 100.0,
+    "recall_at_5_percent": 100.0,
+    "mean_reciprocal_rank": 1.0,
+    "mean_latency_seconds": 0.0467,
+    "median_latency_seconds": 0.0465,
+    "total_seconds": 2.106
+  },
+  "results": [
+    {
+      "id": "q-turnbuckle",
+      "query": "What component lets me adjust tension in a cable without rotating the cable ends?",
+      "expected_document_id": "structures-turnbuckle",
+      "rank": 1,
+      "latency_seconds": 0.05040230000304291,
+      "hits": [
+        {
+          "rank": 1,
+          "score": 0.64134,
+          "document_id": "structures-turnbuckle",
+          "chunk_index": 0,
+          "source": "structures.md",
+          "text": "A turnbuckle is an adjustable connector used to change the tension or effective length of a cable or tie without rotating the members being connected.",
+          "metadata": {}
+        },
+        {
+          "rank": 2,
+          "score": 0.388241,
+          "document_id": "calculus-inverse",
+          "chunk_index": 0,
+          "source": "calculus.md",
+          "text": "A function is invertible on a domain when it is one-to-one there. Restricting a parabola to one side of its vertex can make its inverse a function.",
+          "metadata": {}
+        },
+        {
+          "rank": 3,
+          "score": 0.365107,
+          "document_id": "git-branch",
+          "chunk_index": 0,
+          "source": "git.md",
+          "text": "A Git branch is a movable reference to a commit. Feature branches let changes develop independently before they are merged into a stable branch.",
+          "metadata": {}
+        },
+        {
+          "rank": 4,
+          "score": 0.321016,
+          "document_id": "python-context",
+          "chunk_index": 0,
+          "source": "python.md",
+          "text": "Python context managers implement setup and cleanup around a block, commonly through __enter__ and __exit__ or the contextlib helpers.",
+          "metadata": {}
+        },
+        {
+          "rank": 5,
+          "score": 0.318931,
+          "document_id": "database-index",
+          "chunk_index": 0,
+          "source": "databases.md",
+          "text": "A database index is an auxiliary data structure that speeds up lookups at the cost of additional storage and write maintenance.",
+          "metadata": {}
+        }
+      ]
+    },
+    {
+      "id": "q-inverse",
+      "query": "Why might I restrict half of a parabola before taking its inverse?",
+      "expected_document_id": "calculus-inverse",
+      "rank": 1,
+      "latency_seconds": 0.046126599998387974,
+      "hits": [
+        {
+          "rank": 1,
+          "score": 0.637503,
+          "document_id": "calculus-inverse",
+          "chunk_index": 0,
+          "source": "calculus.md",
+          "text": "A function is invertible on a domain when it is one-to-one there. Restricting a parabola to one side of its vertex can make its inverse a function.",
+          "metadata": {}
+        },
+        {
+          "rank": 2,
+          "score": 0.380509,
+          "document_id": "structures-turnbuckle",
+          "chunk_index": 0,
+          "source": "structures.md",
+          "text": "A turnbuckle is an adjustable connector used to change the tension or effective length of a cable or tie without rotating the members being connected.",
+          "metadata": {}
+        },
+        {
+          "rank": 3,
+          "score": 0.333345,
+          "document_id": "git-branch",
+          "chunk_index": 0,
+          "source": "git.md",
+          "text": "A Git branch is a movable reference to a commit. Feature branches let changes develop independently before they are merged into a stable branch.",
+          "metadata": {}
+        },
+        {
+          "rank": 4,
+          "score": 0.312566,
+          "document_id": "networks-dns",
+          "chunk_index": 0,
+          "source": "networks.md",
+          "text": "DNS translates human-readable domain names into IP addresses. Recursive resolvers query authoritative infrastructure and cache answers for later requests.",
+          "metadata": {}
+        },
+        {
+          "rank": 5,
+          "score": 0.30241,
+          "document_id": "database-index",
+          "chunk_index": 0,
+          "source": "databases.md",
+          "text": "A database index is an auxiliary data structure that speeds up lookups at the cost of additional storage and write maintenance.",
+          "metadata": {}
+        }
+      ]
+    },
+    {
+      "id": "q-dns",
+      "query": "What system resolves a domain name to an IP address?",
+      "expected_document_id": "networks-dns",
+      "rank": 1,
+      "latency_seconds": 0.04906479999772273,
+      "hits": [
+        {
+          "rank": 1,
+          "score": 0.656943,
+          "document_id": "networks-dns",
+          "chunk_index": 0,
+          "source": "networks.md",
+          "text": "DNS translates human-readable domain names into IP addresses. Recursive resolvers query authoritative infrastructure and cache answers for later requests.",
+          "metadata": {}
+        },
+        {
+          "rank": 2,
+          "score": 0.410771,
+          "document_id": "calculus-inverse",
+          "chunk_index": 0,
+          "source": "calculus.md",
+          "text": "A function is invertible on a domain when it is one-to-one there. Restricting a parabola to one side of its vertex can make its inverse a function.",
+          "metadata": {}
+        },
+        {
+          "rank": 3,
+          "score": 0.407145,
+          "document_id": "database-index",
+          "chunk_index": 0,
+          "source": "databases.md",
+          "text": "A database index is an auxiliary data structure that speeds up lookups at the cost of additional storage and write maintenance.",
+          "metadata": {}
+        },
+        {
+          "rank": 4,
+          "score": 0.356278,
+          "document_id": "python-context",
+          "chunk_index": 0,
+          "source": "python.md",
+          "text": "Python context managers implement setup and cleanup around a block, commonly through __enter__ and __exit__ or the contextlib helpers.",
+          "metadata": {}
+        },
+        {
+          "rank": 5,
+          "score": 0.35131,
+          "document_id": "git-branch",
+          "chunk_index": 0,
+          "source": "git.md",
+          "text": "A Git branch is a movable reference to a commit. Feature branches let changes develop independently before they are merged into a stable branch.",
+          "metadata": {}
+        }
+      ]
+    },
+    {
+      "id": "q-context",
+      "query": "What Python feature wraps setup and cleanup around a block of code?",
+      "expected_document_id": "python-context",
+      "rank": 1,
+      "latency_seconds": 0.04963839999982156,
+      "hits": [
+        {
+          "rank": 1,
+          "score": 0.630572,
+          "document_id": "python-context",
+          "chunk_index": 0,
+          "source": "python.md",
+          "text": "Python context managers implement setup and cleanup around a block, commonly through __enter__ and __exit__ or the contextlib helpers.",
+          "metadata": {}
+        },
+        {
+          "rank": 2,
+          "score": 0.456371,
+          "document_id": "git-branch",
+          "chunk_index": 0,
+          "source": "git.md",
+          "text": "A Git branch is a movable reference to a commit. Feature branches let changes develop independently before they are merged into a stable branch.",
+          "metadata": {}
+        },
+        {
+          "rank": 3,
+          "score": 0.440709,
+          "document_id": "database-index",
+          "chunk_index": 0,
+          "source": "databases.md",
+          "text": "A database index is an auxiliary data structure that speeds up lookups at the cost of additional storage and write maintenance.",
+          "metadata": {}
+        },
+        {
+          "rank": 4,
+          "score": 0.375968,
+          "document_id": "structures-turnbuckle",
+          "chunk_index": 0,
+          "source": "structures.md",
+          "text": "A turnbuckle is an adjustable connector used to change the tension or effective length of a cable or tie without rotating the members being connected.",
+          "metadata": {}
+        },
+        {
+          "rank": 5,
+          "score": 0.344329,
+          "document_id": "networks-dns",
+          "chunk_index": 0,
+          "source": "networks.md",
+          "text": "DNS translates human-readable domain names into IP addresses. Recursive resolvers query authoritative infrastructure and cache answers for later requests.",
+          "metadata": {}
+        }
+      ]
+    },
+    {
+      "id": "q-jupiter",
+      "query": "Which planet is the biggest in our Solar System?",
+      "expected_document_id": "space-jupiter",
+      "rank": 1,
+      "latency_seconds": 0.04634929999883752,
+      "hits": [
+        {
+          "rank": 1,
+          "score": 0.687722,
+          "document_id": "space-jupiter",
+          "chunk_index": 0,
+          "source": "astronomy.md",
+          "text": "Jupiter is the largest planet in the Solar System and is a gas giant. Its Great Red Spot is a long-lived storm.",
+          "metadata": {}
+        },
+        {
+          "rank": 2,
+          "score": 0.389552,
+          "document_id": "bangla-capital",
+          "chunk_index": 0,
+          "source": "bangla.md",
+          "text": "ঢাকা বাংলাদেশের রাজধানী এবং দেশের বৃহত্তম শহরগুলোর একটি।",
+          "metadata": {}
+        },
+        {
+          "rank": 3,
+          "score": 0.326893,
+          "document_id": "biology-mitochondria",
+          "chunk_index": 0,
+          "source": "biology.md",
+          "text": "Mitochondria generate much of a eukaryotic cell's ATP through cellular respiration and oxidative phosphorylation.",
+          "metadata": {}
+        },
+        {
+          "rank": 4,
+          "score": 0.275445,
+          "document_id": "arabic-qibla",
+          "chunk_index": 0,
+          "source": "arabic.md",
+          "text": "الكعبة في المسجد الحرام بمكة هي قبلة المسلمين في الصلاة.",
+          "metadata": {}
+        },
+        {
+          "rank": 5,
+          "score": 0.253896,
+          "document_id": "database-index",
+          "chunk_index": 0,
+          "source": "databases.md",
+          "text": "A database index is an auxiliary data structure that speeds up lookups at the cost of additional storage and write maintenance.",
+          "metadata": {}
+        }
+      ]
+    },
+    {
+      "id": "q-mitochondria",
+      "query": "Which organelle produces much of a eukaryotic cell's ATP?",
+      "expected_document_id": "biology-mitochondria",
+      "rank": 1,
+      "latency_seconds": 0.04539130000193836,
+      "hits": [
+        {
+          "rank": 1,
+          "score": 0.716545,
+          "document_id": "biology-mitochondria",
+          "chunk_index": 0,
+          "source": "biology.md",
+          "text": "Mitochondria generate much of a eukaryotic cell's ATP through cellular respiration and oxidative phosphorylation.",
+          "metadata": {}
+        },
+        {
+          "rank": 2,
+          "score": 0.351861,
+          "document_id": "space-jupiter",
+          "chunk_index": 0,
+          "source": "astronomy.md",
+          "text": "Jupiter is the largest planet in the Solar System and is a gas giant. Its Great Red Spot is a long-lived storm.",
+          "metadata": {}
+        },
+        {
+          "rank": 3,
+          "score": 0.295998,
+          "document_id": "structures-turnbuckle",
+          "chunk_index": 0,
+          "source": "structures.md",
+          "text": "A turnbuckle is an adjustable connector used to change the tension or effective length of a cable or tie without rotating the members being connected.",
+          "metadata": {}
+        },
+        {
+          "rank": 4,
+          "score": 0.282474,
+          "document_id": "database-index",
+          "chunk_index": 0,
+          "source": "databases.md",
+          "text": "A database index is an auxiliary data structure that speeds up lookups at the cost of additional storage and write maintenance.",
+          "metadata": {}
+        },
+        {
+          "rank": 5,
+          "score": 0.258363,
+          "document_id": "networks-dns",
+          "chunk_index": 0,
+          "source": "networks.md",
+          "text": "DNS translates human-readable domain names into IP addresses. Recursive resolvers query authoritative infrastructure and cache answers for later requests.",
+          "metadata": {}
+        }
+      ]
+    },
+    {
+      "id": "q-bangla",
+      "query": "বাংলাদেশের রাজধানী কোন শহর?",
+      "expected_document_id": "bangla-capital",
+      "rank": 1,
+      "latency_seconds": 0.0528651999993599,
+      "hits": [
+        {
+          "rank": 1,
+          "score": 0.730699,
+          "document_id": "bangla-capital",
+          "chunk_index": 0,
+          "source": "bangla.md",
+          "text": "ঢাকা বাংলাদেশের রাজধানী এবং দেশের বৃহত্তম শহরগুলোর একটি।",
+          "metadata": {}
+        },
+        {
+          "rank": 2,
+          "score": 0.373656,
+          "document_id": "arabic-qibla",
+          "chunk_index": 0,
+          "source": "arabic.md",
+          "text": "الكعبة في المسجد الحرام بمكة هي قبلة المسلمين في الصلاة.",
+          "metadata": {}
+        },
+        {
+          "rank": 3,
+          "score": 0.329678,
+          "document_id": "space-jupiter",
+          "chunk_index": 0,
+          "source": "astronomy.md",
+          "text": "Jupiter is the largest planet in the Solar System and is a gas giant. Its Great Red Spot is a long-lived storm.",
+          "metadata": {}
+        },
+        {
+          "rank": 4,
+          "score": 0.280997,
+          "document_id": "networks-dns",
+          "chunk_index": 0,
+          "source": "networks.md",
+          "text": "DNS translates human-readable domain names into IP addresses. Recursive resolvers query authoritative infrastructure and cache answers for later requests.",
+          "metadata": {}
+        },
+        {
+          "rank": 5,
+          "score": 0.269063,
+          "document_id": "database-index",
+          "chunk_index": 0,
+          "source": "databases.md",
+          "text": "A database index is an auxiliary data structure that speeds up lookups at the cost of additional storage and write maintenance.",
+          "metadata": {}
+        }
+      ]
+    },
+    {
+      "id": "q-arabic",
+      "query": "ما هي قبلة المسلمين في الصلاة؟",
+      "expected_document_id": "arabic-qibla",
+      "rank": 1,
+      "latency_seconds": 0.04188299999805167,
+      "hits": [
+        {
+          "rank": 1,
+          "score": 0.646804,
+          "document_id": "arabic-qibla",
+          "chunk_index": 0,
+          "source": "arabic.md",
+          "text": "الكعبة في المسجد الحرام بمكة هي قبلة المسلمين في الصلاة.",
+          "metadata": {}
+        },
+        {
+          "rank": 2,
+          "score": 0.305583,
+          "document_id": "bangla-capital",
+          "chunk_index": 0,
+          "source": "bangla.md",
+          "text": "ঢাকা বাংলাদেশের রাজধানী এবং দেশের বৃহত্তম শহরগুলোর একটি।",
+          "metadata": {}
+        },
+        {
+          "rank": 3,
+          "score": 0.286685,
+          "document_id": "space-jupiter",
+          "chunk_index": 0,
+          "source": "astronomy.md",
+          "text": "Jupiter is the largest planet in the Solar System and is a gas giant. Its Great Red Spot is a long-lived storm.",
+          "metadata": {}
+        },
+        {
+          "rank": 4,
+          "score": 0.2815,
+          "document_id": "structures-turnbuckle",
+          "chunk_index": 0,
+          "source": "structures.md",
+          "text": "A turnbuckle is an adjustable connector used to change the tension or effective length of a cable or tie without rotating the members being connected.",
+          "metadata": {}
+        },
+        {
+          "rank": 5,
+          "score": 0.274176,
+          "document_id": "python-context",
+          "chunk_index": 0,
+          "source": "python.md",
+          "text": "Python context managers implement setup and cleanup around a block, commonly through __enter__ and __exit__ or the contextlib helpers.",
+          "metadata": {}
+        }
+      ]
+    },
+    {
+      "id": "q-db-index",
+      "query": "What database structure makes reads faster but adds write and storage overhead?",
+      "expected_document_id": "database-index",
+      "rank": 1,
+      "latency_seconds": 0.03900649999559391,
+      "hits": [
+        {
+          "rank": 1,
+          "score": 0.675098,
+          "document_id": "database-index",
+          "chunk_index": 0,
+          "source": "databases.md",
+          "text": "A database index is an auxiliary data structure that speeds up lookups at the cost of additional storage and write maintenance.",
+          "metadata": {}
+        },
+        {
+          "rank": 2,
+          "score": 0.437382,
+          "document_id": "networks-dns",
+          "chunk_index": 0,
+          "source": "networks.md",
+          "text": "DNS translates human-readable domain names into IP addresses. Recursive resolvers query authoritative infrastructure and cache answers for later requests.",
+          "metadata": {}
+        },
+        {
+          "rank": 3,
+          "score": 0.376316,
+          "document_id": "python-context",
+          "chunk_index": 0,
+          "source": "python.md",
+          "text": "Python context managers implement setup and cleanup around a block, commonly through __enter__ and __exit__ or the contextlib helpers.",
+          "metadata": {}
+        },
+        {
+          "rank": 4,
+          "score": 0.366234,
+          "document_id": "git-branch",
+          "chunk_index": 0,
+          "source": "git.md",
+          "text": "A Git branch is a movable reference to a commit. Feature branches let changes develop independently before they are merged into a stable branch.",
+          "metadata": {}
+        },
+        {
+          "rank": 5,
+          "score": 0.308723,
+          "document_id": "biology-mitochondria",
+          "chunk_index": 0,
+          "source": "biology.md",
+          "text": "Mitochondria generate much of a eukaryotic cell's ATP through cellular respiration and oxidative phosphorylation.",
+          "metadata": {}
+        }
+      ]
+    },
+    {
+      "id": "q-git",
+      "query": "What Git concept lets me develop work separately before merging it into the stable line?",
+      "expected_document_id": "git-branch",
+      "rank": 1,
+      "latency_seconds": 0.04670489999989513,
+      "hits": [
+        {
+          "rank": 1,
+          "score": 0.660887,
+          "document_id": "git-branch",
+          "chunk_index": 0,
+          "source": "git.md",
+          "text": "A Git branch is a movable reference to a commit. Feature branches let changes develop independently before they are merged into a stable branch.",
+          "metadata": {}
+        },
+        {
+          "rank": 2,
+          "score": 0.412958,
+          "document_id": "python-context",
+          "chunk_index": 0,
+          "source": "python.md",
+          "text": "Python context managers implement setup and cleanup around a block, commonly through __enter__ and __exit__ or the contextlib helpers.",
+          "metadata": {}
+        },
+        {
+          "rank": 3,
+          "score": 0.363401,
+          "document_id": "database-index",
+          "chunk_index": 0,
+          "source": "databases.md",
+          "text": "A database index is an auxiliary data structure that speeds up lookups at the cost of additional storage and write maintenance.",
+          "metadata": {}
+        },
+        {
+          "rank": 4,
+          "score": 0.337438,
+          "document_id": "networks-dns",
+          "chunk_index": 0,
+          "source": "networks.md",
+          "text": "DNS translates human-readable domain names into IP addresses. Recursive resolvers query authoritative infrastructure and cache answers for later requests.",
+          "metadata": {}
+        },
+        {
+          "rank": 5,
+          "score": 0.303638,
+          "document_id": "calculus-inverse",
+          "chunk_index": 0,
+          "source": "calculus.md",
+          "text": "A function is invertible on a domain when it is one-to-one there. Restricting a parabola to one side of its vertex can make its inverse a function.",
+          "metadata": {}
+        }
+      ]
+    }
+  ]
+}

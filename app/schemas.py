@@ -2,9 +2,13 @@
 
 from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
+from app.config import settings
 from app.routing import Quality, ReasoningEffort
+
+JsonScalar = str | int | float | bool | None
+EmbeddingPurpose = Literal["raw", "query", "document"]
 
 
 class GenerateRequest(BaseModel):
@@ -98,6 +102,167 @@ class ClassifyResponse(BaseModel):
     request_id: str
 
 
+class EmbeddingRequest(BaseModel):
+    """Generate dense vectors independently of the RAG index."""
+
+    input: str | list[str]
+    purpose: EmbeddingPurpose = "raw"
+
+    @field_validator("input")
+    @classmethod
+    def validate_inputs(cls, value: str | list[str]) -> str | list[str]:
+        inputs = [value] if isinstance(value, str) else value
+        if not inputs or len(inputs) > 128:
+            raise ValueError("input must contain between 1 and 128 strings")
+        if any(not isinstance(item, str) or not item.strip() for item in inputs):
+            raise ValueError("embedding inputs cannot be blank")
+        return value
+
+
+class EmbeddingResponse(BaseModel):
+    """Dense embedding vectors plus provider metadata."""
+
+    embeddings: list[list[float]]
+    model: str
+    dimensions: int
+    input_tokens: int | None = None
+    request_id: str
+
+
+class RagDocument(BaseModel):
+    """A logical source document to chunk and index."""
+
+    id: str | None = None
+    text: str = Field(min_length=1, max_length=2_000_000)
+    source: str | None = Field(default=None, max_length=2048)
+    metadata: dict[str, JsonScalar] = Field(default_factory=dict)
+
+    @field_validator("id")
+    @classmethod
+    def nonblank_id(cls, value: str | None) -> str | None:
+        if value is not None and not value.strip():
+            raise ValueError("document id cannot be blank")
+        return value
+
+
+class RagIndexRequest(BaseModel):
+    """Chunk and replace one or more documents inside a named collection."""
+
+    collection: str = Field(pattern=r"^[A-Za-z0-9][A-Za-z0-9_.-]{0,63}$")
+    documents: list[RagDocument] = Field(min_length=1, max_length=100)
+    chunk_size_chars: int | None = Field(default=None, ge=200, le=8000)
+    chunk_overlap_chars: int | None = Field(default=None, ge=0, le=4000)
+
+    @model_validator(mode="after")
+    def validate_chunking(self) -> "RagIndexRequest":
+        size = self.chunk_size_chars or settings.rag_chunk_size_chars
+        overlap = (
+            self.chunk_overlap_chars
+            if self.chunk_overlap_chars is not None
+            else settings.rag_chunk_overlap_chars
+        )
+        if overlap >= size:
+            raise ValueError("chunk_overlap_chars must be smaller than chunk_size_chars")
+        return self
+
+
+class RagIndexResponse(BaseModel):
+    """Indexing counts and embedding signature for a collection update."""
+
+    collection: str
+    documents: int
+    chunks: int
+    embedding_model: str
+    embedding_dimensions: int
+    request_id: str
+
+
+class RagSearchRequest(BaseModel):
+    """Semantic-search request over one collection."""
+
+    collection: str = Field(pattern=r"^[A-Za-z0-9][A-Za-z0-9_.-]{0,63}$")
+    query: str = Field(min_length=1, max_length=24000)
+    top_k: int = Field(default_factory=lambda: settings.rag_default_top_k, ge=1, le=50)
+    min_score: float = Field(default=0.0, ge=-1.0, le=1.0)
+    metadata_filter: dict[str, JsonScalar] | None = None
+
+
+class RagSearchHit(BaseModel):
+    """One ranked chunk returned from semantic retrieval."""
+
+    rank: int
+    score: float
+    document_id: str
+    chunk_index: int
+    source: str | None = None
+    text: str
+    metadata: dict[str, JsonScalar]
+
+
+class RagSearchResponse(BaseModel):
+    """Semantic retrieval results and the embedding model used for the query."""
+
+    collection: str
+    hits: list[RagSearchHit]
+    embedding_model: str
+    request_id: str
+
+
+class RagAnswerRequest(RagSearchRequest):
+    """Retrieve relevant chunks and answer using only those sources."""
+
+    quality: Quality = "default"
+    reasoning: ReasoningEffort | None = None
+    system: str | None = None
+    max_output_tokens: int = Field(default=2048, ge=128, le=8192)
+
+
+class RagCitation(BaseModel):
+    """A retrieved chunk explicitly cited by the generated answer."""
+
+    label: str
+    document_id: str
+    chunk_index: int
+    source: str | None = None
+    score: float
+    metadata: dict[str, JsonScalar]
+
+
+class RagAnswerResponse(BaseModel):
+    """Grounded answer, verified citation identifiers, and routing metadata."""
+
+    answer: str
+    citations: list[RagCitation]
+    retrieved: list[RagSearchHit]
+    model: str | None = None
+    profile: str
+    reasoning: ReasoningEffort | None = None
+    attempts: int
+    request_id: str
+
+
+class RagCollectionInfo(BaseModel):
+    """Persistent collection statistics."""
+
+    collection: str
+    chunks: int
+    documents: int
+    embedding_model: str
+    embedding_dim: int
+
+
+class RagCollectionsResponse(BaseModel):
+    """All currently indexed collections."""
+
+    collections: list[RagCollectionInfo]
+
+
+class RagDeleteResponse(BaseModel):
+    """Number of vector chunks removed by a delete operation."""
+
+    deleted_chunks: int
+
+
 class ErrorBody(BaseModel):
     """Stable fields nested under the public `error` response object."""
 
@@ -120,3 +285,4 @@ class StatusResponse(BaseModel):
     lmstudio: str
     loaded_models: list[str]
     profiles: dict[str, dict[str, str | None]]
+    embedding_model: str

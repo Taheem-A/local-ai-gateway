@@ -1,4 +1,4 @@
-"""LM Studio provider adapters for free-form, structured, and model-list requests."""
+"""LM Studio provider adapters for generation, embeddings, and model discovery."""
 
 from __future__ import annotations
 
@@ -154,6 +154,63 @@ async def generate_structured(
         "output_tokens": usage.get("completion_tokens"),
         "reasoning_output_tokens": completion_details.get("reasoning_tokens"),
         "finish_reason": choice.get("finish_reason"),
+    }
+
+
+async def embed_texts(*, model: str, texts: list[str]) -> dict[str, Any]:
+    """Generate dense vectors through LM Studio's OpenAI-compatible endpoint."""
+
+    if not texts:
+        raise ValueError("texts cannot be empty")
+
+    body = {"model": model, "input": texts, "encoding_format": "float"}
+    async with httpx.AsyncClient(timeout=_timeout()) as client:
+        response = await client.post(
+            f"{settings.lm_base_url}/v1/embeddings",
+            headers=_headers(),
+            json=body,
+        )
+
+    if not response.is_success:
+        raise LMStudioError(
+            f"LM Studio embeddings returned {response.status_code}: {response.text}"
+        )
+
+    try:
+        payload = response.json()
+    except ValueError as exc:
+        raise LMStudioError("LM Studio embeddings returned invalid JSON.") from exc
+
+    items = payload.get("data") or []
+    if len(items) != len(texts):
+        raise LMStudioError(
+            "LM Studio embeddings returned a different number of vectors than inputs."
+        )
+
+    ordered = sorted(items, key=lambda item: int(item.get("index", 0)))
+    vectors: list[list[float]] = []
+    dimension: int | None = None
+    for item in ordered:
+        vector = item.get("embedding")
+        if not isinstance(vector, list) or not vector:
+            raise LMStudioError("LM Studio returned an empty or invalid embedding vector.")
+        try:
+            converted = [float(value) for value in vector]
+        except (TypeError, ValueError) as exc:
+            raise LMStudioError("LM Studio returned a non-numeric embedding vector.") from exc
+        if dimension is None:
+            dimension = len(converted)
+        elif len(converted) != dimension:
+            raise LMStudioError("LM Studio returned inconsistent embedding dimensions.")
+        vectors.append(converted)
+
+    usage = payload.get("usage") or {}
+    return {
+        "vectors": vectors,
+        "model": str(payload.get("model") or model),
+        "dimensions": dimension or 0,
+        "input_tokens": usage.get("prompt_tokens"),
+        "total_tokens": usage.get("total_tokens"),
     }
 
 

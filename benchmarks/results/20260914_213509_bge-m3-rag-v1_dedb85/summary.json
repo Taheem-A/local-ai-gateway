@@ -1,0 +1,17 @@
+{
+  "suite_version": 1,
+  "suite_sha256": "26dc2cc75c23f6b4f7ea168344638e83b8d3db1f07efb5bf8847da03e3de3189",
+  "embedding_model": "text-embedding-bge-m3",
+  "embedding_dimensions": 1024,
+  "top_k": 5,
+  "cases": 10,
+  "corpus_documents": 10,
+  "indexed_chunks": 10,
+  "recall_at_1_percent": 100.0,
+  "recall_at_3_percent": 100.0,
+  "recall_at_5_percent": 100.0,
+  "mean_reciprocal_rank": 1.0,
+  "mean_latency_seconds": 0.0467,
+  "median_latency_seconds": 0.0465,
+  "total_seconds": 2.106
+}

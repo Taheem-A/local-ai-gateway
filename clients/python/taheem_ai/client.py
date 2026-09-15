@@ -227,6 +227,7 @@ class AI:
                 final_turn=first,
             )
 
+        registry.preflight(first["tool_calls"], allowed_risks=allowed_risks)
         messages.append(first["assistant_message"])
         tool_results: list[dict[str, Any]] = []
         for call in first["tool_calls"]:

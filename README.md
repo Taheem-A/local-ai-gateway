@@ -1,11 +1,11 @@
 # Local AI Gateway
 
-A localhost-only AI service for personal projects. Applications call one stable API while the gateway owns model selection, reasoning effort, streaming, embeddings, retrieval-augmented generation (RAG), structured-output validation, safe tool-call planning, retries, and operational metrics.
+A localhost-only AI service for personal projects. Applications call one stable API while the gateway owns model selection, reasoning effort, streaming, embeddings, retrieval-augmented generation (RAG), structured-output validation, safe tool-call planning, retries, operational metrics, and a local browser playground for debugging.
 
 ## Current production profiles
 
 ```text
-Your apps / taheem_ai SDK
+Your apps / taheem_ai SDK / local playground
         |
         v
 Local AI Gateway :4812
@@ -233,7 +233,23 @@ Use `stream_events()` when the application also needs progress or final token/ti
 
 See [`docs/streaming.md`](docs/streaming.md) for the event contract, cancellation behavior, error semantics, and scope boundary.
 
-## 11. Python SDK
+## 11. Local playground / debug UI
+
+With the gateway running, open:
+
+```text
+http://127.0.0.1:4812/playground/
+```
+
+The zero-build, same-origin UI exercises the real production endpoints for generation, streaming, structured extraction, classification, RAG retrieval/answers, and one-turn tool planning. It also includes a raw request/response inspector, live stream event inspection, gateway/LM Studio status, routing profiles, aggregate metrics, and recent content-free request metadata.
+
+The page never embeds the gateway key. Enter it in the connection panel; the browser keeps it in `sessionStorage` for the current tab. The debug APIs remain authenticated, and the gateway still does not persist prompt, response, RAG source, tool, or streamed text content merely because the UI is used.
+
+The Tools panel cannot execute application handlers. It only calls `/v1/tools/turn` and displays inert validated tool-call requests, preserving the Stage 2 trust boundary.
+
+See [`docs/playground.md`](docs/playground.md) for the architecture, security headers, supported panels, and Stage 4 scope boundary.
+
+## 12. Python SDK
 
 Install the local client in editable mode:
 
@@ -252,7 +268,7 @@ print(ai.ask("Explain this error."))
 
 The SDK also provides streaming, typed extraction, classification, embeddings, RAG indexing/search/answers, low-level `tool_turn()`, bounded `run_tools_once()`, and matching async APIs.
 
-## 12. Metrics and benchmarks
+## 13. Metrics and benchmarks
 
 Operational requests are recorded in `data/gateway.db`; prompt, response, tool-definition, tool-argument, tool-result, and streamed text content are not stored there. RAG source text and vectors live separately in `data/rag.db` and are private application data by design.
 
@@ -275,6 +291,7 @@ See [`benchmarks/README.md`](benchmarks/README.md).
 - Never port-forward either service directly to the public internet.
 - Keep `.env`, `data/gateway.db`, and `data/rag.db` private.
 - Prompt/tool/stream content is not logged by operational metrics by default.
+- The playground stores the API key in browser `sessionStorage`, not in page source or gateway metrics.
 - Hidden reasoning is not exposed by the streaming API.
 - Retrieved RAG content and tool results are untrusted data, never authorization.
 - A model-requested tool call is only a request; application policy decides whether code executes.
@@ -289,5 +306,6 @@ See [`benchmarks/README.md`](benchmarks/README.md).
 - [`docs/rag.md`](docs/rag.md) — embeddings, retrieval, indexing, citations, and RAG security
 - [`docs/tools.md`](docs/tools.md) — tool protocol, local registry, risk policy, and security boundaries
 - [`docs/streaming.md`](docs/streaming.md) — SSE events, reasoning suppression, cancellation, and SDK usage
+- [`docs/playground.md`](docs/playground.md) — local UI architecture, panels, debug APIs, and secret handling
 - [`docs/benchmarking.md`](docs/benchmarking.md) — benchmark history and methodology
 - [`docs/development.md`](docs/development.md) — coding conventions and release checks

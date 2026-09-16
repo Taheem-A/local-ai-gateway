@@ -16,12 +16,14 @@ from app.routing import choose_profile
 from app.schemas import ToolTurnRequest, ToolTurnResponse
 from app.streaming.router import router as streaming_router
 from app.tools.service import run_tool_turn
+from app.vision.router import router as vision_router
 
 router = APIRouter()
 # `app.main` already mounts this router as the gateway's extension router. Keep
 # extension features in their own modules while composing them here to avoid
 # duplicating application setup and exception handling.
 router.include_router(streaming_router)
+router.include_router(vision_router)
 router.include_router(playground_router)
 
 

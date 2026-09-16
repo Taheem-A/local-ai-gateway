@@ -11,6 +11,7 @@ from app.config import settings
 from app.errors import AuthenticationError, GatewayError, LMStudioUnavailableError
 from app.lmstudio import LMStudioError
 from app.observability import RequestMetric, record_metric
+from app.playground.router import router as playground_router
 from app.routing import choose_profile
 from app.schemas import ToolTurnRequest, ToolTurnResponse
 from app.streaming.router import router as streaming_router
@@ -18,8 +19,10 @@ from app.tools.service import run_tool_turn
 
 router = APIRouter()
 # `app.main` already mounts this router as the gateway's extension router. Keep
-# streaming in its own module while composing it here to avoid duplicating app setup.
+# extension features in their own modules while composing them here to avoid
+# duplicating application setup and exception handling.
 router.include_router(streaming_router)
+router.include_router(playground_router)
 
 
 def _authenticate(key: str | None) -> None:

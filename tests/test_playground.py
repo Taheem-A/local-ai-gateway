@@ -22,6 +22,7 @@ def test_playground_shell_is_secret_free_hardened_and_polished(tmp_path, monkeyp
         response = client.get("/playground/")
         javascript = client.get("/playground/assets/app.js")
         ui_javascript = client.get("/playground/assets/ui.js")
+        vision_javascript = client.get("/playground/assets/vision.js")
         stylesheet = client.get("/playground/assets/styles.css")
         polish_stylesheet = client.get("/playground/assets/polish.css")
 
@@ -30,6 +31,7 @@ def test_playground_shell_is_secret_free_hardened_and_polished(tmp_path, monkeyp
     assert 'data-theme="signal-red"' in response.text
     assert 'id="theme-select"' in response.text
     assert "/playground/assets/ui.js" in response.text
+    assert "/playground/assets/vision.js" in response.text
     assert "/playground/assets/polish.css" in response.text
     assert "Ctrl K" in response.text
     assert 'aria-keyshortcuts="Control+K Meta+K"' in response.text
@@ -37,12 +39,18 @@ def test_playground_shell_is_secret_free_hardened_and_polished(tmp_path, monkeyp
     assert "playground-test-key" not in response.text
     assert response.headers["cache-control"] == "no-store"
     assert "default-src 'self'" in response.headers["content-security-policy"]
+    assert "blob:" in response.headers["content-security-policy"]
     assert response.headers["x-frame-options"] == "DENY"
     assert javascript.status_code == 200
     assert ui_javascript.status_code == 200
+    assert vision_javascript.status_code == 200
     assert stylesheet.status_code == 200
     assert polish_stylesheet.status_code == 200
+    assert "/v1/vision" in vision_javascript.text
+    assert 'data-view = "vision"' not in vision_javascript.text
+    assert "Stage 5 accepts at most four images" in vision_javascript.text
     assert "#tools-form .form-actions" in polish_stylesheet.text
+    assert ".vision-file-list" in polish_stylesheet.text
     assert "prefers-reduced-motion" in polish_stylesheet.text
     assert "focus-visible" in polish_stylesheet.text
 

@@ -16,6 +16,7 @@ router = APIRouter()
 _STATIC_DIR = Path(__file__).resolve().parent / "static"
 _ASSETS = {
     "app.js": "application/javascript; charset=utf-8",
+    "ui.js": "application/javascript; charset=utf-8",
     "styles.css": "text/css; charset=utf-8",
 }
 _SECURITY_HEADERS = {
@@ -58,7 +59,7 @@ async def playground_index() -> FileResponse:
 
 @router.get("/playground/assets/{asset_name}", include_in_schema=False)
 async def playground_asset(asset_name: str) -> FileResponse:
-    """Serve the two allow-listed static assets and reject path traversal/unknown files."""
+    """Serve allow-listed static assets and reject path traversal/unknown files."""
 
     media_type = _ASSETS.get(asset_name)
     if media_type is None:

@@ -1,0 +1,57 @@
+/* Final Stage 4 interaction and accessibility polish.
+ *
+ * Keep these rules deliberately small: the primary visual system lives in
+ * styles.css. This layer handles viewport ergonomics and keyboard affordances
+ * that are easiest to validate in a real browser during the pre-merge pass.
+ */
+
+button:focus-visible,
+summary:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: 2px;
+}
+
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  border-color: rgba(var(--accent-rgb), 0.85);
+  box-shadow: 0 0 0 1px rgba(var(--accent-rgb), 0.22);
+}
+
+.command-field input:focus-visible {
+  box-shadow: none;
+}
+
+.toggle input:focus-visible + span {
+  outline: 1px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Tool definitions can be tall enough that the action row falls below the
+ * viewport. Keep the execution control reachable while the left pane scrolls.
+ */
+#tools-form .form-actions {
+  position: sticky;
+  bottom: -1px;
+  z-index: 4;
+  border-top: 1px solid var(--border);
+  background: var(--panel);
+  padding: 10px 0 2px;
+}
+
+@media (max-width: 900px) {
+  #tools-form .form-actions {
+    position: static;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en" data-theme="signal-red">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Local AI Gateway Playground</title>
+  <link rel="stylesheet" href="/playground/assets/styles.css">
+  <link rel="stylesheet" href="/playground/assets/polish.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">◇</span><strong>Local AI Gateway</strong></div>
+      <div class="breadcrumb" aria-label="Current location"><span class="breadcrumb-sep">/</span><span id="page-title">Generate</span><span class="breadcrumb-chevron">›</span></div>
+      <label class="command-field" for="command-input"><span aria-hidden="true">⌕</span><input id="command-input" type="text" autocomplete="off" aria-keyshortcuts="Control+K Meta+K" placeholder="Search / run a command…"><kbd>Ctrl K</kbd></label>
+      <div class="topbar-actions">
+        <label class="theme-control" title="Colour scheme"><span>Theme</span><select id="theme-select" aria-label="Colour scheme"><option value="signal-red">Signal Red</option><option value="copper">Copper</option><option value="emerald">Emerald</option><option value="cyan">Cyan</option><option value="violet">Violet</option><option value="rose">Rose</option><option value="lime">Lime</option><option value="espresso">Espresso</option></select></label>
+        <button id="inspector-toggle" class="topbar-button" type="button" aria-pressed="false" aria-controls="inspector" aria-keyshortcuts="Control+Shift+I">Inspector</button>
+        <span id="connection-pill" class="connection-status pill-offline"><i></i> Disconnected</span>
+      </div>
+    </header>
+
+    <div class="workbench-shell">
+      <aside class="sidebar">
+        <nav class="nav" aria-label="Playground sections">
+          <div class="nav-group">
+            <div class="nav-heading">Workbench</div>
+            <button class="nav-item active" data-view="generate" type="button"><span class="nav-glyph">›_</span><span>Generate</span></button>
+            <button class="nav-item" data-view="extract" type="button"><span class="nav-glyph">{ }</span><span>Extract</span></button>
+            <button class="nav-item" data-view="classify" type="button"><span class="nav-glyph">≡</span><span>Classify</span></button>
+            <button class="nav-item" data-view="rag" type="button"><span class="nav-glyph">⌕</span><span>RAG</span></button>
+            <button class="nav-item" data-view="tools" type="button"><span class="nav-glyph">⌁</span><span>Tools</span></button>
+          </div>
+          <div class="nav-group"><div class="nav-heading">Observe</div><button class="nav-item" data-view="debug" type="button"><span class="nav-glyph">▤</span><span>Requests</span></button></div>
+          <div class="nav-group sidebar-system">
+            <div class="nav-heading">System</div>
+            <details class="gateway-details"><summary><span class="nav-glyph">◇</span><span>Gateway</span></summary><div class="gateway-panel">
+              <label>API key<input id="api-key" type="password" autocomplete="off" placeholder="X-Local-AI-Key"></label>
+              <label>Project ID <span class="muted">optional</span><input id="project-id" type="text" autocomplete="off" placeholder="playground"></label>
+              <div class="button-row"><button id="connect-button" class="button button-primary" type="button">Connect</button><button id="clear-session" class="button button-ghost" type="button">Clear</button></div>
+              <p class="microcopy">Key stays in this tab's sessionStorage and is never written to gateway metrics.</p>
+            </div></details>
+            <button id="refresh-all" class="nav-item nav-action" type="button"><span class="nav-glyph">↻</span><span>Refresh status</span></button>
+          </div>
+        </nav>
+      </aside>
+
+      <main class="workspace">
+        <section class="view active" id="view-generate">
+          <div class="pane-grid generate-grid">
+            <section class="pane request-pane">
+              <div class="pane-header"><div><h2>Request</h2><p>Compose a prompt, configure parameters, and run your model locally.</p></div><span class="saved-state"><i></i> Ready</span></div>
+              <form id="generate-form" class="pane-form">
+                <div class="toolbar-controls four">
+                  <label>Profile<select id="generate-quality"><option value="default">default</option><option value="deep">deep</option><option value="fast">fast</option><option value="balanced">balanced</option></select></label>
+                  <label>Reasoning<select id="generate-reasoning"><option value="">profile default</option><option value="low">low</option><option value="medium">medium</option><option value="high">high</option></select></label>
+                  <label>Temperature<input id="generate-temperature" type="number" min="0" max="1" step="0.1" value="0.2"></label>
+                  <label class="switch-field">Stream<span class="toggle"><input id="generate-stream" type="checkbox" checked><span></span></span></label>
+                </div>
+                <div class="editor-block grow-editor"><div class="editor-heading"><span>Prompt</span><span class="muted mono">Markdown</span></div><div class="prompt-editor"><span class="prompt-mark">›</span><textarea id="generate-prompt" rows="14" required>Explain why dependency injection is useful in a local Python service.</textarea></div></div>
+                <details class="advanced-block"><summary>Advanced options</summary><div class="advanced-content"><label>System prompt <span class="muted">optional</span><textarea id="generate-system" rows="4" placeholder="Additional system instruction"></textarea></label><label>Max output tokens<input id="generate-max-tokens" type="number" min="1" max="8192" value="2048"></label></div></details>
+                <div class="form-actions"><span class="muted mono">Ctrl+Enter to run</span><div class="button-row"><button id="stop-stream" class="button button-danger hidden" type="button">■ Stop</button><button class="button button-primary run-button" type="submit">▶ Run</button></div></div>
+              </form>
+            </section>
+            <section class="pane response-pane">
+              <div class="pane-header response-header"><div><h2>Response</h2></div><span id="generate-state" class="runtime-state">Idle</span></div>
+              <div class="response-tabs"><span class="active">Output</span><span>Metrics</span></div>
+              <div id="generate-output" class="prose-output empty">Response will appear here.<span class="stream-cursor" aria-hidden="true"></span></div>
+              <div id="generate-meta" class="meta-strip"></div>
+            </section>
+          </div>
+        </section>
+
+        <section class="view" id="view-extract">
+          <div class="pane-grid">
+            <section class="pane request-pane"><div class="pane-header"><div><h2>Extract</h2><p>Schema-constrained structured output with validation and repair.</p></div></div><form id="extract-form" class="pane-form">
+              <label>Prompt<textarea id="extract-prompt" rows="5" required>MAT186 Problem Set 2 is due September 18, 2026 at 11:59 PM.</textarea></label>
+              <label>JSON Schema<textarea id="extract-schema" class="code-editor" rows="17" spellcheck="false">{
+  "type": "object",
+  "properties": {
+    "course": {"type": "string", "x-normalize": "upper"},
+    "assignment": {"type": "string"},
+    "due_date": {"type": "string", "format": "date"},
+    "due_time": {"type": "string", "format": "time"}
+  },
+  "required": ["course", "assignment", "due_date", "due_time"],
+  "additionalProperties": false
+}</textarea></label>
+              <details class="advanced-block"><summary>Advanced options</summary><div class="advanced-content"><label>System <span class="muted">optional</span><textarea id="extract-system" rows="2"></textarea></label><div class="toolbar-controls four"><label>Profile<select id="extract-quality"><option value="default">default</option><option value="deep">deep</option><option value="fast">fast</option><option value="balanced">balanced</option></select></label><label>Reasoning<select id="extract-reasoning"><option value="">profile default</option><option value="low">low</option><option value="medium">medium</option><option value="high">high</option></select></label><label>Max tokens<input id="extract-max-tokens" type="number" min="1" max="8192" value="2048"></label><label>Attempts<input id="extract-attempts" type="number" min="1" max="3" value="2"></label></div></div></details>
+              <div class="form-actions"><span></span><button class="button button-primary run-button" type="submit">▶ Run extraction</button></div>
+            </form></section>
+            <section class="pane response-pane"><div class="pane-header"><div><h2>Result</h2><p>Validated data and routing metadata.</p></div></div><pre id="extract-output" class="json-output code-surface">Waiting for a request.</pre></section>
+          </div>
+        </section>
+
+        <section class="view" id="view-classify">
+          <div class="pane-grid classify-grid">
+            <section class="pane request-pane"><div class="pane-header"><div><h2>Classify</h2><p>Choose exactly one label from an explicit closed set.</p></div></div><form id="classify-form" class="pane-form">
+              <label>Text<textarea id="classify-text" rows="9" required>Homework 4. Due Sunday at 11:59 PM.</textarea></label>
+              <label>Labels <span class="muted">one per line or comma-separated</span><textarea id="classify-labels" rows="6" required>assignment
+exam
+announcement
+irrelevant</textarea></label>
+              <details class="advanced-block"><summary>Advanced options</summary><div class="advanced-content"><label>System <span class="muted">optional</span><textarea id="classify-system" rows="2"></textarea></label><div class="toolbar-controls four"><label>Profile<select id="classify-quality"><option value="default">default</option><option value="deep">deep</option><option value="fast">fast</option><option value="balanced">balanced</option></select></label><label>Reasoning<select id="classify-reasoning"><option value="">profile default</option><option value="low">low</option><option value="medium">medium</option><option value="high">high</option></select></label><label>Max tokens<input id="classify-max-tokens" type="number" min="128" max="4096" value="512"></label><label>Attempts<input id="classify-attempts" type="number" min="1" max="3" value="2"></label></div></div></details>
+              <div class="form-actions"><span></span><button class="button button-primary run-button" type="submit">▶ Run classification</button></div>
+            </form></section>
+            <section class="pane response-pane classification-result"><div class="pane-header"><div><h2>Result</h2><p>Constrained label plus request metadata.</p></div></div><pre id="classify-output" class="json-output code-surface">Waiting for a request.</pre></section>
+          </div>
+        </section>
+
+        <section class="view" id="view-rag">
+          <div class="pane-grid rag-grid">
+            <section class="pane request-pane rag-request-pane">
+              <div class="pane-header"><div><h2>Retrieval</h2><p>Search local collections and inspect grounded evidence.</p></div><button id="rag-refresh-collections" class="button button-ghost" type="button" aria-label="Refresh RAG collections" title="Refresh RAG collections">↻</button></div>
+              <form id="rag-form" class="pane-form rag-form">
+                <div class="toolbar-controls rag-controls"><label>Collection<input id="rag-collection" type="text" value="university" required></label><label>Mode<select id="rag-mode"><option value="search">search</option><option value="answer">answer with sources</option></select></label><label>Top K<input id="rag-top-k" type="number" min="1" max="50" value="5"></label><button class="button button-primary run-button rag-run" type="submit">▶ Run</button></div>
+                <label class="query-line">Query<div class="query-input"><span>›</span><textarea id="rag-query" rows="2" required>What does the indexed material say about turnbuckles?</textarea></div></label>
+                <div id="rag-collections" class="collection-line"><span class="muted">Connect to load collections.</span></div>
+                <details class="advanced-block"><summary>Retrieval options</summary><div class="advanced-content"><label>Metadata filter JSON <span class="muted">optional</span><textarea id="rag-filter" class="code-editor" rows="3" spellcheck="false">{}</textarea></label><div class="toolbar-controls three"><label>Min score<input id="rag-min-score" type="number" min="-1" max="1" step="0.05" value="0"></label><label>Profile<select id="rag-quality"><option value="default">default</option><option value="deep">deep</option><option value="fast">fast</option><option value="balanced">balanced</option></select></label><label>Reasoning<select id="rag-reasoning"><option value="">profile default</option><option value="low">low</option><option value="medium">medium</option><option value="high">high</option></select></label></div></div></details>
+              </form>
+              <div class="rag-results-heading"><strong>Retrieval results</strong><span id="rag-result-count" class="muted mono">—</span></div><div id="rag-results" class="retrieval-list"><div class="empty-state">Run a RAG request to inspect ranked chunks.</div></div>
+            </section>
+            <section class="pane response-pane rag-answer-pane"><div class="pane-header"><div><h2>Answer</h2><p>Grounded output and resolved citations.</p></div></div><div id="rag-answer" class="rag-answer"><div class="empty-state">Answer mode will render grounded output here.</div></div><div class="rag-citation-heading">Citations</div><div id="rag-citations" class="citation-list"><div class="empty-state small">No citations yet.</div></div><details class="raw-result"><summary>Raw response</summary><pre id="rag-output" class="json-output code-surface">Waiting for a request.</pre></details></section>
+          </div>
+        </section>
+
+        <section class="view" id="view-tools">
+          <div class="pane-grid">
+            <section class="pane request-pane"><div class="pane-header"><div><h2>Tool planning</h2><p>Inspect one stateless tool-capable model turn.</p></div></div><div class="warning-strip">The playground can request tools but never executes application-owned Python handlers.</div><form id="tools-form" class="pane-form">
+              <label>Messages JSON<textarea id="tools-messages" class="code-editor" rows="8" spellcheck="false">[
+  {"role": "user", "content": "What is 17 multiplied by 23? Use the calculator."}
+]</textarea></label>
+              <label>Tools JSON<textarea id="tools-definitions" class="code-editor" rows="16" spellcheck="false">[
+  {
+    "name": "calculate",
+    "description": "Perform a basic arithmetic operation.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "a": {"type": "number"},
+        "b": {"type": "number"},
+        "operation": {"type": "string", "enum": ["add", "subtract", "multiply", "divide"]}
+      },
+      "required": ["a", "b", "operation"],
+      "additionalProperties": false
+    },
+    "risk": "read"
+  }
+]</textarea></label>
+              <details class="advanced-block"><summary>Advanced options</summary><div class="advanced-content"><label>System <span class="muted">optional</span><textarea id="tools-system" rows="2"></textarea></label><div class="toolbar-controls four"><label>Tool choice<select id="tools-choice"><option value="auto">auto</option><option value="required">required</option><option value="none">none</option></select></label><label>Profile<select id="tools-quality"><option value="default">default</option><option value="deep">deep</option><option value="fast">fast</option><option value="balanced">balanced</option></select></label><label>Reasoning<select id="tools-reasoning"><option value="">profile default</option><option value="low">low</option><option value="medium">medium</option><option value="high">high</option></select></label><label>Max tokens<input id="tools-max-tokens" type="number" min="128" max="8192" value="2048"></label></div></div></details>
+              <div class="form-actions"><span></span><button class="button button-primary run-button" type="submit">▶ Run tool turn</button></div>
+            </form></section>
+            <section class="pane response-pane"><div class="pane-header"><div><h2>Model decision</h2><p>Returned calls remain inert data.</p></div></div><pre id="tools-output" class="json-output code-surface">Waiting for a request.</pre></section>
+          </div>
+        </section>
+
+        <section class="view" id="view-debug">
+          <section class="requests-view">
+            <div class="requests-heading"><div><h1>Requests</h1><p>Explore content-free request metadata from your local AI Gateway.</p></div><button id="debug-refresh" class="button button-ghost" type="button">↻ Refresh</button></div>
+            <div class="request-filters"><label>Window<input id="metrics-days" type="number" min="1" max="365" value="7"></label><label>Rows<input id="request-limit" type="number" min="1" max="200" value="50"></label><div class="privacy-note">Prompts, responses, RAG text, tool arguments, and secrets are never stored here.</div></div>
+            <div id="metrics-summary" class="request-summary"></div><div id="status-cards" class="status-summary"></div><pre id="profiles-output" class="hidden">Connect to inspect profiles.</pre>
+            <div class="table-wrap request-table-wrap"><table class="request-table"><thead><tr><th>Time</th><th>Endpoint</th><th>Project</th><th>Profile</th><th>Model</th><th>Latency</th><th>Tokens</th><th>Status</th></tr></thead><tbody id="requests-body"><tr><td colspan="8" class="muted">Connect to load recent request metadata.</td></tr></tbody></table></div>
+          </section>
+        </section>
+      </main>
+
+      <aside id="inspector" class="inspector" aria-label="Request inspector">
+        <div class="inspector-header"><div><span class="inspector-kicker">Inspector</span><strong id="inspector-endpoint">Nothing sent yet.</strong></div><button id="inspector-close" class="icon-button" type="button" aria-label="Close inspector">×</button></div>
+        <div class="inspector-tabs"><span class="active">Request</span><span>Response</span></div>
+        <section class="inspector-section"><div class="section-heading"><span>Request</span><button id="copy-request" class="button button-small button-ghost" type="button">Copy</button></div><pre id="inspector-request" class="inspector-output code-surface">{}</pre></section>
+        <section class="inspector-section grow"><div class="section-heading"><span>Response / events</span><button id="copy-response" class="button button-small button-ghost" type="button">Copy</button></div><pre id="inspector-response" class="inspector-output code-surface">{}</pre></section>
+      </aside>
+    </div>
+
+    <footer class="statusbar"><span class="status-model">◇ <strong>local gateway</strong></span><span class="status-divider"></span><span>LM Studio <strong id="lm-status">—</strong></span><span class="status-divider"></span><span>Loaded <strong id="loaded-model-count">—</strong></span><span class="status-divider"></span><span>Embedding <strong id="embedding-model">—</strong></span><span class="status-spacer"></span><span id="status-first-text">TTFT —</span><span class="status-divider"></span><span id="status-tps">— tok/s</span><span class="status-divider"></span><span id="status-output-tokens">— tokens</span><span class="status-divider"></span><span id="status-latency">— s</span></footer>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="/playground/assets/app.js" defer></script>
+  <script src="/playground/assets/ui.js" defer></script>
+</body>
+</html>

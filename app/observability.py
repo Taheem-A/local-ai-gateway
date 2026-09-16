@@ -156,3 +156,47 @@ def summary(days: int = 30) -> dict[str, Any]:
         "reasoning_tokens": int(aggregate["reasoning_tokens"] or 0),
         "by_quality": {row["quality"]: row["count"] for row in by_quality},
     }
+
+
+def recent_requests(limit: int = 50) -> list[dict[str, Any]]:
+    """Return recent content-free request metadata for local diagnostics."""
+
+    initialize_metrics_db()
+    bounded_limit = max(1, min(int(limit), 200))
+    with sqlite3.connect(_db_path()) as connection:
+        connection.row_factory = sqlite3.Row
+        rows = connection.execute(
+            """
+            SELECT
+                request_id, timestamp, project, endpoint, quality, model,
+                reasoning_level, input_tokens, reasoning_tokens, output_tokens,
+                model_load_seconds, first_token_seconds, total_latency_seconds,
+                attempts, success, error_code
+            FROM requests
+            ORDER BY timestamp DESC
+            LIMIT ?
+            """,
+            (bounded_limit,),
+        ).fetchall()
+
+    return [
+        {
+            "request_id": row["request_id"],
+            "timestamp": row["timestamp"],
+            "project": row["project"],
+            "endpoint": row["endpoint"],
+            "quality": row["quality"],
+            "model": row["model"],
+            "reasoning_level": row["reasoning_level"],
+            "input_tokens": row["input_tokens"],
+            "reasoning_tokens": row["reasoning_tokens"],
+            "output_tokens": row["output_tokens"],
+            "model_load_seconds": row["model_load_seconds"],
+            "first_token_seconds": row["first_token_seconds"],
+            "total_latency_seconds": row["total_latency_seconds"],
+            "attempts": row["attempts"],
+            "success": bool(row["success"]),
+            "error_code": row["error_code"],
+        }
+        for row in rows
+    ]

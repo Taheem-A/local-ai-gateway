@@ -18,6 +18,7 @@ _ASSETS = {
     "app.js": "application/javascript; charset=utf-8",
     "ui.js": "application/javascript; charset=utf-8",
     "styles.css": "text/css; charset=utf-8",
+    "polish.css": "text/css; charset=utf-8",
 }
 _SECURITY_HEADERS = {
     "Cache-Control": "no-store",

@@ -28,10 +28,12 @@ class Settings(BaseSettings):
     reasoning_default: str | None = "low"
     reasoning_deep: str | None = "high"
 
-    # Stage 5 keeps vision as a separate capability instead of pretending every
-    # text profile can accept images. Qwen3-VL-8B is the initial candidate and
-    # must pass the committed live vision benchmark before it is called qualified.
-    vision_model: str = "qwen/qwen3-vl-8b"
+    # Vision is a capability-specific route instead of pretending every text
+    # profile accepts images. Reuse the already-installed Gemma 4 12B QAT as the
+    # first Stage 5 candidate because LM Studio advertises that exact model as
+    # vision-capable. It remains provisional until the live Legion benchmark is
+    # committed; alternate VLMs can be tested by changing only VISION_MODEL.
+    vision_model: str = "google/gemma-4-12b-qat"
     vision_max_images: int = 4
     vision_max_image_bytes: int = 12 * 1024 * 1024
     vision_max_total_bytes: int = 24 * 1024 * 1024

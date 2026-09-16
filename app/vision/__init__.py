@@ -1,5 +1,6 @@
-"""Stage 5 local vision capability."""
+"""Stage 5 local vision capability.
 
-from app.vision.router import router
-
-__all__ = ["router"]
+The package intentionally does not re-export the FastAPI ``router`` object.
+Keeping ``app.vision.router`` bound to the actual module avoids shadowing the
+submodule and makes normal imports/monkeypatching predictable.
+"""

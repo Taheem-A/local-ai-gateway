@@ -17,7 +17,8 @@ from typing import Any
 
 import httpx
 from dotenv import load_dotenv
-from PIL import Image, ImageDraw, ImageFont, __version__ as pillow_version
+from PIL import Image, ImageDraw, ImageFont
+from PIL import __version__ as pillow_version
 
 BENCH_DIR = Path(__file__).resolve().parent
 RESULTS_DIR = BENCH_DIR / "results"

@@ -1,6 +1,6 @@
 # Local playground / debug UI
 
-Stage 4 adds a browser-based local playground at:
+Stage 4 adds a browser-based local workbench at:
 
 ```text
 http://127.0.0.1:4812/playground/
@@ -30,17 +30,51 @@ This was chosen over a separate React/Vite application or CDN-based UI framework
 
 The result has no new runtime package dependency and works whenever the gateway itself is running.
 
+## Workbench design
+
+The UI is intentionally closer to a compact developer workbench than a dashboard. It uses an edge-to-edge dark workspace, a narrow left navigation rail, two-pane request/result layouts, an optional right-side inspector, and a status bar for operational metadata. Normal panes use separators rather than decorative cards, gradients, glass effects, or permanent elevation.
+
+The interface has eight dark colour schemes that all use the same layout and semantic tokens:
+
+- Signal Red — default;
+- Copper;
+- Emerald;
+- Cyan;
+- Violet;
+- Rose;
+- Lime;
+- Espresso.
+
+The selected theme is stored locally in the browser and does not affect gateway behavior. Signal Red remains the fallback when no valid saved theme exists.
+
+At narrower desktop widths the sidebar and inspector reduce in width. Below 900px the navigation collapses to icons, the two-pane workbench stacks vertically, and the inspector becomes an overlay. The desktop layout remains the primary target, but the workbench should stay usable at reduced viewport sizes.
+
+## Keyboard and interaction model
+
+The workbench supports:
+
+```text
+Ctrl+K                 Focus the command field
+Cmd+K                  Focus the command field on macOS
+Ctrl+Enter             Run the active workbench form
+Ctrl+Shift+I           Toggle the inspector
+```
+
+The command field accepts navigation commands such as `generate`, `extract`, `classify`, `rag`, `tools`, and `requests`, plus `inspector`, `refresh`, and `connect`.
+
+Interactive controls expose visible keyboard focus states. Motion-heavy transitions are suppressed when the operating system requests reduced motion. On the Tools screen, the action row stays reachable while long JSON definitions scroll on desktop-sized layouts.
+
 ## Authentication and secret handling
 
 The HTML and static assets are public to the local gateway process and contain **no gateway key**.
 
-The user enters `X-Local-AI-Key` in the connection panel. The browser keeps it in `sessionStorage`, so it is scoped to the current browser tab/session rather than persisted indefinitely in `localStorage` or written to disk by the gateway.
+The user enters `X-Local-AI-Key` in the Gateway panel. The browser keeps it in `sessionStorage`, so it is scoped to the current browser tab/session rather than persisted indefinitely in `localStorage` or written to disk by the gateway.
 
-Every sensitive API call still goes through the normal gateway authentication boundary. The new debug endpoints are also authenticated.
+Every sensitive API call still goes through the normal gateway authentication boundary. The Requests/debug endpoints are also authenticated.
 
 The playground page is served with a restrictive Content Security Policy, `no-store`, `no-referrer`, MIME-sniffing protection, and frame denial. No external scripts, fonts, stylesheets, or CDNs are allowed.
 
-## Supported panels
+## Supported workbench views
 
 ### Generate
 
@@ -75,9 +109,9 @@ Runs one low-level `POST /v1/tools/turn` request with editable message history a
 
 The UI **does not execute handlers**. Returned tool calls remain inert JSON. This preserves the Stage 2 rule that application-owned registries are the only execution authority.
 
-### Debug
+### Requests
 
-Displays gateway/LM Studio status, routing profiles, recent aggregate metrics, and recent request metadata.
+Displays aggregate metrics and recent content-free request metadata from the local gateway.
 
 The backing endpoints are:
 
@@ -88,9 +122,11 @@ GET /v1/debug/requests?limit=50
 
 They expose only operational metadata already stored in `data/gateway.db`. Prompt text, generated text, RAG source text, tool definitions, tool arguments, tool results, and streamed content are not returned.
 
+Selecting a request row opens the inspector with the operational metadata that is available. Content remains unavailable by design.
+
 ## Request inspector
 
-The right-side inspector shows the last request body and response/event stream held in browser memory. It is intentionally client-side only and is not persisted by the gateway.
+The right-side inspector shows the last request body and response/event stream held in browser memory. It is closed by default and can be opened from the top bar or with `Ctrl+Shift+I`.
 
 For long streams, the browser may display a large event array. This is a debugging feature rather than a production telemetry format.
 
@@ -113,11 +149,15 @@ Those boundaries keep the UI useful without changing the trust model or turning 
 
 Automated tests verify that:
 
-- the playground shell and assets are served;
+- the playground shell and allow-listed assets are served;
+- Signal Red is the default and all eight dark themes are present;
 - the gateway key is not embedded in the HTML;
 - security headers are present;
 - unknown assets are rejected;
+- keyboard/accessibility polish assets are wired into the shell;
 - debug endpoints require authentication;
 - recent debug rows expose operational metadata but not prompt/response/tool/RAG content.
 
-A final local smoke test should still be run against the real gateway and LM Studio before Stage 4 is merged, because CI cannot validate browser rendering or live GPU-backed streaming.
+CI also runs Ruff, Python compilation, and the complete pytest suite.
+
+Before Stage 4 is merged, run one final real-browser smoke test against the real gateway and LM Studio. Confirm Generate streaming and Stop behavior, Extract, Classify, RAG search/answer, Tools, Requests + Inspector, theme persistence, keyboard shortcuts, and the 1180px/900px responsive transitions. CI cannot validate live GPU-backed inference or browser rendering.

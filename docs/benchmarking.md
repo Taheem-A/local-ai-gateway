@@ -136,6 +136,8 @@ Streaming runs save `raw_results.json`, `summary.json`, and `report.md`. They ex
 
 The stream suite includes English and Bengali output paths, but it does not grade the quality of the prose. Content capability remains the responsibility of the generation benchmark.
 
+The first production GPT-OSS streaming run is frozen under `benchmarks/history/2026-09-15-gptoss-streaming/`. Its three fixed cases all passed with 100% protocol, reconstruction, incremental-delivery, request-ID-consistency, and full-case success and zero request errors. The first request was cold and spent 11.976 s loading the model before first visible text at 13.5198 s; the two warm requests reached visible text in 0.5613 s and 0.7579 s. For warmed UX expectations, the per-case warm values and 0.7579 s median are more representative than the cold-start-skewed 4.9463 s mean.
+
 ## Routing decision from the 2026-09-13 experiment
 
 The same GPT-OSS 20B model was tested at low, medium, and high reasoning. Low was dramatically faster and used far fewer reasoning tokens while retaining strong task performance. High produced the strongest raw reliability but at substantially greater cost. Medium did not establish a compelling production niche.

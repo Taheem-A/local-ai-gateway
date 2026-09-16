@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from fastapi import APIRouter, Header, HTTPException, Query
-from fastapi.responses import FileResponse, RedirectResponse
+from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 
 from app.config import settings
 from app.errors import AuthenticationError
@@ -17,13 +17,14 @@ _STATIC_DIR = Path(__file__).resolve().parent / "static"
 _ASSETS = {
     "app.js": "application/javascript; charset=utf-8",
     "ui.js": "application/javascript; charset=utf-8",
+    "vision.js": "application/javascript; charset=utf-8",
     "styles.css": "text/css; charset=utf-8",
     "polish.css": "text/css; charset=utf-8",
 }
 _SECURITY_HEADERS = {
     "Cache-Control": "no-store",
     "Content-Security-Policy": (
-        "default-src 'self'; connect-src 'self'; img-src 'self' data:; "
+        "default-src 'self'; connect-src 'self'; img-src 'self' data: blob:; "
         "style-src 'self'; script-src 'self'; base-uri 'none'; "
         "frame-ancestors 'none'; form-action 'self'"
     ),
@@ -48,12 +49,17 @@ async def playground_redirect() -> RedirectResponse:
 
 
 @router.get("/playground/", include_in_schema=False)
-async def playground_index() -> FileResponse:
-    """Serve the zero-build local playground shell without embedding any secrets."""
+async def playground_index() -> HTMLResponse:
+    """Serve the zero-build local shell and mount its Stage 5 vision extension."""
 
-    return FileResponse(
-        _STATIC_DIR / "index.html",
-        media_type="text/html; charset=utf-8",
+    html = (_STATIC_DIR / "index.html").read_text(encoding="utf-8")
+    marker = '  <script src="/playground/assets/app.js" defer></script>'
+    vision_script = '  <script src="/playground/assets/vision.js" defer></script>'
+    if vision_script not in html:
+        html = html.replace(marker, f"{vision_script}\n{marker}")
+    return HTMLResponse(
+        content=html,
+        media_type="text/html",
         headers=_SECURITY_HEADERS,
     )
 

@@ -21,16 +21,43 @@ def test_playground_shell_is_secret_free_and_hardened(tmp_path, monkeypatch):
     with TestClient(app) as client:
         response = client.get("/playground/")
         javascript = client.get("/playground/assets/app.js")
+        ui_javascript = client.get("/playground/assets/ui.js")
         stylesheet = client.get("/playground/assets/styles.css")
 
     assert response.status_code == 200
     assert "Local AI Gateway Playground" in response.text
+    assert 'data-theme="signal-red"' in response.text
+    assert 'id="theme-select"' in response.text
+    assert "/playground/assets/ui.js" in response.text
     assert "playground-test-key" not in response.text
     assert response.headers["cache-control"] == "no-store"
     assert "default-src 'self'" in response.headers["content-security-policy"]
     assert response.headers["x-frame-options"] == "DENY"
     assert javascript.status_code == 200
+    assert ui_javascript.status_code == 200
     assert stylesheet.status_code == 200
+
+
+def test_playground_exposes_all_dark_workbench_themes(tmp_path, monkeypatch):
+    _configure_temp_storage(tmp_path, monkeypatch)
+
+    with TestClient(app) as client:
+        response = client.get("/playground/")
+        stylesheet = client.get("/playground/assets/styles.css")
+
+    theme_ids = (
+        "signal-red",
+        "copper",
+        "emerald",
+        "cyan",
+        "violet",
+        "rose",
+        "lime",
+        "espresso",
+    )
+    for theme_id in theme_ids:
+        assert f'value="{theme_id}"' in response.text
+        assert f'data-theme="{theme_id}"' in stylesheet.text
 
 
 def test_playground_only_serves_allowlisted_assets(tmp_path, monkeypatch):

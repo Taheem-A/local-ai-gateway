@@ -1,0 +1,3643 @@
+{
+  "summary": {
+    "suite_version": 1,
+    "suite_sha256": "93d48e3947ca26c25f82696336c134f0696209461614da1363e5386445d8f12b",
+    "quality": "default",
+    "requested_reasoning": null,
+    "resolved_profile": "default",
+    "resolved_reasoning": "low",
+    "model": "openai/gpt-oss-20b",
+    "max_output_tokens": 1024,
+    "cases": 3,
+    "protocol_accuracy_percent": 100.0,
+    "aggregate_match_percent": 100.0,
+    "incremental_delivery_percent": 100.0,
+    "request_id_consistency_percent": 100.0,
+    "case_success_percent": 100.0,
+    "request_errors": 0,
+    "mean_first_text_latency_seconds": 4.9463,
+    "median_first_text_latency_seconds": 0.7579,
+    "mean_total_latency_seconds": 7.5837,
+    "median_total_latency_seconds": 6.7957,
+    "mean_delta_count": 131.33,
+    "total_seconds": 22.844
+  },
+  "results": [
+    {
+      "id": "stream-short",
+      "first_text_latency_seconds": 13.519802900002105,
+      "total_latency_seconds": 13.607475800003158,
+      "events": [
+        {
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f",
+          "model": "openai/gpt-oss-20b",
+          "profile": "default",
+          "quality": "default",
+          "reasoning": "low",
+          "type": "start"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "started",
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.0,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.01,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.019801,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.02940890079601,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.03882937161455009,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.0480678613832589,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.05712960934857333,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.06601965508424507,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.07474284793113459,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.08330385590568047,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.09170717411165441,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.09995713268725677,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.10805790431726221,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.11601351133777134,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.1238278324591451,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.1315046091308775,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.1390474515704866,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.14645984447695934,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.1537451524478623,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.16090662511791723,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.16794740203562727,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.17487051729341993,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.1816789039257362,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.18837539808853804,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.19496274303281744,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.2014435928838699,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.20782051623733214,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.214095999582277,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.2202724505610028,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.22635220107454426,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.2323375102423663,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.23823056722417518,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.24403349391129123,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.24974834749457092,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.2553771229154422,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.260921755206219,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.26638412172549353,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.2717660442940583,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.27706929123648955,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.28229557933322263,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.287446575687669,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.2925238995126613,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.29752912384026897,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.3024637771587952,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.3073293449805509,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.3121272713438017,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.31685896025209087,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.32152577705396945,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.3261290497659916,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.3306700703416845,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.33515009588904854,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.33957034983901196,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.34393202306712956,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.3482362749706974,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.35248423450333816,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.35667700116900547,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.3608156459772545,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.3649012123615293,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.3689347170621279,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.37291715097542244,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.3768494799708303,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.3807326456769565,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.38456756623825916,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.3883551370435182,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.39209623142732875,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.3957917013457773,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.3994423780274036,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.4030490726004974,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.40661257669772866,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.41013366303906174,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.41361308599385893,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.4170515821230354,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.4204498707020879,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.4238086542257802,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.42712861889523124,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.4304104350881201,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.43365475781268514,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.43686222714616724,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.44003346865831505,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.4431690938205434,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.44626970040130975,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.44933587284824633,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.45236818265756434,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.4553671887312221,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.45833343772232743,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.4612674643692246,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.4641697918186962,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.4670409319386924,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.46988138562098014,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.4726916430740915,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.4754721841069305,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.478223478403386,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.4809459857882806,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.48364015648497366,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.48630643136492224,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.48894524218949265,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.49155701184430023,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.4941421545663472,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.496701076164215,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.4992341742315575,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.501741838354133,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5042244503106003,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5066823842672985,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5091160069672205,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5115256779133786,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5139117495467583,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5162745674190452,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5186144703603016,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5209317906417665,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5232268541339435,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5254999804601337,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.527751483145567,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5299816697622791,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5321908420698737,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5343792961523066,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5365473225508228,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5386952063931709,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5408232275192174,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5429316606030761,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5450207752718667,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5470908362212088,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5491421033275568,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5511748317574758,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5531892720739551,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5551856703398531,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5571642682185631,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5591253030719872,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5610690080559008,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5629956122127912,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5649053405622438,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5667984141889564,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5686750503284485,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5705354624505401,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5723798603406659,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5742084501790885,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5760214346180775,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5778190128571107,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5796013807161601,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5813687307071177,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5831212521034154,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5848591310078937,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5865825504189688,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5882916902951496,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5899867276179499,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5916678364532443,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5933351880111121,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5949889507042116,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5966292902047283,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5982563694999358,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.5998703489464094,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.6014713863229322,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.6030596368821258,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.6046352534008473,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.6061983862293815,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.6077491833394649,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.6092877903711734,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.6108143506787038,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.6123290053750803,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.613831893375815,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.615323151441552,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.6168029142197207,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.6182713142852256,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.6197284821802009,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.6211745464528506,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.6226096336954027,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.6240338685811979,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.6254473739009381,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.6268502705981152,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.6282426778036421,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.6296247128697082,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.6309964914028767,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.6323581272964466,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.6337097327620963,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.6350514183608285,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.6363832930332329,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.6377054641290865,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.6390180374363057,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.6403211172092691,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.6416148061965249,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.6428992056679005,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.6441744154410266,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.6454405339072938,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.6466976580572533,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.6479458835054756,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.649185304514883,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.6504160140205661,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.6516381036530988,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 0.6528516637613628,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "running",
+          "progress": 1.0,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "model_loading",
+          "state": "completed",
+          "progress": 1.0,
+          "model_load_time_seconds": 11.976,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "prompt_processing",
+          "state": "started",
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "prompt_processing",
+          "state": "running",
+          "progress": 0.0,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "prompt_processing",
+          "state": "running",
+          "progress": 0.782051282051282,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "prompt_processing",
+          "state": "running",
+          "progress": 0.9487179487179487,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "prompt_processing",
+          "state": "running",
+          "progress": 1.0,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "type": "progress",
+          "phase": "prompt_processing",
+          "state": "completed",
+          "progress": 1.0,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f"
+        },
+        {
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f",
+          "text": "Streaming",
+          "type": "delta"
+        },
+        {
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f",
+          "text": " is",
+          "type": "delta"
+        },
+        {
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f",
+          "text": " working",
+          "type": "delta"
+        },
+        {
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f",
+          "text": ".",
+          "type": "delta"
+        },
+        {
+          "type": "completed",
+          "text": "Streaming is working.",
+          "model": "openai/gpt-oss-20b",
+          "input_tokens": 78,
+          "output_tokens": 21,
+          "reasoning_output_tokens": 7,
+          "tokens_per_second": 49.33131403821204,
+          "time_to_first_token_seconds": 0.922413,
+          "model_load_time_seconds": 11.976,
+          "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f",
+          "profile": "default",
+          "quality": "default",
+          "reasoning": "low",
+          "time_to_first_text_seconds": 13.509426799995708,
+          "total_latency_seconds": 13.586149800001294
+        }
+      ],
+      "completed": {
+        "type": "completed",
+        "text": "Streaming is working.",
+        "model": "openai/gpt-oss-20b",
+        "input_tokens": 78,
+        "output_tokens": 21,
+        "reasoning_output_tokens": 7,
+        "tokens_per_second": 49.33131403821204,
+        "time_to_first_token_seconds": 0.922413,
+        "model_load_time_seconds": 11.976,
+        "request_id": "9285fc3a-6a27-44ad-8d81-9e9eba9d8c0f",
+        "profile": "default",
+        "quality": "default",
+        "reasoning": "low",
+        "time_to_first_text_seconds": 13.509426799995708,
+        "total_latency_seconds": 13.586149800001294
+      },
+      "grade": {
+        "protocol_correct": true,
+        "aggregate_match": true,
+        "incremental_delivery": true,
+        "request_id_consistent": true,
+        "timing_valid": true,
+        "metadata_valid": true,
+        "case_success": true,
+        "delta_count": 4,
+        "reconstructed_text": "Streaming is working.",
+        "completed_text": "Streaming is working."
+      },
+      "error": null
+    },
+    {
+      "id": "stream-long",
+      "first_text_latency_seconds": 0.5612827000004472,
+      "total_latency_seconds": 6.795683999996982,
+      "events": [
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "model": "openai/gpt-oss-20b",
+          "profile": "default",
+          "quality": "default",
+          "reasoning": "low",
+          "type": "start"
+        },
+        {
+          "type": "progress",
+          "phase": "prompt_processing",
+          "state": "started",
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e"
+        },
+        {
+          "type": "progress",
+          "phase": "prompt_processing",
+          "state": "running",
+          "progress": 0.0,
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e"
+        },
+        {
+          "type": "progress",
+          "phase": "prompt_processing",
+          "state": "running",
+          "progress": 0.03571428571428571,
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e"
+        },
+        {
+          "type": "progress",
+          "phase": "prompt_processing",
+          "state": "running",
+          "progress": 0.8571428571428571,
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e"
+        },
+        {
+          "type": "progress",
+          "phase": "prompt_processing",
+          "state": "running",
+          "progress": 1.0,
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e"
+        },
+        {
+          "type": "progress",
+          "phase": "prompt_processing",
+          "state": "completed",
+          "progress": 1.0,
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "**",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "DNS",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " Lookup",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " in",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " Six",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " Steps",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "**\n\n",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "1",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": ".",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " **",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "Query",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " Initi",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "ation",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "**",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "  \n",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "  ",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " The",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " client",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "’s",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " operating",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " system",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " sends",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " a",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " DNS",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " query",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " for",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " the",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " desired",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " hostname",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " (",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "e",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": ".g",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": ".,",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " `",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "example",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": ".com",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "`)",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " to",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " its",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " configured",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " recursive",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " resolver",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": ",",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " usually",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " provided",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " by",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " the",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " ISP",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " or",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " a",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " public",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " DNS",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " service",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": ".\n\n",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "2",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": ".",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " **",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "Resolver",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " Cache",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " Check",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "**",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "  \n",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "  ",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " The",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " recursive",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " resolver",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " first",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " checks",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " its",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " local",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " cache",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": ".",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " If",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " it",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " already",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " holds",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " a",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " valid",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " record",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " for",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " that",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " domain",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": ",",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " it",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " returns",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " the",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " IP",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " address",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " immediately",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": ";",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " otherwise",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": ",",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " it",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " proceeds",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " to",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " step",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " ",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "3",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": ".\n\n",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "3",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": ".",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " **",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "Root",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " Server",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " Contact",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "**",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "  \n",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "  ",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " The",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " resolver",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " sends",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " a",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " query",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " to",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " one",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " of",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " the",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " root",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " name",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " servers",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " (`",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": ".",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "com",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "`,",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " `.",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "net",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "`,",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " etc",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": ".).",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " Root",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " servers",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " reply",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " with",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " the",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " address",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " of",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " the",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " authoritative",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " name",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " server",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " for",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " the",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " top",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "‑",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "level",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " domain",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " (",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "T",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "LD",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": ")",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " in",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " question",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " (",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "e",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": ".g",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": ".,",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " `",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "com",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "`",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": ").\n\n",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "4",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": ".",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " **",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "T",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "LD",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " Server",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " Query",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "**",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "  \n",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "  ",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " Using",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " the",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " T",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "LD",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " server",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "’s",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " address",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": ",",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " the",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " resolver",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " queries",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " it",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " for",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " the",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " specific",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " domain",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " (`",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "example",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": ".com",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "`).",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " The",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " T",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "LD",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " server",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " responds",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " with",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " the",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " address",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " of",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " the",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " authoritative",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " name",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " server",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " that",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " holds",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " the",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " zone",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " file",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " for",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " that",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " domain",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": ".\n\n",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "5",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": ".",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " **",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "Author",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "itative",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " Name",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " Server",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " Lookup",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "**",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "  \n",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "  ",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " The",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " resolver",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " contacts",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " the",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " authoritative",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " name",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " server",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " for",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " `",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "example",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": ".com",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "`.",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " This",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " server",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " returns",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " the",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " requested",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " DNS",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " record",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " (",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "typically",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " an",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " A",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " or",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " AAA",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "A",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " record",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": ")",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " containing",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " the",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " IP",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " address",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " associated",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " with",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " the",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " hostname",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": ".\n\n",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "6",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": ".",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " **",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "Response",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " Delivery",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " and",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " C",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "aching",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "**",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "  \n",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "  ",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " The",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " recursive",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " resolver",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " sends",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " the",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " resolved",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " IP",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " back",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " to",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " the",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " client",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": ",",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " stores",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " it",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " in",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " its",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " cache",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " for",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " future",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " queries",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " (",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "respect",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "ing",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " the",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " TTL",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": "),",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " and",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " the",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " client",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " can",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " now",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " establish",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " a",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " connection",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " to",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " that",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " IP",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": " address",
+          "type": "delta"
+        },
+        {
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "text": ".",
+          "type": "delta"
+        },
+        {
+          "type": "completed",
+          "text": "**DNS Lookup in Six Steps**\n\n1. **Query Initiation**  \n   The client’s operating system sends a DNS query for the desired hostname (e.g., `example.com`) to its configured recursive resolver, usually provided by the ISP or a public DNS service.\n\n2. **Resolver Cache Check**  \n   The recursive resolver first checks its local cache. If it already holds a valid record for that domain, it returns the IP address immediately; otherwise, it proceeds to step 3.\n\n3. **Root Server Contact**  \n   The resolver sends a query to one of the root name servers (`.com`, `.net`, etc.). Root servers reply with the address of the authoritative name server for the top‑level domain (TLD) in question (e.g., `com`).\n\n4. **TLD Server Query**  \n   Using the TLD server’s address, the resolver queries it for the specific domain (`example.com`). The TLD server responds with the address of the authoritative name server that holds the zone file for that domain.\n\n5. **Authoritative Name Server Lookup**  \n   The resolver contacts the authoritative name server for `example.com`. This server returns the requested DNS record (typically an A or AAAA record) containing the IP address associated with the hostname.\n\n6. **Response Delivery and Caching**  \n   The recursive resolver sends the resolved IP back to the client, stores it in its cache for future queries (respecting the TTL), and the client can now establish a connection to that IP address.",
+          "model": "openai/gpt-oss-20b",
+          "input_tokens": 88,
+          "output_tokens": 326,
+          "reasoning_output_tokens": 6,
+          "tokens_per_second": 49.88399285599827,
+          "time_to_first_token_seconds": 0.244262,
+          "model_load_time_seconds": null,
+          "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+          "profile": "default",
+          "quality": "default",
+          "reasoning": "low",
+          "time_to_first_text_seconds": 0.5601545999961672,
+          "total_latency_seconds": 6.78021080000326
+        }
+      ],
+      "completed": {
+        "type": "completed",
+        "text": "**DNS Lookup in Six Steps**\n\n1. **Query Initiation**  \n   The client’s operating system sends a DNS query for the desired hostname (e.g., `example.com`) to its configured recursive resolver, usually provided by the ISP or a public DNS service.\n\n2. **Resolver Cache Check**  \n   The recursive resolver first checks its local cache. If it already holds a valid record for that domain, it returns the IP address immediately; otherwise, it proceeds to step 3.\n\n3. **Root Server Contact**  \n   The resolver sends a query to one of the root name servers (`.com`, `.net`, etc.). Root servers reply with the address of the authoritative name server for the top‑level domain (TLD) in question (e.g., `com`).\n\n4. **TLD Server Query**  \n   Using the TLD server’s address, the resolver queries it for the specific domain (`example.com`). The TLD server responds with the address of the authoritative name server that holds the zone file for that domain.\n\n5. **Authoritative Name Server Lookup**  \n   The resolver contacts the authoritative name server for `example.com`. This server returns the requested DNS record (typically an A or AAAA record) containing the IP address associated with the hostname.\n\n6. **Response Delivery and Caching**  \n   The recursive resolver sends the resolved IP back to the client, stores it in its cache for future queries (respecting the TTL), and the client can now establish a connection to that IP address.",
+        "model": "openai/gpt-oss-20b",
+        "input_tokens": 88,
+        "output_tokens": 326,
+        "reasoning_output_tokens": 6,
+        "tokens_per_second": 49.88399285599827,
+        "time_to_first_token_seconds": 0.244262,
+        "model_load_time_seconds": null,
+        "request_id": "e5e62c1b-a369-41b9-a153-b6624f5edd4e",
+        "profile": "default",
+        "quality": "default",
+        "reasoning": "low",
+        "time_to_first_text_seconds": 0.5601545999961672,
+        "total_latency_seconds": 6.78021080000326
+      },
+      "grade": {
+        "protocol_correct": true,
+        "aggregate_match": true,
+        "incremental_delivery": true,
+        "request_id_consistent": true,
+        "timing_valid": true,
+        "metadata_valid": true,
+        "case_success": true,
+        "delta_count": 310,
+        "reconstructed_text": "**DNS Lookup in Six Steps**\n\n1. **Query Initiation**  \n   The client’s operating system sends a DNS query for the desired hostname (e.g., `example.com`) to its configured recursive resolver, usually provided by the ISP or a public DNS service.\n\n2. **Resolver Cache Check**  \n   The recursive resolver first checks its local cache. If it already holds a valid record for that domain, it returns the IP address immediately; otherwise, it proceeds to step 3.\n\n3. **Root Server Contact**  \n   The resolver sends a query to one of the root name servers (`.com`, `.net`, etc.). Root servers reply with the address of the authoritative name server for the top‑level domain (TLD) in question (e.g., `com`).\n\n4. **TLD Server Query**  \n   Using the TLD server’s address, the resolver queries it for the specific domain (`example.com`). The TLD server responds with the address of the authoritative name server that holds the zone file for that domain.\n\n5. **Authoritative Name Server Lookup**  \n   The resolver contacts the authoritative name server for `example.com`. This server returns the requested DNS record (typically an A or AAAA record) containing the IP address associated with the hostname.\n\n6. **Response Delivery and Caching**  \n   The recursive resolver sends the resolved IP back to the client, stores it in its cache for future queries (respecting the TTL), and the client can now establish a connection to that IP address.",
+        "completed_text": "**DNS Lookup in Six Steps**\n\n1. **Query Initiation**  \n   The client’s operating system sends a DNS query for the desired hostname (e.g., `example.com`) to its configured recursive resolver, usually provided by the ISP or a public DNS service.\n\n2. **Resolver Cache Check**  \n   The recursive resolver first checks its local cache. If it already holds a valid record for that domain, it returns the IP address immediately; otherwise, it proceeds to step 3.\n\n3. **Root Server Contact**  \n   The resolver sends a query to one of the root name servers (`.com`, `.net`, etc.). Root servers reply with the address of the authoritative name server for the top‑level domain (TLD) in question (e.g., `com`).\n\n4. **TLD Server Query**  \n   Using the TLD server’s address, the resolver queries it for the specific domain (`example.com`). The TLD server responds with the address of the authoritative name server that holds the zone file for that domain.\n\n5. **Authoritative Name Server Lookup**  \n   The resolver contacts the authoritative name server for `example.com`. This server returns the requested DNS record (typically an A or AAAA record) containing the IP address associated with the hostname.\n\n6. **Response Delivery and Caching**  \n   The recursive resolver sends the resolved IP back to the client, stores it in its cache for future queries (respecting the TTL), and the client can now establish a connection to that IP address."
+      },
+      "error": null
+    },
+    {
+      "id": "stream-bangla",
+      "first_text_latency_seconds": 0.7579212999989977,
+      "total_latency_seconds": 2.3479613000090467,
+      "events": [
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "model": "openai/gpt-oss-20b",
+          "profile": "default",
+          "quality": "default",
+          "reasoning": "low",
+          "type": "start"
+        },
+        {
+          "type": "progress",
+          "phase": "prompt_processing",
+          "state": "started",
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20"
+        },
+        {
+          "type": "progress",
+          "phase": "prompt_processing",
+          "state": "running",
+          "progress": 0.0,
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20"
+        },
+        {
+          "type": "progress",
+          "phase": "prompt_processing",
+          "state": "running",
+          "progress": 0.01818181818181818,
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20"
+        },
+        {
+          "type": "progress",
+          "phase": "prompt_processing",
+          "state": "running",
+          "progress": 0.9272727272727272,
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20"
+        },
+        {
+          "type": "progress",
+          "phase": "prompt_processing",
+          "state": "running",
+          "progress": 1.0,
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20"
+        },
+        {
+          "type": "progress",
+          "phase": "prompt_processing",
+          "state": "completed",
+          "progress": 1.0,
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": "১",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": ")",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": " নিয়ম",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": "িত",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": " পড়",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": "াশ",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": "োনা",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": " ম",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": "স্ত",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": "িষ",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": "্ক",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": "কে",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": " সক",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": "্র",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": "িয়",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": " রাখ",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": "ে",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": ",",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": " ফলে",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": " স্ম",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": "ৃতি",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": " ও",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": " যুক্ত",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": "ি",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": " শক্ত",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": "িশ",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": "ালী",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": " হয়",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": "।",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": "  \n",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": "২",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": ")",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": " ধার",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": "াব",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": "াহ",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": "িক",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": " অন",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": "ুশ",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": "ীল",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": "নে",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": " জ",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": "ট",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": "িল",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": " ধারণ",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": "া",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": " সহজ",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": "ে",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": " বো",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": "ঝ",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": "া",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": " যায়",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": " এবং",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": " ভুল",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": " কম",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": "ে",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": " যায়",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": "।",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": "  \n",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": "৩",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": ")",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": " সময়",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": "ম",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": "তো",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": " প্রস্তু",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": "তি",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": " নেও",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": "য়ার",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": " ফলে",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": " পরীক্ষ",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": "ায়",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": " আত্ম",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": "বিশ",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": "্বাস",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": " বাড়",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": "ে",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": " আর",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": " চাপ",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": " কম",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": "ে",
+          "type": "delta"
+        },
+        {
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "text": "।",
+          "type": "delta"
+        },
+        {
+          "type": "completed",
+          "text": "১) নিয়মিত পড়াশোনা মস্তিষ্ককে সক্রিয় রাখে, ফলে স্মৃতি ও যুক্তি শক্তিশালী হয়।  \n২) ধারাবাহিক অনুশীলনে জটিল ধারণা সহজে বোঝা যায় এবং ভুল কমে যায়।  \n৩) সময়মতো প্রস্তুতি নেওয়ার ফলে পরীক্ষায় আত্মবিশ্বাস বাড়ে আর চাপ কমে।",
+          "model": "openai/gpt-oss-20b",
+          "input_tokens": 115,
+          "output_tokens": 104,
+          "reasoning_output_tokens": 14,
+          "tokens_per_second": 50.83806300069939,
+          "time_to_first_token_seconds": 0.276779,
+          "model_load_time_seconds": null,
+          "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+          "profile": "default",
+          "quality": "default",
+          "reasoning": "low",
+          "time_to_first_text_seconds": 0.7568413999979384,
+          "total_latency_seconds": 2.3357795999909285
+        }
+      ],
+      "completed": {
+        "type": "completed",
+        "text": "১) নিয়মিত পড়াশোনা মস্তিষ্ককে সক্রিয় রাখে, ফলে স্মৃতি ও যুক্তি শক্তিশালী হয়।  \n২) ধারাবাহিক অনুশীলনে জটিল ধারণা সহজে বোঝা যায় এবং ভুল কমে যায়।  \n৩) সময়মতো প্রস্তুতি নেওয়ার ফলে পরীক্ষায় আত্মবিশ্বাস বাড়ে আর চাপ কমে।",
+        "model": "openai/gpt-oss-20b",
+        "input_tokens": 115,
+        "output_tokens": 104,
+        "reasoning_output_tokens": 14,
+        "tokens_per_second": 50.83806300069939,
+        "time_to_first_token_seconds": 0.276779,
+        "model_load_time_seconds": null,
+        "request_id": "918adbb8-6907-46c8-a971-ee2cbc300b20",
+        "profile": "default",
+        "quality": "default",
+        "reasoning": "low",
+        "time_to_first_text_seconds": 0.7568413999979384,
+        "total_latency_seconds": 2.3357795999909285
+      },
+      "grade": {
+        "protocol_correct": true,
+        "aggregate_match": true,
+        "incremental_delivery": true,
+        "request_id_consistent": true,
+        "timing_valid": true,
+        "metadata_valid": true,
+        "case_success": true,
+        "delta_count": 80,
+        "reconstructed_text": "১) নিয়মিত পড়াশোনা মস্তিষ্ককে সক্রিয় রাখে, ফলে স্মৃতি ও যুক্তি শক্তিশালী হয়।  \n২) ধারাবাহিক অনুশীলনে জটিল ধারণা সহজে বোঝা যায় এবং ভুল কমে যায়।  \n৩) সময়মতো প্রস্তুতি নেওয়ার ফলে পরীক্ষায় আত্মবিশ্বাস বাড়ে আর চাপ কমে।",
+        "completed_text": "১) নিয়মিত পড়াশোনা মস্তিষ্ককে সক্রিয় রাখে, ফলে স্মৃতি ও যুক্তি শক্তিশালী হয়।  \n২) ধারাবাহিক অনুশীলনে জটিল ধারণা সহজে বোঝা যায় এবং ভুল কমে যায়।  \n৩) সময়মতো প্রস্তুতি নেওয়ার ফলে পরীক্ষায় আত্মবিশ্বাস বাড়ে আর চাপ কমে।"
+      },
+      "error": null
+    }
+  ]
+}

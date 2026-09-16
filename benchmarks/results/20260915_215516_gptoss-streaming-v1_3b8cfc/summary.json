@@ -1,0 +1,23 @@
+{
+  "suite_version": 1,
+  "suite_sha256": "93d48e3947ca26c25f82696336c134f0696209461614da1363e5386445d8f12b",
+  "quality": "default",
+  "requested_reasoning": null,
+  "resolved_profile": "default",
+  "resolved_reasoning": "low",
+  "model": "openai/gpt-oss-20b",
+  "max_output_tokens": 1024,
+  "cases": 3,
+  "protocol_accuracy_percent": 100.0,
+  "aggregate_match_percent": 100.0,
+  "incremental_delivery_percent": 100.0,
+  "request_id_consistency_percent": 100.0,
+  "case_success_percent": 100.0,
+  "request_errors": 0,
+  "mean_first_text_latency_seconds": 4.9463,
+  "median_first_text_latency_seconds": 0.7579,
+  "mean_total_latency_seconds": 7.5837,
+  "median_total_latency_seconds": 6.7957,
+  "mean_delta_count": 131.33,
+  "total_seconds": 22.844
+}

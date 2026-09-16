@@ -15,7 +15,7 @@ def _configure_temp_storage(tmp_path, monkeypatch) -> None:
     monkeypatch.setattr(settings, "gateway_api_key", "playground-test-key")
 
 
-def test_playground_shell_is_secret_free_and_hardened(tmp_path, monkeypatch):
+def test_playground_shell_is_secret_free_hardened_and_polished(tmp_path, monkeypatch):
     _configure_temp_storage(tmp_path, monkeypatch)
 
     with TestClient(app) as client:
@@ -23,12 +23,17 @@ def test_playground_shell_is_secret_free_and_hardened(tmp_path, monkeypatch):
         javascript = client.get("/playground/assets/app.js")
         ui_javascript = client.get("/playground/assets/ui.js")
         stylesheet = client.get("/playground/assets/styles.css")
+        polish_stylesheet = client.get("/playground/assets/polish.css")
 
     assert response.status_code == 200
     assert "Local AI Gateway Playground" in response.text
     assert 'data-theme="signal-red"' in response.text
     assert 'id="theme-select"' in response.text
     assert "/playground/assets/ui.js" in response.text
+    assert "/playground/assets/polish.css" in response.text
+    assert "Ctrl K" in response.text
+    assert 'aria-keyshortcuts="Control+K Meta+K"' in response.text
+    assert 'aria-label="Refresh RAG collections"' in response.text
     assert "playground-test-key" not in response.text
     assert response.headers["cache-control"] == "no-store"
     assert "default-src 'self'" in response.headers["content-security-policy"]
@@ -36,6 +41,10 @@ def test_playground_shell_is_secret_free_and_hardened(tmp_path, monkeypatch):
     assert javascript.status_code == 200
     assert ui_javascript.status_code == 200
     assert stylesheet.status_code == 200
+    assert polish_stylesheet.status_code == 200
+    assert "#tools-form .form-actions" in polish_stylesheet.text
+    assert "prefers-reduced-motion" in polish_stylesheet.text
+    assert "focus-visible" in polish_stylesheet.text
 
 
 def test_playground_exposes_all_dark_workbench_themes(tmp_path, monkeypatch):

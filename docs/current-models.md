@@ -29,6 +29,22 @@ Applications call `/v1/embeddings` or the RAG endpoints and never need to know t
 
 If a different embedding family requires task prefixes, set `EMBEDDING_QUERY_PREFIX` and `EMBEDDING_DOCUMENT_PREFIX` in `.env`; do not bake those strings into applications.
 
+## Vision model — Stage 5 candidate
+
+Vision is also a separate capability rather than another text-generation quality profile. The Stage 5 candidate is:
+
+```dotenv
+VISION_MODEL=google/gemma-4-12b-qat
+```
+
+This is **not yet a production-qualified vision decision**. It is the first candidate because the model is already present for the historical/experimental Gemma text profiles and current LM Studio metadata advertises the same model family as vision-capable. Reusing the installed model avoids adding another several-gigabyte VLM and another model-switch path before measurements show that doing so is worthwhile.
+
+The candidate becomes the production vision model only after the fixed `vision-v1` benchmark and real screenshot/photo smoke tests pass on the Legion and the immutable result is committed. If it fails, preserve that result and run the same frozen suite against the next candidate rather than editing the cases after seeing its answers.
+
+Applications call `/v1/vision` or SDK `vision()` and never send the raw model ID. `GET /v1/vision/status` reports whether the configured model is installed, advertises vision capability, and is currently loaded.
+
+See [`vision.md`](vision.md) for the image boundary, preprocessing rules, benchmark gate, and candidate policy.
+
 ## Why default uses low reasoning
 
 The frozen 40-case September 2026 GPT-OSS comparison measured the same model and benchmark at low, medium, and high reasoning:

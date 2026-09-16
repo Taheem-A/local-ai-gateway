@@ -99,6 +99,8 @@ Reported metrics include protocol accuracy, aggregate-match accuracy, incrementa
 
 The benchmark intentionally does **not** grade whether the model's prose is semantically excellent. Generation quality already has its own suite; Stage 3 is about delivery correctness and perceived latency.
 
+The first production GPT-OSS streaming validation is frozen under `history/2026-09-15-gptoss-streaming/`. Its immutable three-case source run achieved 100% protocol accuracy, aggregate reconstruction, incremental delivery, request-ID consistency, and full-case success with zero request errors. The cold first request reached visible text in 13.5198 s with 11.976 s of model loading; the two warm cases reached visible text in 0.5613 s and 0.7579 s.
+
 A live result is not production evidence until its result directory is committed unchanged and summarized under `history/`.
 
 ## Saved artifacts

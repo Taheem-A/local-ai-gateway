@@ -6,7 +6,6 @@ from io import BytesIO
 
 import pytest
 from PIL import Image
-
 from taheem_ai import AI, AsyncAI
 from taheem_ai.vision import encode_vision_images
 

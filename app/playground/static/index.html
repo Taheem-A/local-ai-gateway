@@ -6,16 +6,17 @@
   <meta name="color-scheme" content="dark">
   <title>Local AI Gateway Playground</title>
   <link rel="stylesheet" href="/playground/assets/styles.css">
+  <link rel="stylesheet" href="/playground/assets/polish.css">
 </head>
 <body>
   <div class="app-shell">
     <header class="topbar">
       <div class="brand"><span class="brand-mark" aria-hidden="true">◇</span><strong>Local AI Gateway</strong></div>
       <div class="breadcrumb" aria-label="Current location"><span class="breadcrumb-sep">/</span><span id="page-title">Generate</span><span class="breadcrumb-chevron">›</span></div>
-      <label class="command-field" for="command-input"><span aria-hidden="true">⌕</span><input id="command-input" type="text" autocomplete="off" placeholder="Search / run a command…"><kbd>⌘K</kbd></label>
+      <label class="command-field" for="command-input"><span aria-hidden="true">⌕</span><input id="command-input" type="text" autocomplete="off" aria-keyshortcuts="Control+K Meta+K" placeholder="Search / run a command…"><kbd>Ctrl K</kbd></label>
       <div class="topbar-actions">
         <label class="theme-control" title="Colour scheme"><span>Theme</span><select id="theme-select" aria-label="Colour scheme"><option value="signal-red">Signal Red</option><option value="copper">Copper</option><option value="emerald">Emerald</option><option value="cyan">Cyan</option><option value="violet">Violet</option><option value="rose">Rose</option><option value="lime">Lime</option><option value="espresso">Espresso</option></select></label>
-        <button id="inspector-toggle" class="topbar-button" type="button" aria-pressed="false">Inspector</button>
+        <button id="inspector-toggle" class="topbar-button" type="button" aria-pressed="false" aria-controls="inspector" aria-keyshortcuts="Control+Shift+I">Inspector</button>
         <span id="connection-pill" class="connection-status pill-offline"><i></i> Disconnected</span>
       </div>
     </header>
@@ -111,7 +112,7 @@ irrelevant</textarea></label>
         <section class="view" id="view-rag">
           <div class="pane-grid rag-grid">
             <section class="pane request-pane rag-request-pane">
-              <div class="pane-header"><div><h2>Retrieval</h2><p>Search local collections and inspect grounded evidence.</p></div><button id="rag-refresh-collections" class="button button-ghost" type="button">↻</button></div>
+              <div class="pane-header"><div><h2>Retrieval</h2><p>Search local collections and inspect grounded evidence.</p></div><button id="rag-refresh-collections" class="button button-ghost" type="button" aria-label="Refresh RAG collections" title="Refresh RAG collections">↻</button></div>
               <form id="rag-form" class="pane-form rag-form">
                 <div class="toolbar-controls rag-controls"><label>Collection<input id="rag-collection" type="text" value="university" required></label><label>Mode<select id="rag-mode"><option value="search">search</option><option value="answer">answer with sources</option></select></label><label>Top K<input id="rag-top-k" type="number" min="1" max="50" value="5"></label><button class="button button-primary run-button rag-run" type="submit">▶ Run</button></div>
                 <label class="query-line">Query<div class="query-input"><span>›</span><textarea id="rag-query" rows="2" required>What does the indexed material say about turnbuckles?</textarea></div></label>

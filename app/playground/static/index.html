@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Local AI Gateway Playground</title>
+  <link rel="stylesheet" href="/playground/assets/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <div class="eyebrow">LOCAL AI GATEWAY</div>
+      <h1>Playground <span>/ debug console</span></h1>
+    </div>
+    <div class="topbar-actions">
+      <span id="connection-pill" class="pill pill-offline">Disconnected</span>
+      <button id="refresh-all" class="button button-ghost" type="button">Refresh</button>
+    </div>
+  </header>
+
+  <div class="shell">
+    <aside class="sidebar">
+      <section class="card connection-card">
+        <div class="card-heading">
+          <div>
+            <div class="eyebrow">CONNECTION</div>
+            <h2>Gateway</h2>
+          </div>
+        </div>
+        <label>
+          API key
+          <input id="api-key" type="password" autocomplete="off" placeholder="X-Local-AI-Key">
+        </label>
+        <label>
+          Project ID <span class="muted">optional</span>
+          <input id="project-id" type="text" autocomplete="off" placeholder="playground">
+        </label>
+        <div class="button-row">
+          <button id="connect-button" class="button button-primary" type="button">Connect</button>
+          <button id="clear-session" class="button button-ghost" type="button">Clear</button>
+        </div>
+        <p class="microcopy">The key lives in <code>sessionStorage</code> for this tab only. It is never embedded in the page or written to gateway metrics.</p>
+      </section>
+
+      <nav class="nav" aria-label="Playground sections">
+        <button class="nav-item active" data-view="generate" type="button"><span>01</span> Generate</button>
+        <button class="nav-item" data-view="extract" type="button"><span>02</span> Extract</button>
+        <button class="nav-item" data-view="classify" type="button"><span>03</span> Classify</button>
+        <button class="nav-item" data-view="rag" type="button"><span>04</span> RAG</button>
+        <button class="nav-item" data-view="tools" type="button"><span>05</span> Tools</button>
+        <button class="nav-item" data-view="debug" type="button"><span>06</span> Debug</button>
+      </nav>
+
+      <section class="card compact-card">
+        <div class="eyebrow">STATUS</div>
+        <div class="status-line"><span>LM Studio</span><strong id="lm-status">—</strong></div>
+        <div class="status-line"><span>Loaded</span><strong id="loaded-model-count">—</strong></div>
+        <div class="status-line"><span>Embedding</span><strong id="embedding-model">—</strong></div>
+      </section>
+    </aside>
+
+    <main class="workspace">
+      <section class="view active" id="view-generate">
+        <div class="view-header">
+          <div>
+            <div class="eyebrow">FREE-FORM GENERATION</div>
+            <h2>Generate</h2>
+            <p>Run normal or streamed generation through the exact production route.</p>
+          </div>
+          <div class="mode-toggle">
+            <label class="switch-label"><input id="generate-stream" type="checkbox" checked> Stream</label>
+          </div>
+        </div>
+        <form id="generate-form" class="stack">
+          <label>Prompt<textarea id="generate-prompt" rows="8" required>Explain why dependency injection is useful in a local Python service.</textarea></label>
+          <label>System <span class="muted">optional</span><textarea id="generate-system" rows="3" placeholder="Additional system instruction"></textarea></label>
+          <div class="control-grid">
+            <label>Quality<select id="generate-quality"><option value="default">default</option><option value="deep">deep</option><option value="fast">fast</option><option value="balanced">balanced</option></select></label>
+            <label>Reasoning<select id="generate-reasoning"><option value="">profile default</option><option value="low">low</option><option value="medium">medium</option><option value="high">high</option></select></label>
+            <label>Temperature<input id="generate-temperature" type="number" min="0" max="1" step="0.1" value="0.2"></label>
+            <label>Max output tokens<input id="generate-max-tokens" type="number" min="1" max="8192" value="2048"></label>
+          </div>
+          <div class="button-row">
+            <button class="button button-primary" type="submit">Run generation</button>
+            <button id="stop-stream" class="button button-danger hidden" type="button">Stop stream</button>
+          </div>
+        </form>
+        <section class="output-card">
+          <div class="output-heading"><strong>Output</strong><span id="generate-state" class="muted">Idle</span></div>
+          <div id="generate-output" class="prose-output empty">Response will appear here.</div>
+          <div id="generate-meta" class="meta-grid"></div>
+        </section>
+      </section>
+
+      <section class="view" id="view-extract">
+        <div class="view-header">
+          <div><div class="eyebrow">SCHEMA-CONSTRAINED</div><h2>Extract</h2><p>Test structured output, normalization, validation, and bounded repair.</p></div>
+        </div>
+        <form id="extract-form" class="stack">
+          <label>Prompt<textarea id="extract-prompt" rows="5" required>MAT186 Problem Set 2 is due September 18, 2026 at 11:59 PM.</textarea></label>
+          <label>JSON Schema<textarea id="extract-schema" class="code-editor" rows="14" spellcheck="false">{
+  "type": "object",
+  "properties": {
+    "course": {"type": "string", "x-normalize": "upper"},
+    "assignment": {"type": "string"},
+    "due_date": {"type": "string", "format": "date"},
+    "due_time": {"type": "string", "format": "time"}
+  },
+  "required": ["course", "assignment", "due_date", "due_time"],
+  "additionalProperties": false
+}</textarea></label>
+          <label>System <span class="muted">optional</span><textarea id="extract-system" rows="2"></textarea></label>
+          <div class="control-grid">
+            <label>Quality<select id="extract-quality"><option value="default">default</option><option value="deep">deep</option><option value="fast">fast</option><option value="balanced">balanced</option></select></label>
+            <label>Reasoning<select id="extract-reasoning"><option value="">profile default</option><option value="low">low</option><option value="medium">medium</option><option value="high">high</option></select></label>
+            <label>Max output tokens<input id="extract-max-tokens" type="number" min="1" max="8192" value="2048"></label>
+            <label>Max attempts<input id="extract-attempts" type="number" min="1" max="3" value="2"></label>
+          </div>
+          <button class="button button-primary fit" type="submit">Run extraction</button>
+        </form>
+        <pre id="extract-output" class="json-output">Waiting for a request.</pre>
+      </section>
+
+      <section class="view" id="view-classify">
+        <div class="view-header"><div><div class="eyebrow">CLOSED-LABEL</div><h2>Classify</h2><p>Exercise enum-constrained classification with explicit labels.</p></div></div>
+        <form id="classify-form" class="stack">
+          <label>Text<textarea id="classify-text" rows="6" required>Homework 4 has been posted and is due Sunday at 11:59 PM.</textarea></label>
+          <label>Labels <span class="muted">one per line or comma-separated</span><textarea id="classify-labels" rows="5" required>assignment
+exam
+announcement
+irrelevant</textarea></label>
+          <label>System <span class="muted">optional</span><textarea id="classify-system" rows="2"></textarea></label>
+          <div class="control-grid">
+            <label>Quality<select id="classify-quality"><option value="default">default</option><option value="deep">deep</option><option value="fast">fast</option><option value="balanced">balanced</option></select></label>
+            <label>Reasoning<select id="classify-reasoning"><option value="">profile default</option><option value="low">low</option><option value="medium">medium</option><option value="high">high</option></select></label>
+            <label>Max output tokens<input id="classify-max-tokens" type="number" min="128" max="4096" value="512"></label>
+            <label>Max attempts<input id="classify-attempts" type="number" min="1" max="3" value="2"></label>
+          </div>
+          <button class="button button-primary fit" type="submit">Run classification</button>
+        </form>
+        <pre id="classify-output" class="json-output">Waiting for a request.</pre>
+      </section>
+
+      <section class="view" id="view-rag">
+        <div class="view-header">
+          <div><div class="eyebrow">RETRIEVAL</div><h2>RAG</h2><p>Inspect indexed collections, raw retrieval hits, or grounded answers.</p></div>
+          <button id="rag-refresh-collections" class="button button-ghost" type="button">Refresh collections</button>
+        </div>
+        <div id="rag-collections" class="chip-row"><span class="muted">Connect to load collections.</span></div>
+        <form id="rag-form" class="stack">
+          <div class="control-grid two">
+            <label>Collection<input id="rag-collection" type="text" value="university" required></label>
+            <label>Mode<select id="rag-mode"><option value="search">search</option><option value="answer">answer with sources</option></select></label>
+          </div>
+          <label>Query<textarea id="rag-query" rows="5" required>What does the indexed material say about turnbuckles?</textarea></label>
+          <label>Metadata filter JSON <span class="muted">optional</span><textarea id="rag-filter" class="code-editor" rows="3" spellcheck="false">{}</textarea></label>
+          <div class="control-grid">
+            <label>Top K<input id="rag-top-k" type="number" min="1" max="50" value="5"></label>
+            <label>Min score<input id="rag-min-score" type="number" min="-1" max="1" step="0.05" value="0"></label>
+            <label>Quality<select id="rag-quality"><option value="default">default</option><option value="deep">deep</option><option value="fast">fast</option><option value="balanced">balanced</option></select></label>
+            <label>Reasoning<select id="rag-reasoning"><option value="">profile default</option><option value="low">low</option><option value="medium">medium</option><option value="high">high</option></select></label>
+          </div>
+          <button class="button button-primary fit" type="submit">Run RAG request</button>
+        </form>
+        <pre id="rag-output" class="json-output">Waiting for a request.</pre>
+      </section>
+
+      <section class="view" id="view-tools">
+        <div class="view-header"><div><div class="eyebrow">TOOL PLANNING</div><h2>Tools</h2><p>Debug one stateless tool-capable model turn. The playground never executes handlers.</p></div></div>
+        <div class="notice"><strong>Execution boundary:</strong> this screen can ask the model to request tools, but it cannot run application-owned Python functions. Returned calls remain inert data.</div>
+        <form id="tools-form" class="stack">
+          <label>Messages JSON<textarea id="tools-messages" class="code-editor" rows="8" spellcheck="false">[
+  {"role": "user", "content": "What is 17 multiplied by 23? Use the calculator."}
+]</textarea></label>
+          <label>Tools JSON<textarea id="tools-definitions" class="code-editor" rows="16" spellcheck="false">[
+  {
+    "name": "calculate",
+    "description": "Perform a basic arithmetic operation.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "a": {"type": "number"},
+        "b": {"type": "number"},
+        "operation": {"type": "string", "enum": ["add", "subtract", "multiply", "divide"]}
+      },
+      "required": ["a", "b", "operation"],
+      "additionalProperties": false
+    },
+    "risk": "read"
+  }
+]</textarea></label>
+          <label>System <span class="muted">optional</span><textarea id="tools-system" rows="2"></textarea></label>
+          <div class="control-grid">
+            <label>Tool choice<select id="tools-choice"><option value="auto">auto</option><option value="required">required</option><option value="none">none</option></select></label>
+            <label>Quality<select id="tools-quality"><option value="default">default</option><option value="deep">deep</option><option value="fast">fast</option><option value="balanced">balanced</option></select></label>
+            <label>Reasoning<select id="tools-reasoning"><option value="">profile default</option><option value="low">low</option><option value="medium">medium</option><option value="high">high</option></select></label>
+            <label>Max output tokens<input id="tools-max-tokens" type="number" min="128" max="8192" value="2048"></label>
+          </div>
+          <button class="button button-primary fit" type="submit">Run tool turn</button>
+        </form>
+        <pre id="tools-output" class="json-output">Waiting for a request.</pre>
+      </section>
+
+      <section class="view" id="view-debug">
+        <div class="view-header">
+          <div><div class="eyebrow">OBSERVABILITY</div><h2>Debug</h2><p>Content-free status and metrics from the running gateway.</p></div>
+          <button id="debug-refresh" class="button button-primary" type="button">Refresh debug data</button>
+        </div>
+        <div id="status-cards" class="dashboard-grid"></div>
+        <div class="split-grid">
+          <section class="card">
+            <div class="card-heading"><div><div class="eyebrow">METRICS</div><h3>Recent window</h3></div><label class="inline-field">Days<input id="metrics-days" type="number" min="1" max="365" value="7"></label></div>
+            <div id="metrics-summary" class="metric-grid"></div>
+          </section>
+          <section class="card">
+            <div class="card-heading"><div><div class="eyebrow">PROFILES</div><h3>Routing map</h3></div></div>
+            <pre id="profiles-output" class="json-output compact">Connect to inspect profiles.</pre>
+          </section>
+        </div>
+        <section class="card table-card">
+          <div class="card-heading"><div><div class="eyebrow">REQUEST LOG</div><h3>Recent metadata</h3></div><label class="inline-field">Rows<input id="request-limit" type="number" min="1" max="200" value="50"></label></div>
+          <div class="table-wrap"><table><thead><tr><th>Time</th><th>Endpoint</th><th>Project</th><th>Profile</th><th>Model</th><th>Latency</th><th>Tokens</th><th>Result</th></tr></thead><tbody id="requests-body"><tr><td colspan="8" class="muted">No data loaded.</td></tr></tbody></table></div>
+        </section>
+      </section>
+    </main>
+
+    <aside class="inspector">
+      <section class="card inspector-card">
+        <div class="card-heading">
+          <div><div class="eyebrow">INSPECTOR</div><h2>Last request</h2></div>
+          <button id="copy-request" class="button button-ghost button-small" type="button">Copy</button>
+        </div>
+        <div id="inspector-endpoint" class="endpoint-label">Nothing sent yet.</div>
+        <pre id="inspector-request" class="json-output inspector-output">{}</pre>
+      </section>
+      <section class="card inspector-card grow">
+        <div class="card-heading">
+          <div><div class="eyebrow">RESPONSE / EVENTS</div><h2>Result</h2></div>
+          <button id="copy-response" class="button button-ghost button-small" type="button">Copy</button>
+        </div>
+        <pre id="inspector-response" class="json-output inspector-output">{}</pre>
+      </section>
+    </aside>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="/playground/assets/app.js" defer></script>
+</body>
+</html>

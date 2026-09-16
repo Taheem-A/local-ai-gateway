@@ -1,6 +1,6 @@
 # Local AI Gateway
 
-A localhost-only AI service for personal projects. Applications call one stable API while the gateway owns model selection, reasoning effort, embeddings, retrieval-augmented generation (RAG), structured-output validation, safe tool-call planning, retries, and operational metrics.
+A localhost-only AI service for personal projects. Applications call one stable API while the gateway owns model selection, reasoning effort, streaming, embeddings, retrieval-augmented generation (RAG), structured-output validation, safe tool-call planning, retries, and operational metrics.
 
 ## Current production profiles
 
@@ -11,7 +11,8 @@ Your apps / taheem_ai SDK
 Local AI Gateway :4812
         |
         +-- generation ----------------------+
-        |                                    v
+        |   +-- JSON response                |
+        |   +-- normalized SSE stream        v
         |                           LM Studio :1234
         |                                    |
         |   +-- fast      -> Gemma 4 12B (experimental candidate)
@@ -107,7 +108,7 @@ python -m compileall -q app benchmarks clients/python/taheem_ai scripts tests wo
 pytest -q
 ```
 
-GitHub Actions runs the same checks. CI uses fake deterministic embeddings and mocked tool-provider responses, so it does not require LM Studio or GPU access.
+GitHub Actions runs the same checks. CI uses fake deterministic embeddings and mocked tool/provider responses, so it does not require LM Studio or GPU access.
 
 ## 5. Free-form generation
 
@@ -167,7 +168,7 @@ POST /v1/tools/turn
 
 runs exactly one model turn. The caller supplies self-contained JSON-Schema tool definitions and conversation history; the gateway validates schemas/history and returns either normal text or validated tool-call requests.
 
-The gateway **never executes caller application code**. Execution authority stays in the application. The Python SDK v0.3 provides `ToolRegistry` for trusted local handlers:
+The gateway **never executes caller application code**. Execution authority stays in the application. The Python SDK provides `ToolRegistry` for trusted local handlers:
 
 ```python
 from taheem_ai import AI, ToolRegistry
@@ -202,7 +203,37 @@ print(result.text)
 
 Tool outputs are treated as untrusted data and cannot grant permission or add tools. See [`docs/tools.md`](docs/tools.md) for the complete security and execution model.
 
-## 10. Python SDK
+## 10. Streaming
+
+`POST /v1/generate/stream` accepts the same generation request as `/v1/generate`, but returns normalized Server-Sent Events so applications can render text as it is generated.
+
+The public event types are:
+
+```text
+start
+progress     # optional model-load/prompt-processing status
+delta        # user-visible text only
+completed    # final text + token/timing metadata
+error        # terminal in-band failure after streaming begins
+```
+
+LM Studio's hidden reasoning events are never forwarded. The gateway also measures `time_to_first_text_seconds` separately from the provider's first-token timing, because hidden reasoning may happen before the first character a user can actually see.
+
+Python SDK v0.4 text streaming is intentionally tiny:
+
+```python
+from taheem_ai import AI
+
+ai = AI(project="demo")
+for text in ai.stream("Explain DNS in five sentences."):
+    print(text, end="", flush=True)
+```
+
+Use `stream_events()` when the application also needs progress or final token/timing metadata. Matching async iterators are available on `AsyncAI`.
+
+See [`docs/streaming.md`](docs/streaming.md) for the event contract, cancellation behavior, error semantics, and scope boundary.
+
+## 11. Python SDK
 
 Install the local client in editable mode:
 
@@ -219,20 +250,20 @@ ai = AI(project="itqaan")
 print(ai.ask("Explain this error."))
 ```
 
-The SDK also provides typed extraction, classification, embeddings, RAG indexing/search/answers, low-level `tool_turn()`, bounded `run_tools_once()`, and matching async APIs.
+The SDK also provides streaming, typed extraction, classification, embeddings, RAG indexing/search/answers, low-level `tool_turn()`, bounded `run_tools_once()`, and matching async APIs.
 
-## 11. Metrics and benchmarks
+## 12. Metrics and benchmarks
 
-Operational requests are recorded in `data/gateway.db`; prompt, response, tool-definition, tool-argument, and tool-result content are not stored there. RAG source text and vectors live separately in `data/rag.db` and are private application data by design.
+Operational requests are recorded in `data/gateway.db`; prompt, response, tool-definition, tool-argument, tool-result, and streamed text content are not stored there. RAG source text and vectors live separately in `data/rag.db` and are private application data by design.
 
 ```powershell
 python scripts\gateway_stats.py --days 30
 ```
 
-Generation, retrieval, and tool calling have separate benchmark suites. Tool calling can be tested with:
+Generation, retrieval, tool calling, and streaming have separate benchmark suites. Streaming can be tested with:
 
 ```powershell
-python benchmarks\run_tool_benchmarks.py --quality default --name gptoss-tool-calling-v1
+python benchmarks\run_stream_benchmarks.py --quality default --name gptoss-streaming-v1
 ```
 
 See [`benchmarks/README.md`](benchmarks/README.md).
@@ -243,7 +274,8 @@ See [`benchmarks/README.md`](benchmarks/README.md).
 - The gateway stays on `127.0.0.1:4812`.
 - Never port-forward either service directly to the public internet.
 - Keep `.env`, `data/gateway.db`, and `data/rag.db` private.
-- Prompt/tool content is not logged by operational metrics by default.
+- Prompt/tool/stream content is not logged by operational metrics by default.
+- Hidden reasoning is not exposed by the streaming API.
 - Retrieved RAG content and tool results are untrusted data, never authorization.
 - A model-requested tool call is only a request; application policy decides whether code executes.
 - Cloud fallback is not implemented, so a local failure cannot silently create API charges.
@@ -256,5 +288,6 @@ See [`benchmarks/README.md`](benchmarks/README.md).
 - [`docs/structured-output.md`](docs/structured-output.md) — structured generation/validation rules
 - [`docs/rag.md`](docs/rag.md) — embeddings, retrieval, indexing, citations, and RAG security
 - [`docs/tools.md`](docs/tools.md) — tool protocol, local registry, risk policy, and security boundaries
+- [`docs/streaming.md`](docs/streaming.md) — SSE events, reasoning suppression, cancellation, and SDK usage
 - [`docs/benchmarking.md`](docs/benchmarking.md) — benchmark history and methodology
 - [`docs/development.md`](docs/development.md) — coding conventions and release checks

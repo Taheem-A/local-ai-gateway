@@ -1,12 +1,12 @@
 # Benchmarks
 
-The benchmark system separates generation capability, retrieval capability, and tool-calling behavior. Generation benchmarks measure raw model behavior through `/v1/generate`; the RAG benchmark measures dense retrieval ranking through `/v1/rag/search`; the tool benchmark measures whether the model selects and parameterizes advertised tools correctly through `/v1/tools/turn`. Keeping these dimensions separate prevents one strong subsystem from masking another weak one.
+The benchmark system separates generation capability, retrieval capability, tool-calling behavior, and streaming transport behavior. Generation benchmarks measure raw model behavior through `/v1/generate`; the RAG benchmark measures dense retrieval ranking through `/v1/rag/search`; the tool benchmark measures whether the model selects and parameterizes advertised tools correctly through `/v1/tools/turn`; and the streaming benchmark measures whether incremental delivery through `/v1/generate/stream` obeys the gateway protocol. Keeping these dimensions separate prevents one strong subsystem from masking another weak one.
 
 ## Versioning policy
 
 A committed benchmark run is evidence and is treated as immutable.
 
-When a prompt, expected answer, grading rule, corpus, query, tool definition, or runner behavior changes in a way that affects comparability:
+When a prompt, expected answer, grading rule, corpus, query, tool definition, stream contract, or runner behavior changes in a way that affects comparability:
 
 1. bump the relevant benchmark version,
 2. update the current benchmark policy and tests,
@@ -71,19 +71,35 @@ python benchmarks\run_tool_benchmarks.py `
     --name gptoss-tool-calling-v1
 ```
 
-The runner reports:
-
-- selection accuracy;
-- argument accuracy;
-- risk-annotation accuracy;
-- synthesis-constraint accuracy;
-- full-case success rate;
-- request errors;
-- mean and median latency.
-
-It also records the suite version/SHA-256, resolved model/profile/reasoning, and output-token budget. The benchmark only exercises model/gateway tool planning and synthesis; application handlers are tested separately by the SDK unit tests and live smoke test.
+The runner reports selection accuracy, argument accuracy, risk-annotation accuracy, synthesis-constraint accuracy, full-case success rate, request errors, and mean/median latency. It also records the suite version/SHA-256, resolved model/profile/reasoning, and output-token budget. The benchmark only exercises model/gateway tool planning and synthesis; application handlers are tested separately by the SDK unit tests and live smoke test.
 
 The first production GPT-OSS validation is frozen under `history/2026-09-15-gptoss-tool-calling/`. The immutable source run achieved 100% selection, argument, risk-annotation, synthesis-constraint, and full-case success across all eight fixed cases with zero request errors on GPT-OSS 20B / `default` / low reasoning. Its overall mean latency was 4.8203 s because the first request took 24.8698 s; the remaining seven requests averaged about 1.99 s and the run median was 2.0042 s.
+
+## Streaming benchmark v1
+
+`stream_suite.json` tests the Stage 3 transport contract rather than free-form answer quality. It includes short and longer English output plus a Bengali path.
+
+```powershell
+python benchmarks\run_stream_benchmarks.py `
+    --quality default `
+    --name gptoss-streaming-v1
+```
+
+The runner verifies:
+
+- `start` is the first public event and exactly one `completed` event is terminal;
+- only the gateway-owned public event types are exposed;
+- output arrives through incremental `delta` events rather than only as a final blob;
+- concatenated deltas reconstruct exactly to the final aggregate text;
+- one request ID is preserved across every event;
+- measured time to first visible text is valid and no greater than total latency;
+- final model/profile/timing metadata is present.
+
+Reported metrics include protocol accuracy, aggregate-match accuracy, incremental-delivery accuracy, request-ID consistency, full-case success, request errors, mean/median time to first visible text, mean/median total latency, and mean delta count.
+
+The benchmark intentionally does **not** grade whether the model's prose is semantically excellent. Generation quality already has its own suite; Stage 3 is about delivery correctness and perceived latency.
+
+The first production GPT-OSS streaming validation is frozen under `history/2026-09-15-gptoss-streaming/`. Its immutable three-case source run achieved 100% protocol accuracy, aggregate reconstruction, incremental delivery, request-ID consistency, and full-case success with zero request errors. The cold first request reached visible text in 13.5198 s with 11.976 s of model loading; the two warm cases reached visible text in 0.5613 s and 0.7579 s.
 
 A live result is not production evidence until its result directory is committed unchanged and summarized under `history/`.
 
@@ -91,13 +107,13 @@ A live result is not production evidence until its result directory is committed
 
 Generation runs receive a unique directory under `benchmarks/results/` containing `raw_results.json`, `summary.json`, `results.csv`, `manual_review.json`, and `report.md`.
 
-RAG and tool-calling runs save `raw_results.json`, `summary.json`, and `report.md` because their fixed suites are mechanically graded.
+RAG, tool-calling, and streaming runs save `raw_results.json`, `summary.json`, and `report.md` because their fixed suites are mechanically graded.
 
 Committed benchmark artifacts are immutable. Create a new run when a suite or implementation changes; do not rewrite a historical result to improve its score.
 
 ## Manual review
 
-Summary semantics and explicitly marked free-text generation fields remain manual. Mechanical constraints such as word limits, sentence counts, bullet counts, JSON structure, canonical date/time formatting, tool names, and tool arguments are checked deterministically.
+Summary semantics and explicitly marked free-text generation fields remain manual. Mechanical constraints such as word limits, sentence counts, bullet counts, JSON structure, canonical date/time formatting, tool names, tool arguments, and stream event ordering are checked deterministically.
 
 Do not rewrite expected answers after seeing a model response merely to improve a score.
 
@@ -140,4 +156,4 @@ Benchmark regressions are included in the normal project test suite:
 pytest -q
 ```
 
-They use mock/deterministic local components and do not consume live LM Studio inference. Live RAG and tool-calling runs must still be executed on the target local models before those configurations are considered production-validated.
+They use mock/deterministic local components and do not consume live LM Studio inference. Live RAG, tool-calling, and streaming runs must still be executed on the target local models before those configurations are considered production-validated.

@@ -70,6 +70,67 @@ With the current production configuration, `quality: "default"` and `reasoning: 
 
 Response fields include the visible text, resolved model/profile/reasoning, token counts, latency metrics when available, and an opaque `request_id`.
 
+## `POST /v1/generate/stream`
+
+Incremental free-form generation using the **same request schema and routing rules** as `/v1/generate`.
+
+The response media type is:
+
+```text
+text/event-stream
+```
+
+The gateway owns the public SSE contract rather than passing LM Studio's raw event stream through to applications.
+
+A successful stream is ordered as:
+
+```text
+start
+[zero or more progress events]
+[one or more delta events]
+completed
+```
+
+### `start`
+
+Confirms the request passed gateway authentication/validation and includes `request_id`, requested model/profile, quality, and resolved reasoning.
+
+### `progress`
+
+Optional UX hints for `model_loading` or `prompt_processing`. Applications must not require these events for correctness.
+
+### `delta`
+
+Carries one user-visible text fragment:
+
+```text
+event: delta
+data: {"type":"delta","request_id":"...","text":"The current"}
+```
+
+Concatenate `text` values in event order to reconstruct the streamed answer.
+
+### `completed`
+
+The single successful terminal event contains the full final text plus model/profile/reasoning, token counts, throughput/timing fields, `time_to_first_text_seconds`, total latency, and the same `request_id` used throughout the stream.
+
+`time_to_first_token_seconds` comes from the provider and may reflect a hidden reasoning token. `time_to_first_text_seconds` is measured by the gateway at the first public text delta and is the appropriate perceived-latency metric for UI work.
+
+### Streaming errors
+
+Authentication/body-validation failures occur before streaming starts and use the normal HTTP JSON error envelope.
+
+After HTTP/SSE headers have been committed, the status code cannot be changed. Provider/runtime failures are therefore terminal in-band events:
+
+```text
+event: error
+data: {"type":"error","request_id":"...","error":{"code":"LMSTUDIO_UNAVAILABLE","message":"...","details":null}}
+```
+
+SDK `stream()`/`stream_events()` methods translate these events to `AIError`.
+
+LM Studio reasoning events are deliberately discarded and are never part of the public streaming API. See [`streaming.md`](streaming.md) for the complete contract and cancellation semantics.
+
 ## `POST /v1/extract`
 
 Schema-constrained extraction with local validation and bounded repair retries.
@@ -339,5 +400,6 @@ Current codes include:
 - `TOOL_CALL_REQUIRED`
 - `EMBEDDING_DIMENSION_CHANGED`
 - `RAG_INDEX_INCOMPATIBLE`
+- `STREAM_FAILED` (in-band after an SSE stream has begun)
 
-Provider and validation failures are recorded as operational metrics without storing prompt/response content. Tool definitions, arguments, conversation text, and results are not stored in operational metrics. RAG source text is stored separately in `data/rag.db` by design and should be treated as private local application data.
+Provider and validation failures are recorded as operational metrics without storing prompt/response content. Tool definitions, arguments, conversation text, results, and streamed text are not stored in operational metrics. RAG source text is stored separately in `data/rag.db` by design and should be treated as private local application data.

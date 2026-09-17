@@ -18,6 +18,7 @@ _ASSETS = {
     "app.js": "application/javascript; charset=utf-8",
     "ui.js": "application/javascript; charset=utf-8",
     "vision.js": "application/javascript; charset=utf-8",
+    "markdown.js": "application/javascript; charset=utf-8",
     "styles.css": "text/css; charset=utf-8",
     "polish.css": "text/css; charset=utf-8",
 }
@@ -50,13 +51,17 @@ async def playground_redirect() -> RedirectResponse:
 
 @router.get("/playground/", include_in_schema=False)
 async def playground_index() -> HTMLResponse:
-    """Serve the zero-build local shell and mount its Stage 5 vision extension."""
+    """Serve the zero-build local shell and mount Stage 5 extensions."""
 
     html = (_STATIC_DIR / "index.html").read_text(encoding="utf-8")
     marker = '  <script src="/playground/assets/app.js" defer></script>'
-    vision_script = '  <script src="/playground/assets/vision.js" defer></script>'
-    if vision_script not in html:
-        html = html.replace(marker, f"{vision_script}\n{marker}")
+    extensions = [
+        '  <script src="/playground/assets/markdown.js" defer></script>',
+        '  <script src="/playground/assets/vision.js" defer></script>',
+    ]
+    for script in reversed(extensions):
+        if script not in html:
+            html = html.replace(marker, f"{script}\n{marker}")
     return HTMLResponse(
         content=html,
         media_type="text/html",

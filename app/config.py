@@ -7,7 +7,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    """Runtime settings for generation, embeddings, retrieval, tools, and persistence."""
+    """Runtime settings for generation, embeddings, retrieval, vision, tools, and persistence."""
 
     lm_base_url: str = "http://127.0.0.1:1234"
     lm_api_token: str
@@ -27,6 +27,18 @@ class Settings(BaseSettings):
     # everyday latency/quality trade-off, while high is reserved for hard tasks.
     reasoning_default: str | None = "low"
     reasoning_deep: str | None = "high"
+
+    # Vision is a capability-specific route instead of pretending every text
+    # profile accepts images. Reuse the already-installed Gemma 4 12B QAT as the
+    # first Stage 5 candidate because LM Studio advertises that exact model as
+    # vision-capable. It remains provisional until the live Legion benchmark is
+    # committed; alternate VLMs can be tested by changing only VISION_MODEL.
+    vision_model: str = "google/gemma-4-12b-qat"
+    vision_max_images: int = 4
+    vision_max_image_bytes: int = 12 * 1024 * 1024
+    vision_max_total_bytes: int = 24 * 1024 * 1024
+    vision_max_pixels: int = 64_000_000
+    vision_max_side: int = 2048
 
     # BGE-M3 is the preferred retrieval model because the gateway is intended to
     # handle multilingual personal data. LM Studio model keys can vary by install,

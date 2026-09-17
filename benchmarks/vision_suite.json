@@ -1,0 +1,42 @@
+{
+  "version": "vision-v1",
+  "description": "Deterministic synthetic visual-understanding cases for Stage 5 local vision qualification.",
+  "cases": [
+    {
+      "id": "shapes",
+      "fixture": "shapes",
+      "prompt": "List the three colored shapes visible in the image. Use one '<color> <shape>' phrase for each object.",
+      "expected_all": ["red circle", "blue square", "green triangle"]
+    },
+    {
+      "id": "text_reading",
+      "fixture": "text_reading",
+      "prompt": "Read the course code, room, and due time from the image. Return them in the form course|room|time.",
+      "expected_all": ["CIV100", "SF1105", "14:30"]
+    },
+    {
+      "id": "table_reading",
+      "fixture": "table_reading",
+      "prompt": "Read the row in the table. Return course|task|due_time using the text shown in the image.",
+      "expected_all": ["MAT186", "Problem Set 2", "23:59"]
+    },
+    {
+      "id": "spatial_relation",
+      "fixture": "spatial_relation",
+      "prompt": "Describe the spatial relationship between the two colored objects using '<object A> <relation> <object B>'.",
+      "expected_all": ["orange square", "left", "purple circle"]
+    },
+    {
+      "id": "multi_image",
+      "fixture": "multi_image",
+      "prompt": "Read the large number in the first image and the large number in the second image, then add them. Return first=<n>; second=<n>; sum=<n>.",
+      "expected_all": ["17", "23", "40"]
+    },
+    {
+      "id": "ui_error",
+      "fixture": "ui_error",
+      "prompt": "Read the status and error code from the dialog. Return status|error_code exactly from what is visible.",
+      "expected_all": ["DISCONNECTED", "E_CONN_4812"]
+    }
+  ]
+}

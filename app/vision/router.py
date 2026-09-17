@@ -1,4 +1,4 @@
-"""FastAPI router for caller-owned tool calling plus mounted extension routes."""
+"""Authenticated Stage 5 vision endpoint and local capability status."""
 
 from __future__ import annotations
 
@@ -11,25 +11,13 @@ from app.config import settings
 from app.errors import AuthenticationError, GatewayError, LMStudioUnavailableError
 from app.lmstudio import LMStudioError
 from app.observability import RequestMetric, record_metric
-from app.playground.router import router as playground_router
-from app.routing import choose_profile
-from app.schemas import ToolTurnRequest, ToolTurnResponse
-from app.streaming.router import router as streaming_router
-from app.tools.service import run_tool_turn
-from app.vision.router import router as vision_router
+from app.vision.schemas import VisionRequest, VisionResponse, VisionStatusResponse
+from app.vision.service import run_vision, vision_model_status
 
 router = APIRouter()
-# `app.main` already mounts this router as the gateway's extension router. Keep
-# extension features in their own modules while composing them here to avoid
-# duplicating application setup and exception handling.
-router.include_router(streaming_router)
-router.include_router(vision_router)
-router.include_router(playground_router)
 
 
 def _authenticate(key: str | None) -> None:
-    """Apply the same local API-key boundary as the gateway's core routes."""
-
     if key != settings.gateway_api_key:
         raise AuthenticationError()
 
@@ -38,21 +26,17 @@ def _record_failure(
     *,
     request_id: str,
     project: str | None,
-    request: ToolTurnRequest,
     started: float,
     error_code: str,
 ) -> None:
-    """Record tool-planning failures without persisting messages, tools, or arguments."""
-
-    profile = choose_profile(request.quality, request.reasoning)
     record_metric(
         RequestMetric(
             request_id=request_id,
             project=project,
-            endpoint="/v1/tools/turn",
-            quality=profile.name,
-            model=profile.model,
-            reasoning_level=profile.reasoning,
+            endpoint="/v1/vision",
+            quality="vision",
+            model=settings.vision_model,
+            reasoning_level=None,
             input_tokens=None,
             reasoning_tokens=None,
             output_tokens=None,
@@ -66,30 +50,43 @@ def _record_failure(
     )
 
 
-@router.post("/v1/tools/turn", response_model=ToolTurnResponse)
-async def tool_turn_endpoint(
-    request: ToolTurnRequest,
+@router.get("/v1/vision/status", response_model=VisionStatusResponse)
+async def vision_status_endpoint(
+    x_local_ai_key: str | None = Header(default=None),
+) -> VisionStatusResponse:
+    """Report configured VLM installation/capability state without loading it."""
+
+    _authenticate(x_local_ai_key)
+    try:
+        status = await vision_model_status()
+    except LMStudioError as exc:
+        raise LMStudioUnavailableError(str(exc)) from exc
+    return VisionStatusResponse(
+        model=status.model,
+        installed=status.installed,
+        supports_vision=status.supports_vision,
+        loaded=status.loaded,
+    )
+
+
+@router.post("/v1/vision", response_model=VisionResponse)
+async def vision_endpoint(
+    payload: VisionRequest,
     x_local_ai_key: str | None = Header(default=None),
     x_project_id: str | None = Header(default=None),
-) -> ToolTurnResponse:
-    """Run one model turn and return validated tool requests without executing them."""
+) -> VisionResponse:
+    """Analyze one bounded local image batch without persisting image or prompt content."""
 
     _authenticate(x_local_ai_key)
     request_id = str(uuid4())
-    profile = choose_profile(request.quality, request.reasoning)
     started = time.perf_counter()
 
     try:
-        result = await run_tool_turn(
-            request=request,
-            model=profile.model,
-            reasoning=profile.reasoning,
-        )
+        result = await run_vision(payload)
     except GatewayError as exc:
         _record_failure(
             request_id=request_id,
             project=x_project_id,
-            request=request,
             started=started,
             error_code=exc.code,
         )
@@ -98,7 +95,6 @@ async def tool_turn_endpoint(
         _record_failure(
             request_id=request_id,
             project=x_project_id,
-            request=request,
             started=started,
             error_code="LMSTUDIO_UNAVAILABLE",
         )
@@ -108,32 +104,31 @@ async def tool_turn_endpoint(
         RequestMetric(
             request_id=request_id,
             project=x_project_id,
-            endpoint="/v1/tools/turn",
-            quality=profile.name,
+            endpoint="/v1/vision",
+            quality="vision",
             model=result.model,
-            reasoning_level=profile.reasoning,
+            reasoning_level=None,
             input_tokens=result.input_tokens,
             reasoning_tokens=result.reasoning_output_tokens,
             output_tokens=result.output_tokens,
-            model_load_seconds=None,
-            first_token_seconds=None,
+            model_load_seconds=result.model_load_time_seconds,
+            first_token_seconds=result.time_to_first_token_seconds,
             total_latency_seconds=time.perf_counter() - started,
             attempts=1,
             success=True,
         )
     )
 
-    return ToolTurnResponse(
-        status=result.status,
+    return VisionResponse(
         text=result.text,
-        tool_calls=result.tool_calls,
-        assistant_message=result.assistant_message,
         model=result.model,
-        profile=profile.name,
-        reasoning=profile.reasoning,
+        image_count=len(result.images),
+        images=result.images,
         input_tokens=result.input_tokens,
         output_tokens=result.output_tokens,
         reasoning_output_tokens=result.reasoning_output_tokens,
-        finish_reason=result.finish_reason,
+        tokens_per_second=result.tokens_per_second,
+        time_to_first_token_seconds=result.time_to_first_token_seconds,
+        model_load_time_seconds=result.model_load_time_seconds,
         request_id=request_id,
     )

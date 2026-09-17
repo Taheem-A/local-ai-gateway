@@ -1,0 +1,108 @@
+{
+  "version": "vision-workload-v1",
+  "description": "Template for private, realistic Stage 5 model-selection runs. Copy to vision_workload.local.json and point each case at local images that are not committed. Keep this case set fixed across candidates.",
+  "cases": [
+    {
+      "id": "windows-error-dialog",
+      "category": "ui_error",
+      "images": ["vision_workload_private/windows-error.png"],
+      "prompt": "Identify the visible error, quote the important error text exactly, and explain what is directly visible versus what you infer.",
+      "expected_all": ["REPLACE_WITH_VISIBLE_ERROR_TOKEN"],
+      "forbidden_any": ["REPLACE_WITH_KNOWN_FALSE_CLAIM"]
+    },
+    {
+      "id": "dense-vscode-terminal",
+      "category": "screenshot_ocr",
+      "images": ["vision_workload_private/vscode-terminal.png"],
+      "prompt": "Read the important terminal/editor text and identify the concrete problem shown. Do not invent text that is not visible.",
+      "expected_all": ["REPLACE_WITH_VISIBLE_TOKEN_1", "REPLACE_WITH_VISIBLE_TOKEN_2"],
+      "forbidden_any": []
+    },
+    {
+      "id": "dense-dark-web-ui",
+      "category": "gui_understanding",
+      "images": ["vision_workload_private/dark-web-ui.png"],
+      "prompt": "Describe the important UI state, controls, labels, and any warning/error text. Distinguish exact visible text from interpretation.",
+      "expected_all": ["REPLACE_WITH_VISIBLE_UI_TOKEN"],
+      "forbidden_any": ["REPLACE_WITH_ABSENT_UI_STATE"]
+    },
+    {
+      "id": "lecture-slide",
+      "category": "education_slide",
+      "images": ["vision_workload_private/lecture-slide.png"],
+      "prompt": "Extract the important labeled information from this lecture slide and answer the question using only what is visible.",
+      "expected_all": ["REPLACE_WITH_VISIBLE_SLIDE_FACT"],
+      "forbidden_any": []
+    },
+    {
+      "id": "engineering-diagram",
+      "category": "diagram_reasoning",
+      "images": ["vision_workload_private/engineering-diagram.png"],
+      "prompt": "Describe the labeled components and answer the question implied by the engineering diagram using only visible evidence.",
+      "expected_all": ["REPLACE_WITH_EXPECTED_COMPONENT"],
+      "forbidden_any": []
+    },
+    {
+      "id": "chart-reading",
+      "category": "chart_reasoning",
+      "images": ["vision_workload_private/chart.png"],
+      "prompt": "Read this chart carefully. State the requested values/trend and preserve labels and numbers exactly where relevant.",
+      "expected_all": ["REPLACE_WITH_CHART_VALUE"],
+      "forbidden_any": ["REPLACE_WITH_WRONG_CHART_VALUE"]
+    },
+    {
+      "id": "dense-table",
+      "category": "table_understanding",
+      "images": ["vision_workload_private/table.png"],
+      "prompt": "Read the requested row/column relationship from this table and preserve important values exactly.",
+      "expected_all": ["REPLACE_WITH_TABLE_VALUE_1", "REPLACE_WITH_TABLE_VALUE_2"],
+      "forbidden_any": []
+    },
+    {
+      "id": "document-photo",
+      "category": "document_photo",
+      "images": ["vision_workload_private/document-photo.jpg"],
+      "prompt": "Read the important fields from this photographed document. Preserve numbers and identifiers exactly and mention uncertainty caused by blur or perspective.",
+      "expected_all": ["REPLACE_WITH_VISIBLE_FIELD"],
+      "forbidden_any": []
+    },
+    {
+      "id": "real-world-photo",
+      "category": "photo_understanding",
+      "images": ["vision_workload_private/real-photo.jpg"],
+      "prompt": "Describe the scene precisely. Separate directly visible facts from uncertain interpretation.",
+      "expected_all": ["REPLACE_WITH_VISIBLE_OBJECT"],
+      "forbidden_any": ["REPLACE_WITH_KNOWN_ABSENT_OBJECT"]
+    },
+    {
+      "id": "game-overlay-small-text",
+      "category": "game_ui",
+      "images": ["vision_workload_private/game-overlay.png"],
+      "prompt": "Read the important small UI/overlay state and answer the requested question without inventing hidden game state.",
+      "expected_all": ["REPLACE_WITH_VISIBLE_GAME_UI_TOKEN"],
+      "forbidden_any": []
+    },
+    {
+      "id": "before-after-ui",
+      "category": "multi_image",
+      "images": [
+        "vision_workload_private/before.png",
+        "vision_workload_private/after.png"
+      ],
+      "prompt": "Compare the two screenshots and state the concrete visible changes. Do not claim changes that cannot be seen.",
+      "expected_all": ["REPLACE_WITH_VISIBLE_CHANGE"],
+      "forbidden_any": []
+    },
+    {
+      "id": "multi-image-evidence-combination",
+      "category": "multi_image_reasoning",
+      "images": [
+        "vision_workload_private/evidence-a.png",
+        "vision_workload_private/evidence-b.png"
+      ],
+      "prompt": "Use both images to answer the question. State which image supports each important fact and do not infer facts absent from both.",
+      "expected_all": ["REPLACE_WITH_FACT_FROM_A", "REPLACE_WITH_FACT_FROM_B"],
+      "forbidden_any": []
+    }
+  ]
+}

@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import json
+from pathlib import Path
+
 import httpx
 import pytest
 from fastapi.testclient import TestClient
@@ -14,7 +17,8 @@ from app.vision.errors import (
     VisionRuntimeError,
 )
 from app.vision.provider import _raise_for_provider_failure
-from benchmarks.run_vision_workload_benchmarks import grade_text
+from benchmarks.compare_vision_workloads import summarize_run
+from benchmarks.run_vision_workload_benchmarks import PRIVATE_RESULTS_DIR, grade_text
 
 
 def _response(status: int, payload: dict) -> httpx.Response:
@@ -66,13 +70,69 @@ def test_workload_grader_checks_expected_and_forbidden_claims():
     assert failed["forbidden_hits"] == ["ACCESS_DENIED"]
 
 
-def test_playground_mounts_local_markdown_renderer():
+def test_private_workload_results_default_outside_tracked_results():
+    assert PRIVATE_RESULTS_DIR.name == "private-results"
+    assert PRIVATE_RESULTS_DIR.parent.name == "benchmarks"
+
+
+def test_workload_comparator_requires_manual_review_and_no_blockers(tmp_path: Path):
+    run = tmp_path / "candidate"
+    run.mkdir()
+    (run / "summary.json").write_text(
+        json.dumps(
+            {
+                "pipeline": "direct",
+                "vision_models": ["example/vlm"],
+                "reason_models": [],
+                "cases": 1,
+                "request_errors": 0,
+                "automatic_case_accuracy_percent": 100.0,
+                "mean_latency_seconds": 2.0,
+                "suite_sha256": "suite",
+                "runner_sha256": "runner",
+            }
+        ),
+        encoding="utf-8",
+    )
+    (run / "manual_review.json").write_text(
+        json.dumps(
+            {
+                "scores": [
+                    {
+                        "id": "case",
+                        "ocr_text_fidelity_0_2": 2,
+                        "visual_spatial_accuracy_0_2": 2,
+                        "reasoning_quality_0_2": 2,
+                        "unsupported_claim_discipline_0_2": 2,
+                        "instruction_following_0_2": 2,
+                        "multi_image_correctness_0_2": None,
+                        "production_blocker": False,
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    result = summarize_run(run)
+    assert result["manual_review_complete"] is True
+    assert result["selection_eligible"] is True
+    assert result["manual_dimension_means"]["visual_spatial_accuracy_0_2"] == 2.0
+
+
+def test_playground_mounts_local_markdown_and_shared_prose_renderers():
     with TestClient(app) as client:
         response = client.get("/playground/")
-        asset = client.get("/playground/assets/markdown.js")
+        markdown = client.get("/playground/assets/markdown.js")
+        prose = client.get("/playground/assets/prose.js")
 
     assert response.status_code == 200
     assert '/playground/assets/markdown.js' in response.text
-    assert asset.status_code == 200
-    assert "innerHTML" not in asset.text
-    assert "createTextNode" in asset.text
+    assert '/playground/assets/prose.js' in response.text
+    assert markdown.status_code == 200
+    assert prose.status_code == 200
+    assert "innerHTML" not in markdown.text
+    assert "createTextNode" in markdown.text
+    assert "PlaygroundMarkdown" in prose.text
+    assert "rag-answer" in prose.text
+    assert "tools-prose" in prose.text

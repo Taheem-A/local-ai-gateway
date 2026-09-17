@@ -19,6 +19,7 @@ _ASSETS = {
     "ui.js": "application/javascript; charset=utf-8",
     "vision.js": "application/javascript; charset=utf-8",
     "markdown.js": "application/javascript; charset=utf-8",
+    "prose.js": "application/javascript; charset=utf-8",
     "styles.css": "text/css; charset=utf-8",
     "polish.css": "text/css; charset=utf-8",
 }
@@ -57,6 +58,7 @@ async def playground_index() -> HTMLResponse:
     marker = '  <script src="/playground/assets/app.js" defer></script>'
     extensions = [
         '  <script src="/playground/assets/markdown.js" defer></script>',
+        '  <script src="/playground/assets/prose.js" defer></script>',
         '  <script src="/playground/assets/vision.js" defer></script>',
     ]
     for script in reversed(extensions):

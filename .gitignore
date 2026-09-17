@@ -8,3 +8,4 @@ logs/
 data/
 benchmarks/vision_workload.local.json
 benchmarks/vision_workload_private/
+benchmarks/private-results/

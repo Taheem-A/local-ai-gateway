@@ -7,6 +7,10 @@ Two pipelines are supported:
 - direct: the configured VLM answers the task itself.
 - vision-then-reason: the VLM extracts evidence, then `/v1/generate` performs
   the final reasoning step using only that evidence.
+
+Private workload runs default to `benchmarks/private-results/`, which is ignored
+by Git. A deliberately curated, redacted validation record can later be copied
+into the immutable tracked benchmark history after manual review.
 """
 
 from __future__ import annotations
@@ -28,10 +32,18 @@ import httpx
 from dotenv import load_dotenv
 
 BENCH_DIR = Path(__file__).resolve().parent
-RESULTS_DIR = BENCH_DIR / "results"
+PRIVATE_RESULTS_DIR = BENCH_DIR / "private-results"
 DEFAULT_SUITE = BENCH_DIR / "vision_workload.local.json"
 RUNNER_PATH = Path(__file__).resolve()
 _ALLOWED_MEDIA = {"image/png", "image/jpeg", "image/webp"}
+_MANUAL_SCORE_FIELDS = (
+    "ocr_text_fidelity_0_2",
+    "visual_spatial_accuracy_0_2",
+    "reasoning_quality_0_2",
+    "unsupported_claim_discipline_0_2",
+    "instruction_following_0_2",
+    "multi_image_correctness_0_2",
+)
 
 
 def _headers(api_key: str, project: str) -> dict[str, str]:
@@ -40,6 +52,10 @@ def _headers(api_key: str, project: str) -> dict[str, str]:
         "X-Project-ID": project,
         "Content-Type": "application/json",
     }
+
+
+def _sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def _image_payload(path: Path) -> dict[str, str]:
@@ -154,6 +170,55 @@ def _median(values: list[float]) -> float | None:
     return round(statistics.median(values), 4) if values else None
 
 
+def _numeric(values: list[Any]) -> list[float]:
+    converted: list[float] = []
+    for value in values:
+        if value is None:
+            continue
+        try:
+            converted.append(float(value))
+        except (TypeError, ValueError):
+            continue
+    return converted
+
+
+def _case_image_manifest(paths: list[Path], suite_path: Path) -> list[dict[str, Any]]:
+    items: list[dict[str, Any]] = []
+    for path in paths:
+        try:
+            relative = str(path.relative_to(suite_path.parent))
+        except ValueError:
+            relative = path.name
+        items.append(
+            {
+                "file": relative,
+                "sha256": _sha256(path),
+                "bytes": path.stat().st_size,
+            }
+        )
+    return items
+
+
+def _manual_review_template(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    return {
+        "instructions": (
+            "Review each answer against the actual images. Score only dimensions that apply "
+            "to the case: 0=wrong/unsafe, 1=partially correct, 2=fully correct. Use null for "
+            "non-applicable dimensions. Do not change automatic expectations after seeing outputs."
+        ),
+        "score_meaning": {"0": "failed", "1": "partial", "2": "fully correct", "null": "not applicable"},
+        "scores": [
+            {
+                "id": row.get("id"),
+                **{field: None for field in _MANUAL_SCORE_FIELDS},
+                "production_blocker": False,
+                "notes": "",
+            }
+            for row in rows
+        ],
+    }
+
+
 def main() -> int:
     load_dotenv()
     parser = argparse.ArgumentParser(description=__doc__)
@@ -170,6 +235,12 @@ def main() -> int:
     parser.add_argument("--reason-quality", default="default")
     parser.add_argument("--max-output-tokens", type=int, default=2048)
     parser.add_argument("--name", default="vision-workload-v1")
+    parser.add_argument(
+        "--output-dir",
+        type=Path,
+        default=PRIVATE_RESULTS_DIR,
+        help="Result root. Defaults to git-ignored benchmarks/private-results/.",
+    )
     args = parser.parse_args()
 
     if not args.api_key:
@@ -261,7 +332,7 @@ def main() -> int:
                 "id": case["id"],
                 "category": case.get("category", "uncategorized"),
                 "pipeline": args.pipeline,
-                "image_files": [path.name for path in image_paths],
+                "images": _case_image_manifest(image_paths, suite_path),
                 "prompt": case["prompt"],
                 "expected_all": case.get("expected_all", []),
                 "forbidden_any": case.get("forbidden_any", []),
@@ -271,6 +342,22 @@ def main() -> int:
                 "reason_model": reason_payload.get("model") if reason_payload else None,
                 "vision_request_id": vision_payload.get("request_id") if vision_payload else None,
                 "reason_request_id": reason_payload.get("request_id") if reason_payload else None,
+                "vision_metrics": {
+                    "input_tokens": vision_payload.get("input_tokens") if vision_payload else None,
+                    "output_tokens": vision_payload.get("output_tokens") if vision_payload else None,
+                    "reasoning_output_tokens": vision_payload.get("reasoning_output_tokens") if vision_payload else None,
+                    "tokens_per_second": vision_payload.get("tokens_per_second") if vision_payload else None,
+                    "time_to_first_token_seconds": vision_payload.get("time_to_first_token_seconds") if vision_payload else None,
+                    "model_load_time_seconds": vision_payload.get("model_load_time_seconds") if vision_payload else None,
+                },
+                "reason_metrics": {
+                    "input_tokens": reason_payload.get("input_tokens") if reason_payload else None,
+                    "output_tokens": reason_payload.get("output_tokens") if reason_payload else None,
+                    "reasoning_output_tokens": reason_payload.get("reasoning_output_tokens") if reason_payload else None,
+                    "tokens_per_second": reason_payload.get("tokens_per_second") if reason_payload else None,
+                    "time_to_first_token_seconds": reason_payload.get("time_to_first_token_seconds") if reason_payload else None,
+                    "model_load_time_seconds": reason_payload.get("model_load_time_seconds") if reason_payload else None,
+                } if reason_payload else None,
                 "grade": grade,
                 "latency_seconds": time.perf_counter() - case_started,
                 "error": error,
@@ -287,6 +374,9 @@ def main() -> int:
     request_errors = sum(row.get("error") is not None for row in rows)
     vision_models = sorted({str(row.get("vision_model")) for row in rows if row.get("vision_model")})
     reason_models = sorted({str(row.get("reason_model")) for row in rows if row.get("reason_model")})
+    vision_tps = _numeric([row.get("vision_metrics", {}).get("tokens_per_second") for row in rows])
+    vision_ttft = _numeric([row.get("vision_metrics", {}).get("time_to_first_token_seconds") for row in rows])
+    vision_load = _numeric([row.get("vision_metrics", {}).get("model_load_time_seconds") for row in rows])
     summary = {
         "suite_version": suite.get("version", "unknown"),
         "suite_sha256": suite_sha,
@@ -300,13 +390,20 @@ def main() -> int:
         "reason_models": reason_models,
         "mean_latency_seconds": _mean(valid_latencies),
         "median_latency_seconds": _median(valid_latencies),
+        "mean_vision_tokens_per_second": _mean(vision_tps),
+        "median_vision_tokens_per_second": _median(vision_tps),
+        "mean_vision_ttft_seconds": _mean(vision_ttft),
+        "median_vision_ttft_seconds": _median(vision_ttft),
+        "mean_vision_model_load_seconds": _mean(vision_load),
         "total_seconds": round(time.perf_counter() - total_started, 3),
         "manual_review_required": True,
+        "production_selection_ready": False,
     }
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     safe_name = "".join(char if char.isalnum() or char in "-_" else "-" for char in args.name)
-    run_dir = RESULTS_DIR / f"{timestamp}_{safe_name}_{args.pipeline}_{uuid.uuid4().hex[:6]}"
+    result_root = args.output_dir.resolve()
+    run_dir = result_root / f"{timestamp}_{safe_name}_{args.pipeline}_{uuid.uuid4().hex[:6]}"
     run_dir.mkdir(parents=True, exist_ok=False)
     (run_dir / "summary.json").write_text(
         json.dumps(summary, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
@@ -315,26 +412,8 @@ def main() -> int:
         json.dumps({"summary": summary, "results": rows}, indent=2, ensure_ascii=False) + "\n",
         encoding="utf-8",
     )
-    manual = {
-        "instructions": (
-            "Review each answer against the actual images. Score 0-2 for OCR/text fidelity, "
-            "visual/spatial accuracy, reasoning quality, and unsupported-claim discipline. "
-            "Do not change automatic grades after seeing model outputs."
-        ),
-        "scores": [
-            {
-                "id": row.get("id"),
-                "ocr_text_fidelity_0_2": None,
-                "visual_spatial_accuracy_0_2": None,
-                "reasoning_quality_0_2": None,
-                "unsupported_claim_discipline_0_2": None,
-                "notes": "",
-            }
-            for row in rows
-        ],
-    }
     (run_dir / "manual_review.json").write_text(
-        json.dumps(manual, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+        json.dumps(_manual_review_template(rows), indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
     )
 
     report = [
@@ -342,6 +421,7 @@ def main() -> int:
         "",
         f"- Suite: `{summary['suite_version']}`",
         f"- Suite SHA-256: `{summary['suite_sha256']}`",
+        f"- Runner SHA-256: `{summary['runner_sha256']}`",
         f"- Pipeline: `{summary['pipeline']}`",
         f"- Vision model(s): `{', '.join(vision_models) if vision_models else 'none'}`",
         f"- Reason model(s): `{', '.join(reason_models) if reason_models else 'none'}`",
@@ -350,7 +430,11 @@ def main() -> int:
         f"- Request errors: {summary['request_errors']}",
         f"- Mean latency: {summary['mean_latency_seconds']}s",
         f"- Median latency: {summary['median_latency_seconds']}s",
+        f"- Mean Vision TTFT: {summary['mean_vision_ttft_seconds']}s",
+        f"- Mean Vision tokens/s: {summary['mean_vision_tokens_per_second']}",
+        f"- Mean Vision model load time: {summary['mean_vision_model_load_seconds']}s",
         "- Manual review: required before model/pipeline selection",
+        "- Production selection ready: no (manual scores and cross-candidate comparison required)",
         "",
         "| Case | Category | Pass | Latency (s) |",
         "|---|---|---:|---:|",
@@ -364,7 +448,7 @@ def main() -> int:
     (run_dir / "report.md").write_text("\n".join(report) + "\n", encoding="utf-8")
 
     print(json.dumps(summary, indent=2, ensure_ascii=False))
-    print(f"Saved to {run_dir}")
+    print(f"Saved private workload artifacts to {run_dir}")
     return 1 if request_errors else 0
 
 

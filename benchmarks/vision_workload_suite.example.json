@@ -1,0 +1,57 @@
+{
+  "version": "vision-workload-v1",
+  "description": "Template for private, realistic Stage 5 model-selection runs. Copy to vision_workload.local.json and point each case at local images that are not committed.",
+  "cases": [
+    {
+      "id": "windows-error-dialog",
+      "category": "ui_error",
+      "images": ["vision_workload_private/windows-error.png"],
+      "prompt": "Identify the visible error, quote the important error text exactly, and explain what is directly visible versus what you infer.",
+      "expected_all": ["REPLACE_WITH_VISIBLE_ERROR_TOKEN"],
+      "forbidden_any": ["REPLACE_WITH_KNOWN_FALSE_CLAIM"]
+    },
+    {
+      "id": "dense-vscode-terminal",
+      "category": "screenshot_ocr",
+      "images": ["vision_workload_private/vscode-terminal.png"],
+      "prompt": "Read the important terminal/editor text and identify the concrete problem shown. Do not invent text that is not visible.",
+      "expected_all": ["REPLACE_WITH_VISIBLE_TOKEN_1", "REPLACE_WITH_VISIBLE_TOKEN_2"],
+      "forbidden_any": []
+    },
+    {
+      "id": "engineering-diagram",
+      "category": "diagram_reasoning",
+      "images": ["vision_workload_private/engineering-diagram.png"],
+      "prompt": "Describe the labeled components and answer the question implied by the diagram using only visible evidence.",
+      "expected_all": ["REPLACE_WITH_EXPECTED_COMPONENT"],
+      "forbidden_any": []
+    },
+    {
+      "id": "document-photo",
+      "category": "document_photo",
+      "images": ["vision_workload_private/document-photo.jpg"],
+      "prompt": "Read the important fields from this photographed document. Preserve numbers and identifiers exactly.",
+      "expected_all": ["REPLACE_WITH_VISIBLE_FIELD"],
+      "forbidden_any": []
+    },
+    {
+      "id": "real-world-photo",
+      "category": "photo_understanding",
+      "images": ["vision_workload_private/real-photo.jpg"],
+      "prompt": "Describe the scene precisely. Separate directly visible facts from uncertain interpretation.",
+      "expected_all": ["REPLACE_WITH_VISIBLE_OBJECT"],
+      "forbidden_any": ["REPLACE_WITH_KNOWN_ABSENT_OBJECT"]
+    },
+    {
+      "id": "before-after-ui",
+      "category": "multi_image",
+      "images": [
+        "vision_workload_private/before.png",
+        "vision_workload_private/after.png"
+      ],
+      "prompt": "Compare the two screenshots and state the concrete visible changes. Do not claim changes that cannot be seen.",
+      "expected_all": ["REPLACE_WITH_VISIBLE_CHANGE"],
+      "forbidden_any": []
+    }
+  ]
+}

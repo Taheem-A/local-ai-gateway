@@ -60,8 +60,13 @@
       </section>
       <section class="pane response-pane">
         <div class="pane-header response-header"><div><h2>Response</h2><p>Visible model output and preprocessing metadata.</p></div><span id="vision-state" class="runtime-state">Idle</span></div>
-        <div class="response-tabs"><span class="active">Output</span><span>Metrics</span></div>
+        <div class="response-tabs vision-response-tabs" role="tablist" aria-label="Vision response view">
+          <button id="vision-tab-rendered" class="active" type="button" role="tab" aria-selected="true">Rendered</button>
+          <button id="vision-tab-raw" type="button" role="tab" aria-selected="false">Raw</button>
+          <span class="response-tab-label">Metrics</span>
+        </div>
         <div id="vision-output" class="prose-output empty">Vision response will appear here.</div>
+        <pre id="vision-output-raw" class="json-output code-surface hidden" aria-label="Raw Markdown output"></pre>
         <div id="vision-meta" class="meta-strip"></div>
         <details class="raw-result"><summary>Image preprocessing</summary><pre id="vision-image-meta" class="json-output code-surface">No images processed yet.</pre></details>
       </section>
@@ -72,8 +77,12 @@
   const fileList = document.getElementById("vision-file-list");
   const form = document.getElementById("vision-form");
   const output = document.getElementById("vision-output");
+  const rawOutput = document.getElementById("vision-output-raw");
+  const renderedTab = document.getElementById("vision-tab-rendered");
+  const rawTab = document.getElementById("vision-tab-raw");
   const stateLabel = document.getElementById("vision-state");
   let previewUrls = [];
+  let lastMarkdown = "";
 
   function selectVisionView() {
     if (typeof switchView === "function") switchView("vision");
@@ -84,6 +93,69 @@
   }
 
   nav.addEventListener("click", selectVisionView);
+
+  function setOutputMode(mode) {
+    const raw = mode === "raw";
+    output.classList.toggle("hidden", raw);
+    rawOutput.classList.toggle("hidden", !raw);
+    renderedTab.classList.toggle("active", !raw);
+    rawTab.classList.toggle("active", raw);
+    renderedTab.setAttribute("aria-selected", String(!raw));
+    rawTab.setAttribute("aria-selected", String(raw));
+  }
+
+  renderedTab.addEventListener("click", () => setOutputMode("rendered"));
+  rawTab.addEventListener("click", () => setOutputMode("raw"));
+
+  function renderMarkdown(text) {
+    lastMarkdown = String(text || "");
+    rawOutput.textContent = lastMarkdown;
+    output.classList.remove("empty", "vision-error-output");
+    if (window.PlaygroundMarkdown?.mount) {
+      window.PlaygroundMarkdown.mount(output, lastMarkdown);
+    } else {
+      output.textContent = lastMarkdown;
+    }
+  }
+
+  function renderVisionFailure(error, status) {
+    lastMarkdown = "";
+    rawOutput.textContent = "";
+    output.replaceChildren();
+    output.classList.remove("empty");
+    output.classList.add("vision-error-output");
+
+    const title = document.createElement("h3");
+    title.textContent = error?.code || `HTTP ${status}`;
+    const message = document.createElement("p");
+    message.textContent = error?.message || "The vision request failed.";
+    output.append(title, message);
+
+    const advisory = error?.details?.advisory;
+    if (advisory) {
+      const panel = document.createElement("div");
+      panel.className = "vision-error-advisory";
+      const heading = document.createElement("strong");
+      heading.textContent = advisory.summary || "Suggested fix";
+      const action = document.createElement("p");
+      action.textContent = advisory.suggested_action || "";
+      panel.append(heading, action);
+      output.append(panel);
+    }
+
+    if (error?.details) {
+      const details = document.createElement("details");
+      details.className = "vision-error-details";
+      const summary = document.createElement("summary");
+      summary.textContent = "Technical details";
+      const pre = document.createElement("pre");
+      pre.className = "json-output code-surface";
+      pre.textContent = JSON.stringify(error.details, null, 2);
+      details.append(summary, pre);
+      output.append(details);
+    }
+    setOutputMode("rendered");
+  }
 
   function clearPreviews() {
     for (const url of previewUrls) URL.revokeObjectURL(url);
@@ -158,8 +230,11 @@
     }
 
     stateLabel.textContent = "Preparing…";
+    lastMarkdown = "";
     output.textContent = "";
-    output.classList.remove("empty");
+    rawOutput.textContent = "";
+    output.classList.remove("empty", "vision-error-output");
+    setOutputMode("rendered");
     document.getElementById("vision-meta").replaceChildren();
     try {
       const images = await Promise.all(files.map(fileAsGatewayImage));
@@ -189,15 +264,19 @@
       try { payload = await response.json(); } catch { payload = null; }
       if (!response.ok) {
         if (typeof updateInspectorResponse === "function") updateInspectorResponse(payload || { status: response.status });
-        throw new Error(extractError(payload, `HTTP ${response.status}`));
+        renderVisionFailure(payload?.error, response.status);
+        stateLabel.textContent = "Failed";
+        const toastText = payload?.error?.message || `Vision request failed with HTTP ${response.status}.`;
+        if (typeof showToast === "function") showToast(toastText, true);
+        return;
       }
       if (typeof updateInspectorResponse === "function") updateInspectorResponse(payload || {});
-      output.textContent = payload.text || "";
+      renderMarkdown(payload.text || "");
       renderMeta("vision-meta", payload);
       document.getElementById("vision-image-meta").textContent = JSON.stringify(payload.images || [], null, 2);
       stateLabel.textContent = "Completed";
     } catch (error) {
-      output.textContent = error.message;
+      renderVisionFailure({ code: "PLAYGROUND_ERROR", message: error.message }, 0);
       stateLabel.textContent = "Failed";
       if (typeof showToast === "function") showToast(error.message, true);
     }
